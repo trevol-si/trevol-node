@@ -484,13 +484,13 @@ export class RadianEventsApi extends runtime.BaseAPI {
 }
 
 /**
-  * @export
-  * @enum {string}
-  */
-export enum ListRadianEventsEventCodeEnum {
-    _030 = '030',
-    _031 = '031',
-    _032 = '032',
-    _033 = '033',
-    _034 = '034',
-}
+ * @export
+ */
+export const ListRadianEventsEventCodeEnum = {
+    _030: '030',
+    _031: '031',
+    _032: '032',
+    _033: '033',
+    _034: '034',
+} as const;
+export type ListRadianEventsEventCodeEnum = typeof ListRadianEventsEventCodeEnum[keyof typeof ListRadianEventsEventCodeEnum];

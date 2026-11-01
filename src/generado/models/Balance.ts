@@ -57,29 +57,32 @@ export interface Balance {
     shared?: boolean;
 }
 
+
 /**
-* @export
-* @enum {string}
-*/
-export enum BalanceObjectEnum {
-    Balance = 'balance'
-}
+ * @export
+ */
+export const BalanceObjectEnum = {
+    Balance: 'balance',
+} as const;
+export type BalanceObjectEnum = typeof BalanceObjectEnum[keyof typeof BalanceObjectEnum];
+
 /**
-* @export
-* @enum {string}
-*/
-export enum BalanceCurrencyEnum {
-    Cop = 'COP'
-}
+ * @export
+ */
+export const BalanceCurrencyEnum = {
+    Cop: 'COP',
+} as const;
+export type BalanceCurrencyEnum = typeof BalanceCurrencyEnum[keyof typeof BalanceCurrencyEnum];
+
 /**
-* @export
-* @enum {string}
-*/
-export enum BalanceLevelEnum {
-    Ok = 'ok',
-    Low = 'low',
-    Empty = 'empty'
-}
+ * @export
+ */
+export const BalanceLevelEnum = {
+    Ok: 'ok',
+    Low: 'low',
+    Empty: 'empty',
+} as const;
+export type BalanceLevelEnum = typeof BalanceLevelEnum[keyof typeof BalanceLevelEnum];
 
 
 /**

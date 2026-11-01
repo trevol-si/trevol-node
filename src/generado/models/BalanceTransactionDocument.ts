@@ -29,22 +29,23 @@ export interface BalanceTransactionDocument {
     number?: string | null;
 }
 
+
 /**
-* @export
-* @enum {string}
-*/
-export enum BalanceTransactionDocumentTypeEnum {
-    Invoice = 'invoice',
-    CreditNote = 'credit_note',
-    DebitNote = 'debit_note',
-    SupportDocument = 'support_document',
-    SupportDocumentAdjustment = 'support_document_adjustment',
-    EquivalentDocument = 'equivalent_document',
-    EquivalentDocumentAdjustment = 'equivalent_document_adjustment',
-    Payroll = 'payroll',
-    PayrollAdjustment = 'payroll_adjustment',
-    RadianEvent = 'radian_event'
-}
+ * @export
+ */
+export const BalanceTransactionDocumentTypeEnum = {
+    Invoice: 'invoice',
+    CreditNote: 'credit_note',
+    DebitNote: 'debit_note',
+    SupportDocument: 'support_document',
+    SupportDocumentAdjustment: 'support_document_adjustment',
+    EquivalentDocument: 'equivalent_document',
+    EquivalentDocumentAdjustment: 'equivalent_document_adjustment',
+    Payroll: 'payroll',
+    PayrollAdjustment: 'payroll_adjustment',
+    RadianEvent: 'radian_event',
+} as const;
+export type BalanceTransactionDocumentTypeEnum = typeof BalanceTransactionDocumentTypeEnum[keyof typeof BalanceTransactionDocumentTypeEnum];
 
 
 /**

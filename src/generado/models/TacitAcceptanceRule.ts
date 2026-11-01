@@ -53,14 +53,15 @@ export interface TacitAcceptanceRule {
     local?: boolean;
 }
 
+
 /**
-* @export
-* @enum {string}
-*/
-export enum TacitAcceptanceRuleSeverityEnum {
-    Rejection = 'rejection',
-    Notification = 'notification'
-}
+ * @export
+ */
+export const TacitAcceptanceRuleSeverityEnum = {
+    Rejection: 'rejection',
+    Notification: 'notification',
+} as const;
+export type TacitAcceptanceRuleSeverityEnum = typeof TacitAcceptanceRuleSeverityEnum[keyof typeof TacitAcceptanceRuleSeverityEnum];
 
 
 /**

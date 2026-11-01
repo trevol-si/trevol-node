@@ -99,52 +99,57 @@ export interface RadianEventData {
     error?: EventDocumentError;
 }
 
+
 /**
-* @export
-* @enum {string}
-*/
-export enum RadianEventDataObjectEnum {
-    RadianEvent = 'radian_event'
-}
+ * @export
+ */
+export const RadianEventDataObjectEnum = {
+    RadianEvent: 'radian_event',
+} as const;
+export type RadianEventDataObjectEnum = typeof RadianEventDataObjectEnum[keyof typeof RadianEventDataObjectEnum];
+
 /**
-* @export
-* @enum {string}
-*/
-export enum RadianEventDataStatusEnum {
-    Pending = 'pending',
-    Sending = 'sending',
-    Validating = 'validating',
-    Accepted = 'accepted',
-    Rejected = 'rejected',
-    Error = 'error'
-}
+ * @export
+ */
+export const RadianEventDataStatusEnum = {
+    Pending: 'pending',
+    Sending: 'sending',
+    Validating: 'validating',
+    Accepted: 'accepted',
+    Rejected: 'rejected',
+    Error: 'error',
+} as const;
+export type RadianEventDataStatusEnum = typeof RadianEventDataStatusEnum[keyof typeof RadianEventDataStatusEnum];
+
 /**
-* @export
-* @enum {string}
-*/
-export enum RadianEventDataEnvironmentEnum {
-    Test = 'test',
-    Live = 'live'
-}
+ * @export
+ */
+export const RadianEventDataEnvironmentEnum = {
+    Test: 'test',
+    Live: 'live',
+} as const;
+export type RadianEventDataEnvironmentEnum = typeof RadianEventDataEnvironmentEnum[keyof typeof RadianEventDataEnvironmentEnum];
+
 /**
-* @export
-* @enum {string}
-*/
-export enum RadianEventDataEventCodeEnum {
-    _030 = '030',
-    _031 = '031',
-    _032 = '032',
-    _033 = '033',
-    _034 = '034'
-}
+ * @export
+ */
+export const RadianEventDataEventCodeEnum = {
+    _030: '030',
+    _031: '031',
+    _032: '032',
+    _033: '033',
+    _034: '034',
+} as const;
+export type RadianEventDataEventCodeEnum = typeof RadianEventDataEventCodeEnum[keyof typeof RadianEventDataEventCodeEnum];
+
 /**
-* @export
-* @enum {string}
-*/
-export enum RadianEventDataOriginEnum {
-    Api = 'api',
-    App = 'app'
-}
+ * @export
+ */
+export const RadianEventDataOriginEnum = {
+    Api: 'api',
+    App: 'app',
+} as const;
+export type RadianEventDataOriginEnum = typeof RadianEventDataOriginEnum[keyof typeof RadianEventDataOriginEnum];
 
 
 /**

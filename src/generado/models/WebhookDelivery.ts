@@ -77,24 +77,26 @@ export interface WebhookDelivery {
     succeeded_at?: string | null;
 }
 
+
 /**
-* @export
-* @enum {string}
-*/
-export enum WebhookDeliveryObjectEnum {
-    WebhookDelivery = 'webhook_delivery'
-}
+ * @export
+ */
+export const WebhookDeliveryObjectEnum = {
+    WebhookDelivery: 'webhook_delivery',
+} as const;
+export type WebhookDeliveryObjectEnum = typeof WebhookDeliveryObjectEnum[keyof typeof WebhookDeliveryObjectEnum];
+
 /**
-* @export
-* @enum {string}
-*/
-export enum WebhookDeliveryStatusEnum {
-    Pending = 'pending',
-    Sending = 'sending',
-    Succeeded = 'succeeded',
-    Failed = 'failed',
-    Canceled = 'canceled'
-}
+ * @export
+ */
+export const WebhookDeliveryStatusEnum = {
+    Pending: 'pending',
+    Sending: 'sending',
+    Succeeded: 'succeeded',
+    Failed: 'failed',
+    Canceled: 'canceled',
+} as const;
+export type WebhookDeliveryStatusEnum = typeof WebhookDeliveryStatusEnum[keyof typeof WebhookDeliveryStatusEnum];
 
 
 /**

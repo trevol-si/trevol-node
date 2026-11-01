@@ -46,8 +46,8 @@ describe('reintentos a través de un método generado', () => {
 		expect(esperas).toEqual([0.5, 1]);
 	});
 
-	it('maxReintentos: 0 los apaga', async () => {
-		const { trevol, peticiones } = cliente([problema(503, 'dian_unavailable', { retryable: true })], { maxReintentos: 0 });
+	it('maxRetries: 0 los apaga', async () => {
+		const { trevol, peticiones } = cliente([problema(503, 'dian_unavailable', { retryable: true })], { maxRetries: 0 });
 		await expect(trevol.invoices.listInvoices({})).rejects.toBeInstanceOf(DianUnavailableError);
 		expect(peticiones).toHaveLength(1);
 	});

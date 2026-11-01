@@ -15,6 +15,5 @@
 		"rootDir": ".",
 		"types": ["node"]
 	},
-	"include": ["src", "pruebas"],
-	"exclude": ["node_modules", "dist", "pruebas/fragmentos/programas"]
+	"include": ["src", "pruebas"]
 }

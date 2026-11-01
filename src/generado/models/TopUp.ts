@@ -49,20 +49,22 @@ export interface TopUp {
     wompi?: TopUpWompi;
 }
 
+
 /**
-* @export
-* @enum {string}
-*/
-export enum TopUpObjectEnum {
-    TopUp = 'top_up'
-}
+ * @export
+ */
+export const TopUpObjectEnum = {
+    TopUp: 'top_up',
+} as const;
+export type TopUpObjectEnum = typeof TopUpObjectEnum[keyof typeof TopUpObjectEnum];
+
 /**
-* @export
-* @enum {string}
-*/
-export enum TopUpStatusEnum {
-    Prepared = 'prepared'
-}
+ * @export
+ */
+export const TopUpStatusEnum = {
+    Prepared: 'prepared',
+} as const;
+export type TopUpStatusEnum = typeof TopUpStatusEnum[keyof typeof TopUpStatusEnum];
 
 
 /**

@@ -45,13 +45,14 @@ export interface PayrollList {
     next_cursor?: string | null;
 }
 
+
 /**
-* @export
-* @enum {string}
-*/
-export enum PayrollListObjectEnum {
-    List = 'list'
-}
+ * @export
+ */
+export const PayrollListObjectEnum = {
+    List: 'list',
+} as const;
+export type PayrollListObjectEnum = typeof PayrollListObjectEnum[keyof typeof PayrollListObjectEnum];
 
 
 /**

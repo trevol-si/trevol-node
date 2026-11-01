@@ -215,52 +215,57 @@ export interface EquivalentDocumentAdjustment {
     equivalent_document?: EquivalentDocumentReference;
 }
 
+
 /**
-* @export
-* @enum {string}
-*/
-export enum EquivalentDocumentAdjustmentObjectEnum {
-    EquivalentDocumentAdjustment = 'equivalent_document_adjustment'
-}
+ * @export
+ */
+export const EquivalentDocumentAdjustmentObjectEnum = {
+    EquivalentDocumentAdjustment: 'equivalent_document_adjustment',
+} as const;
+export type EquivalentDocumentAdjustmentObjectEnum = typeof EquivalentDocumentAdjustmentObjectEnum[keyof typeof EquivalentDocumentAdjustmentObjectEnum];
+
 /**
-* @export
-* @enum {string}
-*/
-export enum EquivalentDocumentAdjustmentEnvironmentEnum {
-    Test = 'test',
-    Live = 'live'
-}
+ * @export
+ */
+export const EquivalentDocumentAdjustmentEnvironmentEnum = {
+    Test: 'test',
+    Live: 'live',
+} as const;
+export type EquivalentDocumentAdjustmentEnvironmentEnum = typeof EquivalentDocumentAdjustmentEnvironmentEnum[keyof typeof EquivalentDocumentAdjustmentEnvironmentEnum];
+
 /**
-* @export
-* @enum {string}
-*/
-export enum EquivalentDocumentAdjustmentStatusEnum {
-    Pending = 'pending',
-    Sending = 'sending',
-    Accepted = 'accepted',
-    Rejected = 'rejected',
-    Error = 'error',
-    Contingency = 'contingency',
-    Processing = 'processing',
-    Validating = 'validating'
-}
+ * @export
+ */
+export const EquivalentDocumentAdjustmentStatusEnum = {
+    Pending: 'pending',
+    Sending: 'sending',
+    Accepted: 'accepted',
+    Rejected: 'rejected',
+    Error: 'error',
+    Contingency: 'contingency',
+    Processing: 'processing',
+    Validating: 'validating',
+} as const;
+export type EquivalentDocumentAdjustmentStatusEnum = typeof EquivalentDocumentAdjustmentStatusEnum[keyof typeof EquivalentDocumentAdjustmentStatusEnum];
+
 /**
-* @export
-* @enum {string}
-*/
-export enum EquivalentDocumentAdjustmentOriginEnum {
-    Api = 'api',
-    App = 'app',
-    Contapyme = 'contapyme'
-}
+ * @export
+ */
+export const EquivalentDocumentAdjustmentOriginEnum = {
+    Api: 'api',
+    App: 'app',
+    Contapyme: 'contapyme',
+} as const;
+export type EquivalentDocumentAdjustmentOriginEnum = typeof EquivalentDocumentAdjustmentOriginEnum[keyof typeof EquivalentDocumentAdjustmentOriginEnum];
+
 /**
-* @export
-* @enum {string}
-*/
-export enum EquivalentDocumentAdjustmentNoteTypeEnum {
-    Credit = 'credit',
-    Debit = 'debit'
-}
+ * @export
+ */
+export const EquivalentDocumentAdjustmentNoteTypeEnum = {
+    Credit: 'credit',
+    Debit: 'debit',
+} as const;
+export type EquivalentDocumentAdjustmentNoteTypeEnum = typeof EquivalentDocumentAdjustmentNoteTypeEnum[keyof typeof EquivalentDocumentAdjustmentNoteTypeEnum];
 
 
 /**

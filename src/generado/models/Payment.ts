@@ -45,14 +45,15 @@ export interface Payment {
     methods?: Array<PaymentMethod>;
 }
 
+
 /**
-* @export
-* @enum {string}
-*/
-export enum PaymentFormEnum {
-    Cash = 'cash',
-    Credit = 'credit'
-}
+ * @export
+ */
+export const PaymentFormEnum = {
+    Cash: 'cash',
+    Credit: 'credit',
+} as const;
+export type PaymentFormEnum = typeof PaymentFormEnum[keyof typeof PaymentFormEnum];
 
 
 /**

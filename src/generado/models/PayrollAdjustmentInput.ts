@@ -142,14 +142,15 @@ export interface PayrollAdjustmentInput {
     employer?: PayrollEmployer;
 }
 
+
 /**
-* @export
-* @enum {string}
-*/
-export enum PayrollAdjustmentInputTypeEnum {
-    Replace = 'replace',
-    Delete = 'delete'
-}
+ * @export
+ */
+export const PayrollAdjustmentInputTypeEnum = {
+    Replace: 'replace',
+    Delete: 'delete',
+} as const;
+export type PayrollAdjustmentInputTypeEnum = typeof PayrollAdjustmentInputTypeEnum[keyof typeof PayrollAdjustmentInputTypeEnum];
 
 
 /**

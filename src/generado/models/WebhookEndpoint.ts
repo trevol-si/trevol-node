@@ -73,101 +73,107 @@ export interface WebhookEndpoint {
     secret?: string;
 }
 
+
 /**
-* @export
-* @enum {string}
-*/
-export enum WebhookEndpointObjectEnum {
-    WebhookEndpoint = 'webhook_endpoint'
-}
+ * @export
+ */
+export const WebhookEndpointObjectEnum = {
+    WebhookEndpoint: 'webhook_endpoint',
+} as const;
+export type WebhookEndpointObjectEnum = typeof WebhookEndpointObjectEnum[keyof typeof WebhookEndpointObjectEnum];
+
 /**
-* @export
-* @enum {string}
-*/
-export enum WebhookEndpointEnvironmentEnum {
-    Test = 'test',
-    Live = 'live'
-}
+ * @export
+ */
+export const WebhookEndpointEnvironmentEnum = {
+    Test: 'test',
+    Live: 'live',
+} as const;
+export type WebhookEndpointEnvironmentEnum = typeof WebhookEndpointEnvironmentEnum[keyof typeof WebhookEndpointEnvironmentEnum];
+
 /**
-* @export
-* @enum {string}
-*/
-export enum WebhookEndpointEventsEnum {
-    Star = '*',
-    InvoiceAccepted = 'invoice.accepted',
-    InvoiceRejected = 'invoice.rejected',
-    InvoiceError = 'invoice.error',
-    InvoiceDelivered = 'invoice.delivered',
-    InvoiceEmailBounced = 'invoice.email_bounced',
-    InvoiceEmailFailed = 'invoice.email_failed',
-    CreditNoteAccepted = 'credit_note.accepted',
-    CreditNoteRejected = 'credit_note.rejected',
-    CreditNoteError = 'credit_note.error',
-    CreditNoteDelivered = 'credit_note.delivered',
-    CreditNoteEmailBounced = 'credit_note.email_bounced',
-    CreditNoteEmailFailed = 'credit_note.email_failed',
-    DebitNoteAccepted = 'debit_note.accepted',
-    DebitNoteRejected = 'debit_note.rejected',
-    DebitNoteError = 'debit_note.error',
-    DebitNoteDelivered = 'debit_note.delivered',
-    DebitNoteEmailBounced = 'debit_note.email_bounced',
-    DebitNoteEmailFailed = 'debit_note.email_failed',
-    BalanceLow = 'balance.low',
-    NumberingLow = 'numbering.low',
-    NumberingExpiring = 'numbering.expiring',
-    CertificateExpiring = 'certificate.expiring',
-    SupportDocumentAccepted = 'support_document.accepted',
-    SupportDocumentRejected = 'support_document.rejected',
-    SupportDocumentError = 'support_document.error',
-    SupportDocumentAdjustmentAccepted = 'support_document_adjustment.accepted',
-    SupportDocumentAdjustmentRejected = 'support_document_adjustment.rejected',
-    SupportDocumentAdjustmentError = 'support_document_adjustment.error',
-    EquivalentDocumentAccepted = 'equivalent_document.accepted',
-    EquivalentDocumentRejected = 'equivalent_document.rejected',
-    EquivalentDocumentError = 'equivalent_document.error',
-    EquivalentDocumentDelivered = 'equivalent_document.delivered',
-    EquivalentDocumentEmailBounced = 'equivalent_document.email_bounced',
-    EquivalentDocumentEmailFailed = 'equivalent_document.email_failed',
-    EquivalentDocumentAdjustmentAccepted = 'equivalent_document_adjustment.accepted',
-    EquivalentDocumentAdjustmentRejected = 'equivalent_document_adjustment.rejected',
-    EquivalentDocumentAdjustmentError = 'equivalent_document_adjustment.error',
-    EquivalentDocumentAdjustmentDelivered = 'equivalent_document_adjustment.delivered',
-    EquivalentDocumentAdjustmentEmailBounced = 'equivalent_document_adjustment.email_bounced',
-    EquivalentDocumentAdjustmentEmailFailed = 'equivalent_document_adjustment.email_failed',
-    PayrollAccepted = 'payroll.accepted',
-    PayrollRejected = 'payroll.rejected',
-    PayrollError = 'payroll.error',
-    PayrollAdjustmentAccepted = 'payroll_adjustment.accepted',
-    PayrollAdjustmentRejected = 'payroll_adjustment.rejected',
-    PayrollAdjustmentError = 'payroll_adjustment.error',
-    RadianEventAccepted = 'radian_event.accepted',
-    RadianEventRejected = 'radian_event.rejected',
-    RadianEventError = 'radian_event.error'
-}
+ * @export
+ */
+export const WebhookEndpointEventsEnum = {
+    Star: '*',
+    InvoiceAccepted: 'invoice.accepted',
+    InvoiceRejected: 'invoice.rejected',
+    InvoiceError: 'invoice.error',
+    InvoiceDelivered: 'invoice.delivered',
+    InvoiceEmailBounced: 'invoice.email_bounced',
+    InvoiceEmailFailed: 'invoice.email_failed',
+    CreditNoteAccepted: 'credit_note.accepted',
+    CreditNoteRejected: 'credit_note.rejected',
+    CreditNoteError: 'credit_note.error',
+    CreditNoteDelivered: 'credit_note.delivered',
+    CreditNoteEmailBounced: 'credit_note.email_bounced',
+    CreditNoteEmailFailed: 'credit_note.email_failed',
+    DebitNoteAccepted: 'debit_note.accepted',
+    DebitNoteRejected: 'debit_note.rejected',
+    DebitNoteError: 'debit_note.error',
+    DebitNoteDelivered: 'debit_note.delivered',
+    DebitNoteEmailBounced: 'debit_note.email_bounced',
+    DebitNoteEmailFailed: 'debit_note.email_failed',
+    BalanceLow: 'balance.low',
+    NumberingLow: 'numbering.low',
+    NumberingExpiring: 'numbering.expiring',
+    CertificateExpiring: 'certificate.expiring',
+    SupportDocumentAccepted: 'support_document.accepted',
+    SupportDocumentRejected: 'support_document.rejected',
+    SupportDocumentError: 'support_document.error',
+    SupportDocumentAdjustmentAccepted: 'support_document_adjustment.accepted',
+    SupportDocumentAdjustmentRejected: 'support_document_adjustment.rejected',
+    SupportDocumentAdjustmentError: 'support_document_adjustment.error',
+    EquivalentDocumentAccepted: 'equivalent_document.accepted',
+    EquivalentDocumentRejected: 'equivalent_document.rejected',
+    EquivalentDocumentError: 'equivalent_document.error',
+    EquivalentDocumentDelivered: 'equivalent_document.delivered',
+    EquivalentDocumentEmailBounced: 'equivalent_document.email_bounced',
+    EquivalentDocumentEmailFailed: 'equivalent_document.email_failed',
+    EquivalentDocumentAdjustmentAccepted: 'equivalent_document_adjustment.accepted',
+    EquivalentDocumentAdjustmentRejected: 'equivalent_document_adjustment.rejected',
+    EquivalentDocumentAdjustmentError: 'equivalent_document_adjustment.error',
+    EquivalentDocumentAdjustmentDelivered: 'equivalent_document_adjustment.delivered',
+    EquivalentDocumentAdjustmentEmailBounced: 'equivalent_document_adjustment.email_bounced',
+    EquivalentDocumentAdjustmentEmailFailed: 'equivalent_document_adjustment.email_failed',
+    PayrollAccepted: 'payroll.accepted',
+    PayrollRejected: 'payroll.rejected',
+    PayrollError: 'payroll.error',
+    PayrollAdjustmentAccepted: 'payroll_adjustment.accepted',
+    PayrollAdjustmentRejected: 'payroll_adjustment.rejected',
+    PayrollAdjustmentError: 'payroll_adjustment.error',
+    RadianEventAccepted: 'radian_event.accepted',
+    RadianEventRejected: 'radian_event.rejected',
+    RadianEventError: 'radian_event.error',
+} as const;
+export type WebhookEndpointEventsEnum = typeof WebhookEndpointEventsEnum[keyof typeof WebhookEndpointEventsEnum];
+
 /**
-* @export
-* @enum {string}
-*/
-export enum WebhookEndpointCatalogVersionEnum {
-    NUMBER_1 = 1,
-    NUMBER_2 = 2
-}
+ * @export
+ */
+export const WebhookEndpointCatalogVersionEnum = {
+    NUMBER_1: 1,
+    NUMBER_2: 2,
+} as const;
+export type WebhookEndpointCatalogVersionEnum = typeof WebhookEndpointCatalogVersionEnum[keyof typeof WebhookEndpointCatalogVersionEnum];
+
 /**
-* @export
-* @enum {string}
-*/
-export enum WebhookEndpointStatusEnum {
-    Enabled = 'enabled',
-    Paused = 'paused',
-    Disabled = 'disabled'
-}
+ * @export
+ */
+export const WebhookEndpointStatusEnum = {
+    Enabled: 'enabled',
+    Paused: 'paused',
+    Disabled: 'disabled',
+} as const;
+export type WebhookEndpointStatusEnum = typeof WebhookEndpointStatusEnum[keyof typeof WebhookEndpointStatusEnum];
+
 /**
-* @export
-* @enum {string}
-*/
-export enum WebhookEndpointDisabledReasonEnum {
-    SustainedFailures = 'sustained_failures'
-}
+ * @export
+ */
+export const WebhookEndpointDisabledReasonEnum = {
+    SustainedFailures: 'sustained_failures',
+} as const;
+export type WebhookEndpointDisabledReasonEnum = typeof WebhookEndpointDisabledReasonEnum[keyof typeof WebhookEndpointDisabledReasonEnum];
 
 
 /**

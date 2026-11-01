@@ -27,7 +27,7 @@ export interface OpcionesTrevol {
 	/** El valor de `Trevol-Version` en cada petición. Por defecto la versión con que se generó este SDK (`API_VERSION`). */
 	apiVersion?: string;
 	/** Reintentos tras el primer intento (3 intentos en total por defecto). 0 los apaga. */
-	maxReintentos?: number;
+	maxRetries?: number;
 	/** Segundos por intento. Por defecto 65, como el playground. */
 	timeout?: number;
 	/** Si `Retry-After` pide esperar más segundos que esto, no se espera: se lanza el error con `retryAfter`. Por defecto 60. */
@@ -96,7 +96,7 @@ export class Trevol {
 			apiVersion: this.apiVersion,
 			baseUrl,
 			userAgent: `trevol-node/${VERSION} (node ${process.version}; +https://platform.trevol.si/docs)`,
-			maxReintentos: opciones.maxReintentos ?? 2,
+			maxReintentos: opciones.maxRetries ?? 2,
 			timeout: opciones.timeout ?? 65,
 			maxRetryAfter: opciones.maxRetryAfter ?? 60,
 			fetch: cargaFetch,

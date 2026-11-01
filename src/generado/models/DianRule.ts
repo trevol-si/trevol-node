@@ -49,14 +49,15 @@ export interface DianRule {
     field?: string;
 }
 
+
 /**
-* @export
-* @enum {string}
-*/
-export enum DianRuleSeverityEnum {
-    Rejection = 'rejection',
-    Notification = 'notification'
-}
+ * @export
+ */
+export const DianRuleSeverityEnum = {
+    Rejection: 'rejection',
+    Notification: 'notification',
+} as const;
+export type DianRuleSeverityEnum = typeof DianRuleSeverityEnum[keyof typeof DianRuleSeverityEnum];
 
 
 /**

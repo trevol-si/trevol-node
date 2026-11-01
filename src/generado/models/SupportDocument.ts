@@ -192,50 +192,55 @@ export interface SupportDocument {
     adjustment_note?: SupportAdjustmentReference | null;
 }
 
+
 /**
-* @export
-* @enum {string}
-*/
-export enum SupportDocumentObjectEnum {
-    SupportDocument = 'support_document'
-}
+ * @export
+ */
+export const SupportDocumentObjectEnum = {
+    SupportDocument: 'support_document',
+} as const;
+export type SupportDocumentObjectEnum = typeof SupportDocumentObjectEnum[keyof typeof SupportDocumentObjectEnum];
+
 /**
-* @export
-* @enum {string}
-*/
-export enum SupportDocumentEnvironmentEnum {
-    Test = 'test',
-    Live = 'live'
-}
+ * @export
+ */
+export const SupportDocumentEnvironmentEnum = {
+    Test: 'test',
+    Live: 'live',
+} as const;
+export type SupportDocumentEnvironmentEnum = typeof SupportDocumentEnvironmentEnum[keyof typeof SupportDocumentEnvironmentEnum];
+
 /**
-* @export
-* @enum {string}
-*/
-export enum SupportDocumentStatusEnum {
-    Pending = 'pending',
-    Sending = 'sending',
-    Accepted = 'accepted',
-    Rejected = 'rejected',
-    Error = 'error',
-    Processing = 'processing'
-}
+ * @export
+ */
+export const SupportDocumentStatusEnum = {
+    Pending: 'pending',
+    Sending: 'sending',
+    Accepted: 'accepted',
+    Rejected: 'rejected',
+    Error: 'error',
+    Processing: 'processing',
+} as const;
+export type SupportDocumentStatusEnum = typeof SupportDocumentStatusEnum[keyof typeof SupportDocumentStatusEnum];
+
 /**
-* @export
-* @enum {string}
-*/
-export enum SupportDocumentOriginEnum {
-    Api = 'api',
-    App = 'app',
-    Contapyme = 'contapyme'
-}
+ * @export
+ */
+export const SupportDocumentOriginEnum = {
+    Api: 'api',
+    App: 'app',
+    Contapyme: 'contapyme',
+} as const;
+export type SupportDocumentOriginEnum = typeof SupportDocumentOriginEnum[keyof typeof SupportDocumentOriginEnum];
+
 /**
-* @export
-* @enum {string}
-*/
-export enum SupportDocumentTransmissionEnum {
-    PerOperation = 'per_operation',
-    Weekly = 'weekly'
-}
+ * @export
+ */
+export const SupportDocumentTransmissionEnum = {
+    PerOperation: 'per_operation',
+    Weekly: 'weekly',
+} as const;
+export type SupportDocumentTransmissionEnum = typeof SupportDocumentTransmissionEnum[keyof typeof SupportDocumentTransmissionEnum];
 
 
 /**

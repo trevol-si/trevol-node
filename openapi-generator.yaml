@@ -11,7 +11,9 @@ additionalProperties:
   modelPropertyNaming: original
   paramNaming: camelCase
   supportsES6: true
-  stringEnums: true
+  # Con `false` cada enum es un objeto `as const` MÁS un tipo de unión de literales: `form: 'cash'` compila (con `true` serían `enum` de TypeScript y
+  # los literales de los fragmentos no compilarían).
+  stringEnums: false
   useSingleRequestParameter: true
   # C18: en TypeScript el valor nuevo de un enum ya pasa tal cual; la opción metería un valor falso en TODOS los enum.
   enumUnknownDefaultCase: false

@@ -45,13 +45,14 @@ export interface SupportDocumentList {
     next_cursor?: string | null;
 }
 
+
 /**
-* @export
-* @enum {string}
-*/
-export enum SupportDocumentListObjectEnum {
-    List = 'list'
-}
+ * @export
+ */
+export const SupportDocumentListObjectEnum = {
+    List: 'list',
+} as const;
+export type SupportDocumentListObjectEnum = typeof SupportDocumentListObjectEnum[keyof typeof SupportDocumentListObjectEnum];
 
 
 /**

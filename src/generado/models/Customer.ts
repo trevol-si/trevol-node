@@ -93,14 +93,15 @@ export interface Customer {
     postal_code?: string;
 }
 
+
 /**
-* @export
-* @enum {string}
-*/
-export enum CustomerPersonTypeEnum {
-    Legal = 'legal',
-    Natural = 'natural'
-}
+ * @export
+ */
+export const CustomerPersonTypeEnum = {
+    Legal: 'legal',
+    Natural: 'natural',
+} as const;
+export type CustomerPersonTypeEnum = typeof CustomerPersonTypeEnum[keyof typeof CustomerPersonTypeEnum];
 
 
 /**

@@ -45,13 +45,14 @@ export interface EventList {
     next_cursor?: string | null;
 }
 
+
 /**
-* @export
-* @enum {string}
-*/
-export enum EventListObjectEnum {
-    List = 'list'
-}
+ * @export
+ */
+export const EventListObjectEnum = {
+    List: 'list',
+} as const;
+export type EventListObjectEnum = typeof EventListObjectEnum[keyof typeof EventListObjectEnum];
 
 
 /**

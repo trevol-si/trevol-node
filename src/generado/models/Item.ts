@@ -165,14 +165,15 @@ export interface Item {
     properties?: Array<ItemProperty>;
 }
 
+
 /**
-* @export
-* @enum {string}
-*/
-export enum ItemIncomeEnum {
-    Own = 'own',
-    ThirdParty = 'third_party'
-}
+ * @export
+ */
+export const ItemIncomeEnum = {
+    Own: 'own',
+    ThirdParty: 'third_party',
+} as const;
+export type ItemIncomeEnum = typeof ItemIncomeEnum[keyof typeof ItemIncomeEnum];
 
 
 /**

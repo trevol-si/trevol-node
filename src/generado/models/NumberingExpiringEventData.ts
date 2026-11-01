@@ -45,22 +45,24 @@ export interface NumberingExpiringEventData {
     days_left?: number;
 }
 
+
 /**
-* @export
-* @enum {string}
-*/
-export enum NumberingExpiringEventDataObjectEnum {
-    Numbering = 'numbering'
-}
+ * @export
+ */
+export const NumberingExpiringEventDataObjectEnum = {
+    Numbering: 'numbering',
+} as const;
+export type NumberingExpiringEventDataObjectEnum = typeof NumberingExpiringEventDataObjectEnum[keyof typeof NumberingExpiringEventDataObjectEnum];
+
 /**
-* @export
-* @enum {string}
-*/
-export enum NumberingExpiringEventDataDocumentEnum {
-    Invoice = 'invoice',
-    SupportDocument = 'support_document',
-    EquivalentDocument = 'equivalent_document'
-}
+ * @export
+ */
+export const NumberingExpiringEventDataDocumentEnum = {
+    Invoice: 'invoice',
+    SupportDocument: 'support_document',
+    EquivalentDocument: 'equivalent_document',
+} as const;
+export type NumberingExpiringEventDataDocumentEnum = typeof NumberingExpiringEventDataDocumentEnum[keyof typeof NumberingExpiringEventDataDocumentEnum];
 
 
 /**

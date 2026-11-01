@@ -124,15 +124,16 @@ export interface EquivalentItem {
     mandator?: ItemMandator;
 }
 
+
 /**
-* @export
-* @enum {string}
-*/
-export enum EquivalentItemIncomeEnum {
-    Own = 'own',
-    Collected = 'collected',
-    ThirdParty = 'third_party'
-}
+ * @export
+ */
+export const EquivalentItemIncomeEnum = {
+    Own: 'own',
+    Collected: 'collected',
+    ThirdParty: 'third_party',
+} as const;
+export type EquivalentItemIncomeEnum = typeof EquivalentItemIncomeEnum[keyof typeof EquivalentItemIncomeEnum];
 
 
 /**

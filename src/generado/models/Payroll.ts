@@ -223,50 +223,55 @@ export interface Payroll {
     updated_at?: string | null;
 }
 
+
 /**
-* @export
-* @enum {string}
-*/
-export enum PayrollObjectEnum {
-    Payroll = 'payroll'
-}
+ * @export
+ */
+export const PayrollObjectEnum = {
+    Payroll: 'payroll',
+} as const;
+export type PayrollObjectEnum = typeof PayrollObjectEnum[keyof typeof PayrollObjectEnum];
+
 /**
-* @export
-* @enum {string}
-*/
-export enum PayrollEnvironmentEnum {
-    Test = 'test',
-    Live = 'live'
-}
+ * @export
+ */
+export const PayrollEnvironmentEnum = {
+    Test: 'test',
+    Live: 'live',
+} as const;
+export type PayrollEnvironmentEnum = typeof PayrollEnvironmentEnum[keyof typeof PayrollEnvironmentEnum];
+
 /**
-* @export
-* @enum {string}
-*/
-export enum PayrollStatusEnum {
-    Pending = 'pending',
-    Sending = 'sending',
-    Validating = 'validating',
-    Accepted = 'accepted',
-    Rejected = 'rejected',
-    Error = 'error',
-    Processing = 'processing'
-}
+ * @export
+ */
+export const PayrollStatusEnum = {
+    Pending: 'pending',
+    Sending: 'sending',
+    Validating: 'validating',
+    Accepted: 'accepted',
+    Rejected: 'rejected',
+    Error: 'error',
+    Processing: 'processing',
+} as const;
+export type PayrollStatusEnum = typeof PayrollStatusEnum[keyof typeof PayrollStatusEnum];
+
 /**
-* @export
-* @enum {string}
-*/
-export enum PayrollOriginEnum {
-    Api = 'api',
-    App = 'app'
-}
+ * @export
+ */
+export const PayrollOriginEnum = {
+    Api: 'api',
+    App: 'app',
+} as const;
+export type PayrollOriginEnum = typeof PayrollOriginEnum[keyof typeof PayrollOriginEnum];
+
 /**
-* @export
-* @enum {string}
-*/
-export enum PayrollSubmissionEnum {
-    Sync = 'sync',
-    TestSet = 'test_set'
-}
+ * @export
+ */
+export const PayrollSubmissionEnum = {
+    Sync: 'sync',
+    TestSet: 'test_set',
+} as const;
+export type PayrollSubmissionEnum = typeof PayrollSubmissionEnum[keyof typeof PayrollSubmissionEnum];
 
 
 /**

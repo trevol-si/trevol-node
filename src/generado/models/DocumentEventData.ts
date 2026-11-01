@@ -114,44 +114,48 @@ export interface DocumentEventData {
     error?: EventError;
 }
 
+
 /**
-* @export
-* @enum {string}
-*/
-export enum DocumentEventDataObjectEnum {
-    Invoice = 'invoice',
-    CreditNote = 'credit_note',
-    DebitNote = 'debit_note'
-}
+ * @export
+ */
+export const DocumentEventDataObjectEnum = {
+    Invoice: 'invoice',
+    CreditNote: 'credit_note',
+    DebitNote: 'debit_note',
+} as const;
+export type DocumentEventDataObjectEnum = typeof DocumentEventDataObjectEnum[keyof typeof DocumentEventDataObjectEnum];
+
 /**
-* @export
-* @enum {string}
-*/
-export enum DocumentEventDataStatusEnum {
-    Pending = 'pending',
-    Sending = 'sending',
-    Accepted = 'accepted',
-    Rejected = 'rejected',
-    Error = 'error',
-    Contingency = 'contingency'
-}
+ * @export
+ */
+export const DocumentEventDataStatusEnum = {
+    Pending: 'pending',
+    Sending: 'sending',
+    Accepted: 'accepted',
+    Rejected: 'rejected',
+    Error: 'error',
+    Contingency: 'contingency',
+} as const;
+export type DocumentEventDataStatusEnum = typeof DocumentEventDataStatusEnum[keyof typeof DocumentEventDataStatusEnum];
+
 /**
-* @export
-* @enum {string}
-*/
-export enum DocumentEventDataEnvironmentEnum {
-    Test = 'test',
-    Live = 'live'
-}
+ * @export
+ */
+export const DocumentEventDataEnvironmentEnum = {
+    Test: 'test',
+    Live: 'live',
+} as const;
+export type DocumentEventDataEnvironmentEnum = typeof DocumentEventDataEnvironmentEnum[keyof typeof DocumentEventDataEnvironmentEnum];
+
 /**
-* @export
-* @enum {string}
-*/
-export enum DocumentEventDataOriginEnum {
-    Api = 'api',
-    App = 'app',
-    Contapyme = 'contapyme'
-}
+ * @export
+ */
+export const DocumentEventDataOriginEnum = {
+    Api: 'api',
+    App: 'app',
+    Contapyme: 'contapyme',
+} as const;
+export type DocumentEventDataOriginEnum = typeof DocumentEventDataOriginEnum[keyof typeof DocumentEventDataOriginEnum];
 
 
 /**

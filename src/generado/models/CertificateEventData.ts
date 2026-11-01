@@ -33,13 +33,14 @@ export interface CertificateEventData {
     days_left?: number;
 }
 
+
 /**
-* @export
-* @enum {string}
-*/
-export enum CertificateEventDataObjectEnum {
-    Certificate = 'certificate'
-}
+ * @export
+ */
+export const CertificateEventDataObjectEnum = {
+    Certificate: 'certificate',
+} as const;
+export type CertificateEventDataObjectEnum = typeof CertificateEventDataObjectEnum[keyof typeof CertificateEventDataObjectEnum];
 
 
 /**

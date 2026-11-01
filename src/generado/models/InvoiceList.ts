@@ -45,13 +45,14 @@ export interface InvoiceList {
     next_cursor?: string | null;
 }
 
+
 /**
-* @export
-* @enum {string}
-*/
-export enum InvoiceListObjectEnum {
-    List = 'list'
-}
+ * @export
+ */
+export const InvoiceListObjectEnum = {
+    List: 'list',
+} as const;
+export type InvoiceListObjectEnum = typeof InvoiceListObjectEnum[keyof typeof InvoiceListObjectEnum];
 
 
 /**

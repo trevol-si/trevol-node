@@ -45,13 +45,14 @@ export interface DebitNoteList {
     next_cursor?: string | null;
 }
 
+
 /**
-* @export
-* @enum {string}
-*/
-export enum DebitNoteListObjectEnum {
-    List = 'list'
-}
+ * @export
+ */
+export const DebitNoteListObjectEnum = {
+    List: 'list',
+} as const;
+export type DebitNoteListObjectEnum = typeof DebitNoteListObjectEnum[keyof typeof DebitNoteListObjectEnum];
 
 
 /**

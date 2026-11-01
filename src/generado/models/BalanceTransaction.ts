@@ -80,37 +80,40 @@ export interface BalanceTransaction {
     created_at?: string;
 }
 
+
 /**
-* @export
-* @enum {string}
-*/
-export enum BalanceTransactionObjectEnum {
-    BalanceTransaction = 'balance_transaction'
-}
+ * @export
+ */
+export const BalanceTransactionObjectEnum = {
+    BalanceTransaction: 'balance_transaction',
+} as const;
+export type BalanceTransactionObjectEnum = typeof BalanceTransactionObjectEnum[keyof typeof BalanceTransactionObjectEnum];
+
 /**
-* @export
-* @enum {string}
-*/
-export enum BalanceTransactionTypeEnum {
-    Document = 'document',
-    TopUp = 'top_up',
-    Bonus = 'bonus',
-    Adjustment = 'adjustment',
-    TopUpReversal = 'top_up_reversal',
-    LicenseFee = 'license_fee',
-    Expiration = 'expiration',
-    Other = 'other'
-}
+ * @export
+ */
+export const BalanceTransactionTypeEnum = {
+    Document: 'document',
+    TopUp: 'top_up',
+    Bonus: 'bonus',
+    Adjustment: 'adjustment',
+    TopUpReversal: 'top_up_reversal',
+    LicenseFee: 'license_fee',
+    Expiration: 'expiration',
+    Other: 'other',
+} as const;
+export type BalanceTransactionTypeEnum = typeof BalanceTransactionTypeEnum[keyof typeof BalanceTransactionTypeEnum];
+
 /**
-* @export
-* @enum {string}
-*/
-export enum BalanceTransactionStatusEnum {
-    Charged = 'charged',
-    Pending = 'pending',
-    Released = 'released',
-    Completed = 'completed'
-}
+ * @export
+ */
+export const BalanceTransactionStatusEnum = {
+    Charged: 'charged',
+    Pending: 'pending',
+    Released: 'released',
+    Completed: 'completed',
+} as const;
+export type BalanceTransactionStatusEnum = typeof BalanceTransactionStatusEnum[keyof typeof BalanceTransactionStatusEnum];
 
 
 /**

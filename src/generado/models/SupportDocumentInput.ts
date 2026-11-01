@@ -122,14 +122,15 @@ export interface SupportDocumentInput {
     numbering?: Numbering;
 }
 
+
 /**
-* @export
-* @enum {string}
-*/
-export enum SupportDocumentInputTransmissionEnum {
-    PerOperation = 'per_operation',
-    Weekly = 'weekly'
-}
+ * @export
+ */
+export const SupportDocumentInputTransmissionEnum = {
+    PerOperation: 'per_operation',
+    Weekly: 'weekly',
+} as const;
+export type SupportDocumentInputTransmissionEnum = typeof SupportDocumentInputTransmissionEnum[keyof typeof SupportDocumentInputTransmissionEnum];
 
 
 /**

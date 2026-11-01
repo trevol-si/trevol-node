@@ -33,22 +33,24 @@ export interface CompanyKey {
     api_version?: CompanyKeyApiVersionEnum;
 }
 
+
 /**
-* @export
-* @enum {string}
-*/
-export enum CompanyKeyPermissionsEnum {
-    Write = 'write',
-    Read = 'read'
-}
+ * @export
+ */
+export const CompanyKeyPermissionsEnum = {
+    Write: 'write',
+    Read: 'read',
+} as const;
+export type CompanyKeyPermissionsEnum = typeof CompanyKeyPermissionsEnum[keyof typeof CompanyKeyPermissionsEnum];
+
 /**
-* @export
-* @enum {string}
-*/
-export enum CompanyKeyApiVersionEnum {
-    _20261021 = '2026-10-21',
-    _20261022 = '2026-10-22'
-}
+ * @export
+ */
+export const CompanyKeyApiVersionEnum = {
+    _20261021: '2026-10-21',
+    _20261022: '2026-10-22',
+} as const;
+export type CompanyKeyApiVersionEnum = typeof CompanyKeyApiVersionEnum[keyof typeof CompanyKeyApiVersionEnum];
 
 
 /**

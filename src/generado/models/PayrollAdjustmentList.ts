@@ -45,13 +45,14 @@ export interface PayrollAdjustmentList {
     next_cursor?: string | null;
 }
 
+
 /**
-* @export
-* @enum {string}
-*/
-export enum PayrollAdjustmentListObjectEnum {
-    List = 'list'
-}
+ * @export
+ */
+export const PayrollAdjustmentListObjectEnum = {
+    List: 'list',
+} as const;
+export type PayrollAdjustmentListObjectEnum = typeof PayrollAdjustmentListObjectEnum[keyof typeof PayrollAdjustmentListObjectEnum];
 
 
 /**

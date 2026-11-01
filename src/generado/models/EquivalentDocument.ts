@@ -255,60 +255,65 @@ export interface EquivalentDocument {
     contingency?: EquivalentDocumentContingency | null;
 }
 
+
 /**
-* @export
-* @enum {string}
-*/
-export enum EquivalentDocumentObjectEnum {
-    EquivalentDocument = 'equivalent_document'
-}
+ * @export
+ */
+export const EquivalentDocumentObjectEnum = {
+    EquivalentDocument: 'equivalent_document',
+} as const;
+export type EquivalentDocumentObjectEnum = typeof EquivalentDocumentObjectEnum[keyof typeof EquivalentDocumentObjectEnum];
+
 /**
-* @export
-* @enum {string}
-*/
-export enum EquivalentDocumentEnvironmentEnum {
-    Test = 'test',
-    Live = 'live'
-}
+ * @export
+ */
+export const EquivalentDocumentEnvironmentEnum = {
+    Test: 'test',
+    Live: 'live',
+} as const;
+export type EquivalentDocumentEnvironmentEnum = typeof EquivalentDocumentEnvironmentEnum[keyof typeof EquivalentDocumentEnvironmentEnum];
+
 /**
-* @export
-* @enum {string}
-*/
-export enum EquivalentDocumentStatusEnum {
-    Pending = 'pending',
-    Sending = 'sending',
-    Accepted = 'accepted',
-    Rejected = 'rejected',
-    Error = 'error',
-    Contingency = 'contingency',
-    Processing = 'processing',
-    Validating = 'validating'
-}
+ * @export
+ */
+export const EquivalentDocumentStatusEnum = {
+    Pending: 'pending',
+    Sending: 'sending',
+    Accepted: 'accepted',
+    Rejected: 'rejected',
+    Error: 'error',
+    Contingency: 'contingency',
+    Processing: 'processing',
+    Validating: 'validating',
+} as const;
+export type EquivalentDocumentStatusEnum = typeof EquivalentDocumentStatusEnum[keyof typeof EquivalentDocumentStatusEnum];
+
 /**
-* @export
-* @enum {string}
-*/
-export enum EquivalentDocumentOriginEnum {
-    Api = 'api',
-    App = 'app',
-    Contapyme = 'contapyme'
-}
+ * @export
+ */
+export const EquivalentDocumentOriginEnum = {
+    Api: 'api',
+    App: 'app',
+    Contapyme: 'contapyme',
+} as const;
+export type EquivalentDocumentOriginEnum = typeof EquivalentDocumentOriginEnum[keyof typeof EquivalentDocumentOriginEnum];
+
 /**
-* @export
-* @enum {string}
-*/
-export enum EquivalentDocumentDocumentTypeEnum {
-    _20 = '20',
-    _25 = '25',
-    _27 = '27',
-    _30 = '30',
-    _35 = '35',
-    _40 = '40',
-    _45 = '45',
-    _50 = '50',
-    _55 = '55',
-    _60 = '60'
-}
+ * @export
+ */
+export const EquivalentDocumentDocumentTypeEnum = {
+    _20: '20',
+    _25: '25',
+    _27: '27',
+    _30: '30',
+    _35: '35',
+    _40: '40',
+    _45: '45',
+    _50: '50',
+    _55: '55',
+    _60: '60',
+} as const;
+export type EquivalentDocumentDocumentTypeEnum = typeof EquivalentDocumentDocumentTypeEnum[keyof typeof EquivalentDocumentDocumentTypeEnum];
 
 
 /**

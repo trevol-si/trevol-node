@@ -240,12 +240,12 @@ export class BalanceApi extends runtime.BaseAPI {
 }
 
 /**
-  * @export
-  * @enum {string}
-  */
-export enum ListBalanceTransactionsTypeEnum {
-    All = 'all',
-    Documents = 'documents',
-    Funding = 'funding',
-    TopUps = 'top_ups',
-}
+ * @export
+ */
+export const ListBalanceTransactionsTypeEnum = {
+    All: 'all',
+    Documents: 'documents',
+    Funding: 'funding',
+    TopUps: 'top_ups',
+} as const;
+export type ListBalanceTransactionsTypeEnum = typeof ListBalanceTransactionsTypeEnum[keyof typeof ListBalanceTransactionsTypeEnum];

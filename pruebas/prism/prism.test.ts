@@ -100,7 +100,7 @@ describe.skipIf(!URL_PRISM)('contra Prism (servidor simulado desde docs/api/open
 	});
 
 	it('el SDK reintenta contra Prism sin cambiar la clave: dos intentos, la misma Idempotency-Key', async () => {
-		const conReintentos = clientePrism({ maxReintentos: 1, internos: { sleep: async () => {} } });
+		const conReintentos = clientePrism({ maxRetries: 1, internos: { sleep: async () => {} } });
 		const e = await conReintentos.invoices
 			.createInvoice({ invoiceInput: ejemplo('createInvoice'), idempotencyKey: 'PRUEBA-PRISM-1' }, prefer('code=503'))
 			.catch((x) => x);

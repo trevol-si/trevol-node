@@ -81,14 +81,15 @@ export interface Seller {
     region?: string;
 }
 
+
 /**
-* @export
-* @enum {string}
-*/
-export enum SellerPersonTypeEnum {
-    Legal = 'legal',
-    Natural = 'natural'
-}
+ * @export
+ */
+export const SellerPersonTypeEnum = {
+    Legal: 'legal',
+    Natural: 'natural',
+} as const;
+export type SellerPersonTypeEnum = typeof SellerPersonTypeEnum[keyof typeof SellerPersonTypeEnum];
 
 
 /**

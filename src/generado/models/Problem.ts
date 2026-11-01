@@ -108,58 +108,60 @@ export interface Problem {
     rules?: Array<object>;
 }
 
+
 /**
-* @export
-* @enum {string}
-*/
-export enum ProblemCodeEnum {
-    AuthenticationRequired = 'authentication_required',
-    CertificateProblem = 'certificate_problem',
-    CompanyNotEnabled = 'company_not_enabled',
-    DianRejected = 'dian_rejected',
-    DianUnavailable = 'dian_unavailable',
-    DuplicateDocument = 'duplicate_document',
-    ExternalIdInUse = 'external_id_in_use',
-    FileUnavailable = 'file_unavailable',
-    IdempotencyKeyRequired = 'idempotency_key_required',
-    IdempotencyKeyReused = 'idempotency_key_reused',
-    InsufficientBalance = 'insufficient_balance',
-    InternalError = 'internal_error',
-    InvalidApiKey = 'invalid_api_key',
-    InvalidJson = 'invalid_json',
-    InvalidRequest = 'invalid_request',
-    InvalidState = 'invalid_state',
-    MethodNotAllowed = 'method_not_allowed',
-    NotFound = 'not_found',
-    NumberingUnavailable = 'numbering_unavailable',
-    PermissionDenied = 'permission_denied',
-    PreviousEventPending = 'previous_event_pending',
-    RateLimited = 'rate_limited',
-    RequestInProgress = 'request_in_progress',
-    TacitAcceptanceNotDue = 'tacit_acceptance_not_due',
-    TopUpAboveMaximum = 'top_up_above_maximum',
-    TopUpBelowMinimum = 'top_up_below_minimum',
-    TopUpsUnavailable = 'top_ups_unavailable',
-    UnsupportedVersion = 'unsupported_version',
-    ValidationError = 'validation_error',
-    WebhookLimitReached = 'webhook_limit_reached'
-}
+ * @export
+ */
+export const ProblemCodeEnum = {
+    AuthenticationRequired: 'authentication_required',
+    CertificateProblem: 'certificate_problem',
+    CompanyNotEnabled: 'company_not_enabled',
+    DianRejected: 'dian_rejected',
+    DianUnavailable: 'dian_unavailable',
+    DuplicateDocument: 'duplicate_document',
+    ExternalIdInUse: 'external_id_in_use',
+    FileUnavailable: 'file_unavailable',
+    IdempotencyKeyRequired: 'idempotency_key_required',
+    IdempotencyKeyReused: 'idempotency_key_reused',
+    InsufficientBalance: 'insufficient_balance',
+    InternalError: 'internal_error',
+    InvalidApiKey: 'invalid_api_key',
+    InvalidJson: 'invalid_json',
+    InvalidRequest: 'invalid_request',
+    InvalidState: 'invalid_state',
+    MethodNotAllowed: 'method_not_allowed',
+    NotFound: 'not_found',
+    NumberingUnavailable: 'numbering_unavailable',
+    PermissionDenied: 'permission_denied',
+    PreviousEventPending: 'previous_event_pending',
+    RateLimited: 'rate_limited',
+    RequestInProgress: 'request_in_progress',
+    TacitAcceptanceNotDue: 'tacit_acceptance_not_due',
+    TopUpAboveMaximum: 'top_up_above_maximum',
+    TopUpBelowMinimum: 'top_up_below_minimum',
+    TopUpsUnavailable: 'top_ups_unavailable',
+    UnsupportedVersion: 'unsupported_version',
+    ValidationError: 'validation_error',
+    WebhookLimitReached: 'webhook_limit_reached',
+} as const;
+export type ProblemCodeEnum = typeof ProblemCodeEnum[keyof typeof ProblemCodeEnum];
+
 /**
-* @export
-* @enum {string}
-*/
-export enum ProblemReasonEnum {
-    MissingLegalRepresentative = 'missing_legal_representative',
-    MissingPin = 'missing_pin',
-    MissingSoftware = 'missing_software',
-    MissingTechnicalKey = 'missing_technical_key',
-    NoResolution = 'no_resolution',
-    PayrollNotEnabled = 'payroll_not_enabled',
-    PrefixInUse = 'prefix_in_use',
-    ResolutionExhausted = 'resolution_exhausted',
-    ResolutionExpired = 'resolution_expired',
-    ResolutionNotYetValid = 'resolution_not_yet_valid'
-}
+ * @export
+ */
+export const ProblemReasonEnum = {
+    MissingLegalRepresentative: 'missing_legal_representative',
+    MissingPin: 'missing_pin',
+    MissingSoftware: 'missing_software',
+    MissingTechnicalKey: 'missing_technical_key',
+    NoResolution: 'no_resolution',
+    PayrollNotEnabled: 'payroll_not_enabled',
+    PrefixInUse: 'prefix_in_use',
+    ResolutionExhausted: 'resolution_exhausted',
+    ResolutionExpired: 'resolution_expired',
+    ResolutionNotYetValid: 'resolution_not_yet_valid',
+} as const;
+export type ProblemReasonEnum = typeof ProblemReasonEnum[keyof typeof ProblemReasonEnum];
 
 
 /**

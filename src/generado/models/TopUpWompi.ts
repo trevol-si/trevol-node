@@ -45,13 +45,14 @@ export interface TopUpWompi {
     expiration_time?: string;
 }
 
+
 /**
-* @export
-* @enum {string}
-*/
-export enum TopUpWompiCurrencyEnum {
-    Cop = 'COP'
-}
+ * @export
+ */
+export const TopUpWompiCurrencyEnum = {
+    Cop: 'COP',
+} as const;
+export type TopUpWompiCurrencyEnum = typeof TopUpWompiCurrencyEnum[keyof typeof TopUpWompiCurrencyEnum];
 
 
 /**

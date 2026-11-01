@@ -29,13 +29,14 @@ export interface TestEventData {
     message?: string;
 }
 
+
 /**
-* @export
-* @enum {string}
-*/
-export enum TestEventDataObjectEnum {
-    Test = 'test'
-}
+ * @export
+ */
+export const TestEventDataObjectEnum = {
+    Test: 'test',
+} as const;
+export type TestEventDataObjectEnum = typeof TestEventDataObjectEnum[keyof typeof TestEventDataObjectEnum];
 
 
 /**

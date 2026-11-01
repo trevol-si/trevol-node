@@ -45,14 +45,15 @@ export interface AllowanceCharge {
     base?: string;
 }
 
+
 /**
-* @export
-* @enum {string}
-*/
-export enum AllowanceChargeTypeEnum {
-    Discount = 'discount',
-    Charge = 'charge'
-}
+ * @export
+ */
+export const AllowanceChargeTypeEnum = {
+    Discount: 'discount',
+    Charge: 'charge',
+} as const;
+export type AllowanceChargeTypeEnum = typeof AllowanceChargeTypeEnum[keyof typeof AllowanceChargeTypeEnum];
 
 
 /**

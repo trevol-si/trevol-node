@@ -196,42 +196,46 @@ export interface SupportDocumentAdjustment {
     support_document?: SupportDocumentReference;
 }
 
+
 /**
-* @export
-* @enum {string}
-*/
-export enum SupportDocumentAdjustmentObjectEnum {
-    SupportDocumentAdjustment = 'support_document_adjustment'
-}
+ * @export
+ */
+export const SupportDocumentAdjustmentObjectEnum = {
+    SupportDocumentAdjustment: 'support_document_adjustment',
+} as const;
+export type SupportDocumentAdjustmentObjectEnum = typeof SupportDocumentAdjustmentObjectEnum[keyof typeof SupportDocumentAdjustmentObjectEnum];
+
 /**
-* @export
-* @enum {string}
-*/
-export enum SupportDocumentAdjustmentEnvironmentEnum {
-    Test = 'test',
-    Live = 'live'
-}
+ * @export
+ */
+export const SupportDocumentAdjustmentEnvironmentEnum = {
+    Test: 'test',
+    Live: 'live',
+} as const;
+export type SupportDocumentAdjustmentEnvironmentEnum = typeof SupportDocumentAdjustmentEnvironmentEnum[keyof typeof SupportDocumentAdjustmentEnvironmentEnum];
+
 /**
-* @export
-* @enum {string}
-*/
-export enum SupportDocumentAdjustmentStatusEnum {
-    Pending = 'pending',
-    Sending = 'sending',
-    Accepted = 'accepted',
-    Rejected = 'rejected',
-    Error = 'error',
-    Processing = 'processing'
-}
+ * @export
+ */
+export const SupportDocumentAdjustmentStatusEnum = {
+    Pending: 'pending',
+    Sending: 'sending',
+    Accepted: 'accepted',
+    Rejected: 'rejected',
+    Error: 'error',
+    Processing: 'processing',
+} as const;
+export type SupportDocumentAdjustmentStatusEnum = typeof SupportDocumentAdjustmentStatusEnum[keyof typeof SupportDocumentAdjustmentStatusEnum];
+
 /**
-* @export
-* @enum {string}
-*/
-export enum SupportDocumentAdjustmentOriginEnum {
-    Api = 'api',
-    App = 'app',
-    Contapyme = 'contapyme'
-}
+ * @export
+ */
+export const SupportDocumentAdjustmentOriginEnum = {
+    Api: 'api',
+    App: 'app',
+    Contapyme: 'contapyme',
+} as const;
+export type SupportDocumentAdjustmentOriginEnum = typeof SupportDocumentAdjustmentOriginEnum[keyof typeof SupportDocumentAdjustmentOriginEnum];
 
 
 /**

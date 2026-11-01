@@ -45,22 +45,23 @@ export interface EquivalentDocumentReference {
     total?: string;
 }
 
+
 /**
-* @export
-* @enum {string}
-*/
-export enum EquivalentDocumentReferenceDocumentTypeEnum {
-    _20 = '20',
-    _25 = '25',
-    _27 = '27',
-    _30 = '30',
-    _35 = '35',
-    _40 = '40',
-    _45 = '45',
-    _50 = '50',
-    _55 = '55',
-    _60 = '60'
-}
+ * @export
+ */
+export const EquivalentDocumentReferenceDocumentTypeEnum = {
+    _20: '20',
+    _25: '25',
+    _27: '27',
+    _30: '30',
+    _35: '35',
+    _40: '40',
+    _45: '45',
+    _50: '50',
+    _55: '55',
+    _60: '60',
+} as const;
+export type EquivalentDocumentReferenceDocumentTypeEnum = typeof EquivalentDocumentReferenceDocumentTypeEnum[keyof typeof EquivalentDocumentReferenceDocumentTypeEnum];
 
 
 /**

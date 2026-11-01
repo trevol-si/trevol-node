@@ -64,22 +64,24 @@ export interface RadianEventInput {
     provider?: RadianEventInputProviderEnum;
 }
 
+
 /**
-* @export
-* @enum {string}
-*/
-export enum RadianEventInputSoftwareEnum {
-    Own = 'own',
-    DianFree = 'dian_free'
-}
+ * @export
+ */
+export const RadianEventInputSoftwareEnum = {
+    Own: 'own',
+    DianFree: 'dian_free',
+} as const;
+export type RadianEventInputSoftwareEnum = typeof RadianEventInputSoftwareEnum[keyof typeof RadianEventInputSoftwareEnum];
+
 /**
-* @export
-* @enum {string}
-*/
-export enum RadianEventInputProviderEnum {
-    Dian = 'dian',
-    Company = 'company'
-}
+ * @export
+ */
+export const RadianEventInputProviderEnum = {
+    Dian: 'dian',
+    Company: 'company',
+} as const;
+export type RadianEventInputProviderEnum = typeof RadianEventInputProviderEnum[keyof typeof RadianEventInputProviderEnum];
 
 
 /**

@@ -45,13 +45,14 @@ export interface Acquirer {
     email?: string | null;
 }
 
+
 /**
-* @export
-* @enum {string}
-*/
-export enum AcquirerObjectEnum {
-    Acquirer = 'acquirer'
-}
+ * @export
+ */
+export const AcquirerObjectEnum = {
+    Acquirer: 'acquirer',
+} as const;
+export type AcquirerObjectEnum = typeof AcquirerObjectEnum[keyof typeof AcquirerObjectEnum];
 
 
 /**

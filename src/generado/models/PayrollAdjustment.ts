@@ -227,58 +227,64 @@ export interface PayrollAdjustment {
     updated_at?: string | null;
 }
 
+
 /**
-* @export
-* @enum {string}
-*/
-export enum PayrollAdjustmentObjectEnum {
-    PayrollAdjustment = 'payroll_adjustment'
-}
+ * @export
+ */
+export const PayrollAdjustmentObjectEnum = {
+    PayrollAdjustment: 'payroll_adjustment',
+} as const;
+export type PayrollAdjustmentObjectEnum = typeof PayrollAdjustmentObjectEnum[keyof typeof PayrollAdjustmentObjectEnum];
+
 /**
-* @export
-* @enum {string}
-*/
-export enum PayrollAdjustmentEnvironmentEnum {
-    Test = 'test',
-    Live = 'live'
-}
+ * @export
+ */
+export const PayrollAdjustmentEnvironmentEnum = {
+    Test: 'test',
+    Live: 'live',
+} as const;
+export type PayrollAdjustmentEnvironmentEnum = typeof PayrollAdjustmentEnvironmentEnum[keyof typeof PayrollAdjustmentEnvironmentEnum];
+
 /**
-* @export
-* @enum {string}
-*/
-export enum PayrollAdjustmentStatusEnum {
-    Pending = 'pending',
-    Sending = 'sending',
-    Validating = 'validating',
-    Accepted = 'accepted',
-    Rejected = 'rejected',
-    Error = 'error',
-    Processing = 'processing'
-}
+ * @export
+ */
+export const PayrollAdjustmentStatusEnum = {
+    Pending: 'pending',
+    Sending: 'sending',
+    Validating: 'validating',
+    Accepted: 'accepted',
+    Rejected: 'rejected',
+    Error: 'error',
+    Processing: 'processing',
+} as const;
+export type PayrollAdjustmentStatusEnum = typeof PayrollAdjustmentStatusEnum[keyof typeof PayrollAdjustmentStatusEnum];
+
 /**
-* @export
-* @enum {string}
-*/
-export enum PayrollAdjustmentOriginEnum {
-    Api = 'api',
-    App = 'app'
-}
+ * @export
+ */
+export const PayrollAdjustmentOriginEnum = {
+    Api: 'api',
+    App: 'app',
+} as const;
+export type PayrollAdjustmentOriginEnum = typeof PayrollAdjustmentOriginEnum[keyof typeof PayrollAdjustmentOriginEnum];
+
 /**
-* @export
-* @enum {string}
-*/
-export enum PayrollAdjustmentSubmissionEnum {
-    Sync = 'sync',
-    TestSet = 'test_set'
-}
+ * @export
+ */
+export const PayrollAdjustmentSubmissionEnum = {
+    Sync: 'sync',
+    TestSet: 'test_set',
+} as const;
+export type PayrollAdjustmentSubmissionEnum = typeof PayrollAdjustmentSubmissionEnum[keyof typeof PayrollAdjustmentSubmissionEnum];
+
 /**
-* @export
-* @enum {string}
-*/
-export enum PayrollAdjustmentTypeEnum {
-    Replace = 'replace',
-    Delete = 'delete'
-}
+ * @export
+ */
+export const PayrollAdjustmentTypeEnum = {
+    Replace: 'replace',
+    Delete: 'delete',
+} as const;
+export type PayrollAdjustmentTypeEnum = typeof PayrollAdjustmentTypeEnum[keyof typeof PayrollAdjustmentTypeEnum];
 
 
 /**

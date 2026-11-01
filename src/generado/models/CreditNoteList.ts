@@ -45,13 +45,14 @@ export interface CreditNoteList {
     next_cursor?: string | null;
 }
 
+
 /**
-* @export
-* @enum {string}
-*/
-export enum CreditNoteListObjectEnum {
-    List = 'list'
-}
+ * @export
+ */
+export const CreditNoteListObjectEnum = {
+    List: 'list',
+} as const;
+export type CreditNoteListObjectEnum = typeof CreditNoteListObjectEnum[keyof typeof CreditNoteListObjectEnum];
 
 
 /**

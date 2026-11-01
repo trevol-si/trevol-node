@@ -215,45 +215,49 @@ export interface Document {
     updated_at?: string | null;
 }
 
+
 /**
-* @export
-* @enum {string}
-*/
-export enum DocumentObjectEnum {
-    Invoice = 'invoice',
-    CreditNote = 'credit_note',
-    DebitNote = 'debit_note'
-}
+ * @export
+ */
+export const DocumentObjectEnum = {
+    Invoice: 'invoice',
+    CreditNote: 'credit_note',
+    DebitNote: 'debit_note',
+} as const;
+export type DocumentObjectEnum = typeof DocumentObjectEnum[keyof typeof DocumentObjectEnum];
+
 /**
-* @export
-* @enum {string}
-*/
-export enum DocumentEnvironmentEnum {
-    Test = 'test',
-    Live = 'live'
-}
+ * @export
+ */
+export const DocumentEnvironmentEnum = {
+    Test: 'test',
+    Live: 'live',
+} as const;
+export type DocumentEnvironmentEnum = typeof DocumentEnvironmentEnum[keyof typeof DocumentEnvironmentEnum];
+
 /**
-* @export
-* @enum {string}
-*/
-export enum DocumentStatusEnum {
-    Pending = 'pending',
-    Sending = 'sending',
-    Accepted = 'accepted',
-    Rejected = 'rejected',
-    Error = 'error',
-    Contingency = 'contingency',
-    Processing = 'processing'
-}
+ * @export
+ */
+export const DocumentStatusEnum = {
+    Pending: 'pending',
+    Sending: 'sending',
+    Accepted: 'accepted',
+    Rejected: 'rejected',
+    Error: 'error',
+    Contingency: 'contingency',
+    Processing: 'processing',
+} as const;
+export type DocumentStatusEnum = typeof DocumentStatusEnum[keyof typeof DocumentStatusEnum];
+
 /**
-* @export
-* @enum {string}
-*/
-export enum DocumentOriginEnum {
-    Api = 'api',
-    App = 'app',
-    Contapyme = 'contapyme'
-}
+ * @export
+ */
+export const DocumentOriginEnum = {
+    Api: 'api',
+    App: 'app',
+    Contapyme: 'contapyme',
+} as const;
+export type DocumentOriginEnum = typeof DocumentOriginEnum[keyof typeof DocumentOriginEnum];
 
 
 /**

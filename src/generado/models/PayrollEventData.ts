@@ -103,58 +103,64 @@ export interface PayrollEventData {
     error?: EventDocumentError;
 }
 
+
 /**
-* @export
-* @enum {string}
-*/
-export enum PayrollEventDataObjectEnum {
-    Payroll = 'payroll',
-    PayrollAdjustment = 'payroll_adjustment'
-}
+ * @export
+ */
+export const PayrollEventDataObjectEnum = {
+    Payroll: 'payroll',
+    PayrollAdjustment: 'payroll_adjustment',
+} as const;
+export type PayrollEventDataObjectEnum = typeof PayrollEventDataObjectEnum[keyof typeof PayrollEventDataObjectEnum];
+
 /**
-* @export
-* @enum {string}
-*/
-export enum PayrollEventDataStatusEnum {
-    Pending = 'pending',
-    Sending = 'sending',
-    Validating = 'validating',
-    Accepted = 'accepted',
-    Rejected = 'rejected',
-    Error = 'error'
-}
+ * @export
+ */
+export const PayrollEventDataStatusEnum = {
+    Pending: 'pending',
+    Sending: 'sending',
+    Validating: 'validating',
+    Accepted: 'accepted',
+    Rejected: 'rejected',
+    Error: 'error',
+} as const;
+export type PayrollEventDataStatusEnum = typeof PayrollEventDataStatusEnum[keyof typeof PayrollEventDataStatusEnum];
+
 /**
-* @export
-* @enum {string}
-*/
-export enum PayrollEventDataEnvironmentEnum {
-    Test = 'test',
-    Live = 'live'
-}
+ * @export
+ */
+export const PayrollEventDataEnvironmentEnum = {
+    Test: 'test',
+    Live: 'live',
+} as const;
+export type PayrollEventDataEnvironmentEnum = typeof PayrollEventDataEnvironmentEnum[keyof typeof PayrollEventDataEnvironmentEnum];
+
 /**
-* @export
-* @enum {string}
-*/
-export enum PayrollEventDataOriginEnum {
-    Api = 'api',
-    App = 'app'
-}
+ * @export
+ */
+export const PayrollEventDataOriginEnum = {
+    Api: 'api',
+    App: 'app',
+} as const;
+export type PayrollEventDataOriginEnum = typeof PayrollEventDataOriginEnum[keyof typeof PayrollEventDataOriginEnum];
+
 /**
-* @export
-* @enum {string}
-*/
-export enum PayrollEventDataTypeEnum {
-    Replace = 'replace',
-    Delete = 'delete'
-}
+ * @export
+ */
+export const PayrollEventDataTypeEnum = {
+    Replace: 'replace',
+    Delete: 'delete',
+} as const;
+export type PayrollEventDataTypeEnum = typeof PayrollEventDataTypeEnum[keyof typeof PayrollEventDataTypeEnum];
+
 /**
-* @export
-* @enum {string}
-*/
-export enum PayrollEventDataSubmissionEnum {
-    Sync = 'sync',
-    TestSet = 'test_set'
-}
+ * @export
+ */
+export const PayrollEventDataSubmissionEnum = {
+    Sync: 'sync',
+    TestSet: 'test_set',
+} as const;
+export type PayrollEventDataSubmissionEnum = typeof PayrollEventDataSubmissionEnum[keyof typeof PayrollEventDataSubmissionEnum];
 
 
 /**

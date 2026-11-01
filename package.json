@@ -20,10 +20,10 @@
 	"scripts": {
 		"build": "tsc -p tsconfig.build.json",
 		"typecheck": "tsc -p tsconfig.json --noEmit",
-		"test": "vitest run --exclude pruebas/prism --exclude pruebas/fragmentos",
-		"test:prism": "../herramientas/prism.sh -- vitest run pruebas/prism pruebas/fragmentos",
-		"test:todo": "npm run typecheck && npm test && npm run test:prism",
-		"humo": "node --experimental-strip-types pruebas/humo/humo.ts"
+		"test": "vitest run",
+		"test:prism": "vitest run pruebas/prism pruebas/fragmentos",
+		"test:todo": "npm run typecheck && npm test",
+		"humo": "npm run build && node pruebas/humo/humo.mjs"
 	},
 	"dependencies": {
 		"standardwebhooks": "1.1.1"

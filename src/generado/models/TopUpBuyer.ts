@@ -57,24 +57,26 @@ export interface TopUpBuyer {
     municipality_code?: string;
 }
 
+
 /**
-* @export
-* @enum {string}
-*/
-export enum TopUpBuyerDocumentTypeEnum {
-    _13 = '13',
-    _31 = '31',
-    _22 = '22',
-    _41 = '41'
-}
+ * @export
+ */
+export const TopUpBuyerDocumentTypeEnum = {
+    _13: '13',
+    _31: '31',
+    _22: '22',
+    _41: '41',
+} as const;
+export type TopUpBuyerDocumentTypeEnum = typeof TopUpBuyerDocumentTypeEnum[keyof typeof TopUpBuyerDocumentTypeEnum];
+
 /**
-* @export
-* @enum {string}
-*/
-export enum TopUpBuyerPersonTypeEnum {
-    Legal = 'legal',
-    Natural = 'natural'
-}
+ * @export
+ */
+export const TopUpBuyerPersonTypeEnum = {
+    Legal: 'legal',
+    Natural: 'natural',
+} as const;
+export type TopUpBuyerPersonTypeEnum = typeof TopUpBuyerPersonTypeEnum[keyof typeof TopUpBuyerPersonTypeEnum];
 
 
 /**

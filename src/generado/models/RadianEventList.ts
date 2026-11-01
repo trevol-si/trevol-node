@@ -45,13 +45,14 @@ export interface RadianEventList {
     next_cursor?: string | null;
 }
 
+
 /**
-* @export
-* @enum {string}
-*/
-export enum RadianEventListObjectEnum {
-    List = 'list'
-}
+ * @export
+ */
+export const RadianEventListObjectEnum = {
+    List: 'list',
+} as const;
+export type RadianEventListObjectEnum = typeof RadianEventListObjectEnum[keyof typeof RadianEventListObjectEnum];
 
 
 /**

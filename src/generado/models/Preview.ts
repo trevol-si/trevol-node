@@ -38,21 +38,23 @@ export interface Preview {
     totals?: { [key: string]: any; };
 }
 
+
 /**
-* @export
-* @enum {string}
-*/
-export enum PreviewObjectEnum {
-    Preview = 'preview'
-}
+ * @export
+ */
+export const PreviewObjectEnum = {
+    Preview: 'preview',
+} as const;
+export type PreviewObjectEnum = typeof PreviewObjectEnum[keyof typeof PreviewObjectEnum];
+
 /**
-* @export
-* @enum {string}
-*/
-export enum PreviewEnvironmentEnum {
-    Test = 'test',
-    Live = 'live'
-}
+ * @export
+ */
+export const PreviewEnvironmentEnum = {
+    Test: 'test',
+    Live: 'live',
+} as const;
+export type PreviewEnvironmentEnum = typeof PreviewEnvironmentEnum[keyof typeof PreviewEnvironmentEnum];
 
 
 /**

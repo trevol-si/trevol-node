@@ -45,13 +45,14 @@ export interface RequestList {
     next_cursor?: string | null;
 }
 
+
 /**
-* @export
-* @enum {string}
-*/
-export enum RequestListObjectEnum {
-    List = 'list'
-}
+ * @export
+ */
+export const RequestListObjectEnum = {
+    List: 'list',
+} as const;
+export type RequestListObjectEnum = typeof RequestListObjectEnum[keyof typeof RequestListObjectEnum];
 
 
 /**

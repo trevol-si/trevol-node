@@ -25,18 +25,19 @@ export interface EventDeliveryEmail {
     status?: EventDeliveryEmailStatusEnum;
 }
 
+
 /**
-* @export
-* @enum {string}
-*/
-export enum EventDeliveryEmailStatusEnum {
-    Pending = 'pending',
-    Sent = 'sent',
-    Failed = 'failed',
-    Skipped = 'skipped',
-    Bounced = 'bounced',
-    Complained = 'complained'
-}
+ * @export
+ */
+export const EventDeliveryEmailStatusEnum = {
+    Pending: 'pending',
+    Sent: 'sent',
+    Failed: 'failed',
+    Skipped: 'skipped',
+    Bounced: 'bounced',
+    Complained: 'complained',
+} as const;
+export type EventDeliveryEmailStatusEnum = typeof EventDeliveryEmailStatusEnum[keyof typeof EventDeliveryEmailStatusEnum];
 
 
 /**

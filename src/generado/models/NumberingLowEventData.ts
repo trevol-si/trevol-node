@@ -45,22 +45,24 @@ export interface NumberingLowEventData {
     to?: number;
 }
 
+
 /**
-* @export
-* @enum {string}
-*/
-export enum NumberingLowEventDataObjectEnum {
-    Numbering = 'numbering'
-}
+ * @export
+ */
+export const NumberingLowEventDataObjectEnum = {
+    Numbering: 'numbering',
+} as const;
+export type NumberingLowEventDataObjectEnum = typeof NumberingLowEventDataObjectEnum[keyof typeof NumberingLowEventDataObjectEnum];
+
 /**
-* @export
-* @enum {string}
-*/
-export enum NumberingLowEventDataDocumentEnum {
-    Invoice = 'invoice',
-    SupportDocument = 'support_document',
-    EquivalentDocument = 'equivalent_document'
-}
+ * @export
+ */
+export const NumberingLowEventDataDocumentEnum = {
+    Invoice: 'invoice',
+    SupportDocument: 'support_document',
+    EquivalentDocument: 'equivalent_document',
+} as const;
+export type NumberingLowEventDataDocumentEnum = typeof NumberingLowEventDataDocumentEnum[keyof typeof NumberingLowEventDataDocumentEnum];
 
 
 /**

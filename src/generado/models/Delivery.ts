@@ -49,14 +49,15 @@ export interface Delivery {
     email?: DeliveryEmail | null;
 }
 
+
 /**
-* @export
-* @enum {string}
-*/
-export enum DeliveryStatusEnum {
-    Pending = 'pending',
-    Completed = 'completed'
-}
+ * @export
+ */
+export const DeliveryStatusEnum = {
+    Pending: 'pending',
+    Completed: 'completed',
+} as const;
+export type DeliveryStatusEnum = typeof DeliveryStatusEnum[keyof typeof DeliveryStatusEnum];
 
 
 /**

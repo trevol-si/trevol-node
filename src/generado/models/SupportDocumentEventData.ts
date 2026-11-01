@@ -103,43 +103,47 @@ export interface SupportDocumentEventData {
     delivery?: any | null;
 }
 
+
 /**
-* @export
-* @enum {string}
-*/
-export enum SupportDocumentEventDataStatusEnum {
-    Pending = 'pending',
-    Sending = 'sending',
-    Accepted = 'accepted',
-    Rejected = 'rejected',
-    Error = 'error',
-    Contingency = 'contingency'
-}
+ * @export
+ */
+export const SupportDocumentEventDataStatusEnum = {
+    Pending: 'pending',
+    Sending: 'sending',
+    Accepted: 'accepted',
+    Rejected: 'rejected',
+    Error: 'error',
+    Contingency: 'contingency',
+} as const;
+export type SupportDocumentEventDataStatusEnum = typeof SupportDocumentEventDataStatusEnum[keyof typeof SupportDocumentEventDataStatusEnum];
+
 /**
-* @export
-* @enum {string}
-*/
-export enum SupportDocumentEventDataEnvironmentEnum {
-    Test = 'test',
-    Live = 'live'
-}
+ * @export
+ */
+export const SupportDocumentEventDataEnvironmentEnum = {
+    Test: 'test',
+    Live: 'live',
+} as const;
+export type SupportDocumentEventDataEnvironmentEnum = typeof SupportDocumentEventDataEnvironmentEnum[keyof typeof SupportDocumentEventDataEnvironmentEnum];
+
 /**
-* @export
-* @enum {string}
-*/
-export enum SupportDocumentEventDataOriginEnum {
-    Api = 'api',
-    App = 'app',
-    Contapyme = 'contapyme'
-}
+ * @export
+ */
+export const SupportDocumentEventDataOriginEnum = {
+    Api: 'api',
+    App: 'app',
+    Contapyme: 'contapyme',
+} as const;
+export type SupportDocumentEventDataOriginEnum = typeof SupportDocumentEventDataOriginEnum[keyof typeof SupportDocumentEventDataOriginEnum];
+
 /**
-* @export
-* @enum {string}
-*/
-export enum SupportDocumentEventDataObjectEnum {
-    SupportDocument = 'support_document',
-    SupportDocumentAdjustment = 'support_document_adjustment'
-}
+ * @export
+ */
+export const SupportDocumentEventDataObjectEnum = {
+    SupportDocument: 'support_document',
+    SupportDocumentAdjustment: 'support_document_adjustment',
+} as const;
+export type SupportDocumentEventDataObjectEnum = typeof SupportDocumentEventDataObjectEnum[keyof typeof SupportDocumentEventDataObjectEnum];
 
 
 /**

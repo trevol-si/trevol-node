@@ -114,43 +114,47 @@ export interface EquivalentDocumentEventData {
     delivery?: EventDelivery;
 }
 
+
 /**
-* @export
-* @enum {string}
-*/
-export enum EquivalentDocumentEventDataStatusEnum {
-    Pending = 'pending',
-    Sending = 'sending',
-    Accepted = 'accepted',
-    Rejected = 'rejected',
-    Error = 'error',
-    Contingency = 'contingency'
-}
+ * @export
+ */
+export const EquivalentDocumentEventDataStatusEnum = {
+    Pending: 'pending',
+    Sending: 'sending',
+    Accepted: 'accepted',
+    Rejected: 'rejected',
+    Error: 'error',
+    Contingency: 'contingency',
+} as const;
+export type EquivalentDocumentEventDataStatusEnum = typeof EquivalentDocumentEventDataStatusEnum[keyof typeof EquivalentDocumentEventDataStatusEnum];
+
 /**
-* @export
-* @enum {string}
-*/
-export enum EquivalentDocumentEventDataEnvironmentEnum {
-    Test = 'test',
-    Live = 'live'
-}
+ * @export
+ */
+export const EquivalentDocumentEventDataEnvironmentEnum = {
+    Test: 'test',
+    Live: 'live',
+} as const;
+export type EquivalentDocumentEventDataEnvironmentEnum = typeof EquivalentDocumentEventDataEnvironmentEnum[keyof typeof EquivalentDocumentEventDataEnvironmentEnum];
+
 /**
-* @export
-* @enum {string}
-*/
-export enum EquivalentDocumentEventDataOriginEnum {
-    Api = 'api',
-    App = 'app',
-    Contapyme = 'contapyme'
-}
+ * @export
+ */
+export const EquivalentDocumentEventDataOriginEnum = {
+    Api: 'api',
+    App: 'app',
+    Contapyme: 'contapyme',
+} as const;
+export type EquivalentDocumentEventDataOriginEnum = typeof EquivalentDocumentEventDataOriginEnum[keyof typeof EquivalentDocumentEventDataOriginEnum];
+
 /**
-* @export
-* @enum {string}
-*/
-export enum EquivalentDocumentEventDataObjectEnum {
-    EquivalentDocument = 'equivalent_document',
-    EquivalentDocumentAdjustment = 'equivalent_document_adjustment'
-}
+ * @export
+ */
+export const EquivalentDocumentEventDataObjectEnum = {
+    EquivalentDocument: 'equivalent_document',
+    EquivalentDocumentAdjustment: 'equivalent_document_adjustment',
+} as const;
+export type EquivalentDocumentEventDataObjectEnum = typeof EquivalentDocumentEventDataObjectEnum[keyof typeof EquivalentDocumentEventDataObjectEnum];
 
 
 /**

@@ -29,13 +29,14 @@ export interface EquivalentDocumentContingencyBackup {
     at?: string | null;
 }
 
+
 /**
-* @export
-* @enum {string}
-*/
-export enum EquivalentDocumentContingencyBackupTypeEnum {
-    _20 = '20'
-}
+ * @export
+ */
+export const EquivalentDocumentContingencyBackupTypeEnum = {
+    _20: '20',
+} as const;
+export type EquivalentDocumentContingencyBackupTypeEnum = typeof EquivalentDocumentContingencyBackupTypeEnum[keyof typeof EquivalentDocumentContingencyBackupTypeEnum];
 
 
 /**

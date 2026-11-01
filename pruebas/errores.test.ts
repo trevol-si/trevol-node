@@ -16,7 +16,7 @@ describe('errores tipados a través de un método generado', () => {
   for (const [clase, code] of todos) {
     it(`${code} → ${clase}`, async () => {
       // retryable false y sin reintentos: el error sale de la primera respuesta
-      const { trevol } = cliente([problema(ESTADO[clase]!, code, { retryable: false })], { maxReintentos: 0 });
+      const { trevol } = cliente([problema(ESTADO[clase]!, code, { retryable: false })], { maxRetries: 0 });
       const e = await trevol.invoices.retrieveInvoice({ id: DOCUMENTO.id }).catch((x) => x);
       const Clase = (sdk as unknown as Record<string, new (...a: never[]) => TrevolError>)[clase]!;
       expect(e).toBeInstanceOf(Clase);
@@ -49,7 +49,7 @@ describe('errores tipados a través de un método generado', () => {
     const html = '<html>' + 'x'.repeat(5000) + '</html>';
     const casos: Array<[number, string]> = [[502, 'InternalServerError'], [404, 'NotFoundError'], [409, 'ConflictError'], [401, 'AuthenticationError']];
     for (const [estado, clase] of casos) {
-      const { trevol } = cliente([new Response(html, { status: estado, headers: { 'content-type': 'text/html' } })], { maxReintentos: 0 });
+      const { trevol } = cliente([new Response(html, { status: estado, headers: { 'content-type': 'text/html' } })], { maxRetries: 0 });
       const e = await trevol.invoices.retrieveInvoice({ id: DOCUMENTO.id }).catch((x) => x);
       expect(e.constructor.name).toBe(clase);
       expect(e.code).toBeNull();

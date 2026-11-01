@@ -80,29 +80,32 @@ export interface Company {
     capabilities?: { [key: string]: any; };
 }
 
+
 /**
-* @export
-* @enum {string}
-*/
-export enum CompanyObjectEnum {
-    Company = 'company'
-}
+ * @export
+ */
+export const CompanyObjectEnum = {
+    Company: 'company',
+} as const;
+export type CompanyObjectEnum = typeof CompanyObjectEnum[keyof typeof CompanyObjectEnum];
+
 /**
-* @export
-* @enum {string}
-*/
-export enum CompanyStatusEnum {
-    Enabled = 'enabled',
-    NotEnabled = 'not_enabled'
-}
+ * @export
+ */
+export const CompanyStatusEnum = {
+    Enabled: 'enabled',
+    NotEnabled: 'not_enabled',
+} as const;
+export type CompanyStatusEnum = typeof CompanyStatusEnum[keyof typeof CompanyStatusEnum];
+
 /**
-* @export
-* @enum {string}
-*/
-export enum CompanyEnvironmentEnum {
-    Test = 'test',
-    Live = 'live'
-}
+ * @export
+ */
+export const CompanyEnvironmentEnum = {
+    Test: 'test',
+    Live: 'live',
+} as const;
+export type CompanyEnvironmentEnum = typeof CompanyEnvironmentEnum[keyof typeof CompanyEnvironmentEnum];
 
 
 /**

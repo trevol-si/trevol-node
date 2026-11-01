@@ -48,14 +48,15 @@ export interface EquivalentDocumentContingency {
     backup?: EquivalentDocumentContingencyBackup | null;
 }
 
+
 /**
-* @export
-* @enum {string}
-*/
-export enum EquivalentDocumentContingencyTypeEnum {
-    _07 = '07',
-    _08 = '08'
-}
+ * @export
+ */
+export const EquivalentDocumentContingencyTypeEnum = {
+    _07: '07',
+    _08: '08',
+} as const;
+export type EquivalentDocumentContingencyTypeEnum = typeof EquivalentDocumentContingencyTypeEnum[keyof typeof EquivalentDocumentContingencyTypeEnum];
 
 
 /**

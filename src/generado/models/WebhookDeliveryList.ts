@@ -45,13 +45,14 @@ export interface WebhookDeliveryList {
     next_cursor?: string | null;
 }
 
+
 /**
-* @export
-* @enum {string}
-*/
-export enum WebhookDeliveryListObjectEnum {
-    List = 'list'
-}
+ * @export
+ */
+export const WebhookDeliveryListObjectEnum = {
+    List: 'list',
+} as const;
+export type WebhookDeliveryListObjectEnum = typeof WebhookDeliveryListObjectEnum[keyof typeof WebhookDeliveryListObjectEnum];
 
 
 /**

@@ -29,14 +29,15 @@ export interface EventDianRule {
     severity?: EventDianRuleSeverityEnum;
 }
 
+
 /**
-* @export
-* @enum {string}
-*/
-export enum EventDianRuleSeverityEnum {
-    Rejection = 'rejection',
-    Notification = 'notification'
-}
+ * @export
+ */
+export const EventDianRuleSeverityEnum = {
+    Rejection: 'rejection',
+    Notification: 'notification',
+} as const;
+export type EventDianRuleSeverityEnum = typeof EventDianRuleSeverityEnum[keyof typeof EventDianRuleSeverityEnum];
 
 
 /**

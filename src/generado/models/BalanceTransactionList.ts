@@ -45,13 +45,14 @@ export interface BalanceTransactionList {
     next_cursor?: string | null;
 }
 
+
 /**
-* @export
-* @enum {string}
-*/
-export enum BalanceTransactionListObjectEnum {
-    List = 'list'
-}
+ * @export
+ */
+export const BalanceTransactionListObjectEnum = {
+    List: 'list',
+} as const;
+export type BalanceTransactionListObjectEnum = typeof BalanceTransactionListObjectEnum[keyof typeof BalanceTransactionListObjectEnum];
 
 
 /**

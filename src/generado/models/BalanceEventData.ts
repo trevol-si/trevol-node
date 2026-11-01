@@ -29,21 +29,23 @@ export interface BalanceEventData {
     level?: BalanceEventDataLevelEnum;
 }
 
+
 /**
-* @export
-* @enum {string}
-*/
-export enum BalanceEventDataObjectEnum {
-    Balance = 'balance'
-}
+ * @export
+ */
+export const BalanceEventDataObjectEnum = {
+    Balance: 'balance',
+} as const;
+export type BalanceEventDataObjectEnum = typeof BalanceEventDataObjectEnum[keyof typeof BalanceEventDataObjectEnum];
+
 /**
-* @export
-* @enum {string}
-*/
-export enum BalanceEventDataLevelEnum {
-    Low = 'low',
-    Depleted = 'depleted'
-}
+ * @export
+ */
+export const BalanceEventDataLevelEnum = {
+    Low: 'low',
+    Depleted: 'depleted',
+} as const;
+export type BalanceEventDataLevelEnum = typeof BalanceEventDataLevelEnum[keyof typeof BalanceEventDataLevelEnum];
 
 
 /**

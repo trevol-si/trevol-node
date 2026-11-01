@@ -57,13 +57,14 @@ export interface TacitAcceptance {
     rules?: Array<TacitAcceptanceRule>;
 }
 
+
 /**
-* @export
-* @enum {string}
-*/
-export enum TacitAcceptanceObjectEnum {
-    TacitAcceptance = 'tacit_acceptance'
-}
+ * @export
+ */
+export const TacitAcceptanceObjectEnum = {
+    TacitAcceptance: 'tacit_acceptance',
+} as const;
+export type TacitAcceptanceObjectEnum = typeof TacitAcceptanceObjectEnum[keyof typeof TacitAcceptanceObjectEnum];
 
 
 /**

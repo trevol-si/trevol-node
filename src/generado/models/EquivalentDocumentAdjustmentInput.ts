@@ -134,14 +134,15 @@ export interface EquivalentDocumentAdjustmentInput {
     equivalent_document: EquivalentDocumentReference;
 }
 
+
 /**
-* @export
-* @enum {string}
-*/
-export enum EquivalentDocumentAdjustmentInputNoteTypeEnum {
-    Credit = 'credit',
-    Debit = 'debit'
-}
+ * @export
+ */
+export const EquivalentDocumentAdjustmentInputNoteTypeEnum = {
+    Credit: 'credit',
+    Debit: 'debit',
+} as const;
+export type EquivalentDocumentAdjustmentInputNoteTypeEnum = typeof EquivalentDocumentAdjustmentInputNoteTypeEnum[keyof typeof EquivalentDocumentAdjustmentInputNoteTypeEnum];
 
 
 /**

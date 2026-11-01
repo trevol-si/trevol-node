@@ -595,13 +595,13 @@ export class WebhookEndpointsApi extends runtime.BaseAPI {
 }
 
 /**
-  * @export
-  * @enum {string}
-  */
-export enum ListWebhookEndpointDeliveriesStatusEnum {
-    Pending = 'pending',
-    Sending = 'sending',
-    Succeeded = 'succeeded',
-    Failed = 'failed',
-    Canceled = 'canceled',
-}
+ * @export
+ */
+export const ListWebhookEndpointDeliveriesStatusEnum = {
+    Pending: 'pending',
+    Sending: 'sending',
+    Succeeded: 'succeeded',
+    Failed: 'failed',
+    Canceled: 'canceled',
+} as const;
+export type ListWebhookEndpointDeliveriesStatusEnum = typeof ListWebhookEndpointDeliveriesStatusEnum[keyof typeof ListWebhookEndpointDeliveriesStatusEnum];

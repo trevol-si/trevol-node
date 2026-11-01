@@ -745,18 +745,18 @@ export class EquivalentDocumentsApi extends runtime.BaseAPI {
 }
 
 /**
-  * @export
-  * @enum {string}
-  */
-export enum ListEquivalentDocumentsDocumentTypeEnum {
-    _20 = '20',
-    _25 = '25',
-    _27 = '27',
-    _30 = '30',
-    _35 = '35',
-    _40 = '40',
-    _45 = '45',
-    _50 = '50',
-    _55 = '55',
-    _60 = '60',
-}
+ * @export
+ */
+export const ListEquivalentDocumentsDocumentTypeEnum = {
+    _20: '20',
+    _25: '25',
+    _27: '27',
+    _30: '30',
+    _35: '35',
+    _40: '40',
+    _45: '45',
+    _50: '50',
+    _55: '55',
+    _60: '60',
+} as const;
+export type ListEquivalentDocumentsDocumentTypeEnum = typeof ListEquivalentDocumentsDocumentTypeEnum[keyof typeof ListEquivalentDocumentsDocumentTypeEnum];

@@ -37,25 +37,26 @@ export interface WebhookDeliveryAttempt {
     duration_ms?: number | null;
 }
 
+
 /**
-* @export
-* @enum {string}
-*/
-export enum WebhookDeliveryAttemptErrorEnum {
-    Http3xx = 'http_3xx',
-    Http4xx = 'http_4xx',
-    Http5xx = 'http_5xx',
-    HttpOther = 'http_other',
-    Timeout = 'timeout',
-    Connection = 'connection',
-    Tls = 'tls',
-    Dns = 'dns',
-    BlockedAddress = 'blocked_address',
-    InvalidUrl = 'invalid_url',
-    SecretUnavailable = 'secret_unavailable',
-    Interrupted = 'interrupted',
-    Unknown = 'unknown'
-}
+ * @export
+ */
+export const WebhookDeliveryAttemptErrorEnum = {
+    Http3xx: 'http_3xx',
+    Http4xx: 'http_4xx',
+    Http5xx: 'http_5xx',
+    HttpOther: 'http_other',
+    Timeout: 'timeout',
+    Connection: 'connection',
+    Tls: 'tls',
+    Dns: 'dns',
+    BlockedAddress: 'blocked_address',
+    InvalidUrl: 'invalid_url',
+    SecretUnavailable: 'secret_unavailable',
+    Interrupted: 'interrupted',
+    Unknown: 'unknown',
+} as const;
+export type WebhookDeliveryAttemptErrorEnum = typeof WebhookDeliveryAttemptErrorEnum[keyof typeof WebhookDeliveryAttemptErrorEnum];
 
 
 /**

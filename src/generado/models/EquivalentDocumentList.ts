@@ -45,13 +45,14 @@ export interface EquivalentDocumentList {
     next_cursor?: string | null;
 }
 
+
 /**
-* @export
-* @enum {string}
-*/
-export enum EquivalentDocumentListObjectEnum {
-    List = 'list'
-}
+ * @export
+ */
+export const EquivalentDocumentListObjectEnum = {
+    List: 'list',
+} as const;
+export type EquivalentDocumentListObjectEnum = typeof EquivalentDocumentListObjectEnum[keyof typeof EquivalentDocumentListObjectEnum];
 
 
 /**

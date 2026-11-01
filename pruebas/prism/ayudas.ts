@@ -6,7 +6,7 @@ export const LLAVE = process.env.TREVOL_API_KEY ?? 'tvl_test_' + 'a1'.repeat(32)
 
 /** Un cliente contra Prism (que sirve las rutas SIN el /v1), sin reintentos para ver el primer resultado. */
 export const clientePrism = (opciones: ConstructorParameters<typeof Trevol>[1] = {}) =>
-	new Trevol(LLAVE, { baseUrl: URL_PRISM, maxReintentos: 0, ...opciones });
+	new Trevol(LLAVE, { baseUrl: URL_PRISM, maxRetries: 0, ...opciones });
 
 /** Si Prism rechaza la petición (cuerpo mal serializado, cabecera olvidada…) lo dice en `sl-violations`: se lo pegamos al error. */
 export async function conViolaciones<T>(f: () => Promise<T>): Promise<T> {

@@ -13,7 +13,7 @@ describe('respuestas del futuro: no rompen a quien ya integró', () => {
   for (const c of casos.filter((x) => x.operacion)) {
     it(c.nombre, async () => {
       const respuesta = new Response(JSON.stringify(c.cuerpo), { status: c.estado, headers: { 'content-type': c.estado! >= 400 ? 'application/problem+json' : 'application/json', ...c.cabeceras } });
-      const { trevol } = cliente([respuesta], { maxReintentos: 0 });
+      const { trevol } = cliente([respuesta], { maxRetries: 0 });
       const llamada = c.operacion === 'listInvoices' ? () => trevol.invoices.listInvoices({}) : () => trevol.invoices.retrieveInvoice({ id: 'inv_x' });
       if (c.estado! < 400) {
         const r: any = await llamada();

@@ -69,32 +69,35 @@ export interface RequestLog {
     created_at?: string;
 }
 
+
 /**
-* @export
-* @enum {string}
-*/
-export enum RequestLogObjectEnum {
-    Request = 'request'
-}
+ * @export
+ */
+export const RequestLogObjectEnum = {
+    Request: 'request',
+} as const;
+export type RequestLogObjectEnum = typeof RequestLogObjectEnum[keyof typeof RequestLogObjectEnum];
+
 /**
-* @export
-* @enum {string}
-*/
-export enum RequestLogMethodEnum {
-    Get = 'GET',
-    Post = 'POST',
-    Put = 'PUT',
-    Patch = 'PATCH',
-    Delete = 'DELETE'
-}
+ * @export
+ */
+export const RequestLogMethodEnum = {
+    Get: 'GET',
+    Post: 'POST',
+    Put: 'PUT',
+    Patch: 'PATCH',
+    Delete: 'DELETE',
+} as const;
+export type RequestLogMethodEnum = typeof RequestLogMethodEnum[keyof typeof RequestLogMethodEnum];
+
 /**
-* @export
-* @enum {string}
-*/
-export enum RequestLogApiVersionEnum {
-    _20261021 = '2026-10-21',
-    _20261022 = '2026-10-22'
-}
+ * @export
+ */
+export const RequestLogApiVersionEnum = {
+    _20261021: '2026-10-21',
+    _20261022: '2026-10-22',
+} as const;
+export type RequestLogApiVersionEnum = typeof RequestLogApiVersionEnum[keyof typeof RequestLogApiVersionEnum];
 
 
 /**
