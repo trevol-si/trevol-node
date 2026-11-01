@@ -49,7 +49,7 @@ export interface Company {
     /**
      * 
      */
-    check_digit?: string | null;
+    check_digit?: number | null;
     /**
      * La razón social.
      */
