@@ -1,0 +1,20 @@
+{
+	"compilerOptions": {
+		"target": "es2023",
+		"lib": ["es2023", "dom"],
+		"module": "nodenext",
+		"moduleResolution": "nodenext",
+		"strict": true,
+		"noUncheckedIndexedAccess": false,
+		"exactOptionalPropertyTypes": false,
+		"declaration": true,
+		"sourceMap": true,
+		"skipLibCheck": true,
+		"verbatimModuleSyntax": true,
+		"outDir": "dist",
+		"rootDir": ".",
+		"types": ["node"]
+	},
+	"include": ["src", "pruebas"],
+	"exclude": ["node_modules", "dist", "pruebas/fragmentos/programas"]
+}
