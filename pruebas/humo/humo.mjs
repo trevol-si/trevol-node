@@ -6,7 +6,7 @@
 //
 // Se NIEGA a correr si la llave no es tvl_test_. `TREVOL_BASE_URL` (opcional) apunta a otro servidor, p. ej. un Prism local.
 import { createHmac } from 'node:crypto';
-import { NotFoundError, Trevol, Webhook } from '../../dist/index.js';
+import { NotFoundError, Trevol, ValidationError, Webhook } from '../../dist/index.js';
 
 const llave = process.env.TREVOL_API_KEY ?? '';
 if (!/^tvl_test_[0-9a-f]{64}$/.test(llave)) {
@@ -60,15 +60,26 @@ await paso('Webhook.verify (firmado ahora, con un secreto local)', async () => {
 	return e.type;
 });
 
+await paso('previewInvoice sin líneas → ValidationError (code validation_error)', async () => {
+	try {
+		await trevol.invoices.previewInvoice({ invoiceInput: { ...facturaDeHumo('HUMO-INVALIDA'), items: [] } });
+	} catch (e) {
+		if (e instanceof ValidationError && e.code === 'validation_error') return `${e.status} ${e.code} ${e.errors?.[0]?.pointer ?? ''}`;
+		throw e;
+	}
+	throw new Error('no lanzó ValidationError');
+});
+
 if (process.env.TREVOL_HUMO_EMITIR === '1') {
 	const clave = `humo-${Date.now()}`;
+	const cuerpo = facturaDeHumo(`HUMO-${Date.now()}`); // el MISMO cuerpo en la repetición: con otro, la API responde idempotency_key_reused
 	let creada;
 	await paso('createInvoice (EMITE en habilitación)', async () => {
-		creada = await trevol.invoices.createInvoice({ invoiceInput: facturaDeHumo(`HUMO-${Date.now()}`), idempotencyKey: clave });
+		creada = await trevol.invoices.createInvoice({ invoiceInput: cuerpo, idempotencyKey: clave });
 		return `${creada.id} ${creada.status}`;
 	});
 	await paso('la misma llamada con la misma Idempotency-Key devuelve lo mismo (Idempotent-Replayed: true)', async () => {
-		const raw = await trevol.invoices.createInvoiceRaw({ invoiceInput: facturaDeHumo(`HUMO-${Date.now()}`), idempotencyKey: clave });
+		const raw = await trevol.invoices.createInvoiceRaw({ invoiceInput: cuerpo, idempotencyKey: clave });
 		const otra = await raw.value();
 		if (raw.raw.headers.get('idempotent-replayed') !== 'true') throw new Error('falta Idempotent-Replayed: true');
 		if (otra.id !== creada?.id) throw new Error(`otro id: ${otra.id}`);
