@@ -14,7 +14,7 @@ const carpeta = new URL('./programas/', import.meta.url);
 describe('la estructura', () => {
 	it('hay un fragmento por operación y por lenguaje, y un programa de arnés por cada uno de node', () => {
 		expect(operaciones).toHaveLength(109);
-		expect(datos.lenguajes).toEqual(['curl', 'node', 'python']);
+		expect(datos.lenguajes.slice(0, 3)).toEqual(['curl', 'node', 'python']); // los demás SDK suman los suyos después
 		for (const op of operaciones) for (const l of datos.lenguajes) expect(datos.fragmentos[op][l], `${op}/${l}`).toBeTruthy();
 		expect(readdirSync(carpeta).filter((f) => f.endsWith('.ts')).sort()).toEqual([...operaciones].sort().map((o) => `${o}.ts`));
 	});
