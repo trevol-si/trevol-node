@@ -95,7 +95,7 @@ export class Trevol {
 			llave: llaveLimpia,
 			apiVersion: this.apiVersion,
 			baseUrl,
-			userAgent: `trevol-node/${VERSION} (node ${process.version}; +https://platform.trevol.si/docs)`,
+			userAgent: `trevol-node/${VERSION} (${typeof process !== 'undefined' ? `node ${process.version}` : 'runtime'}; +https://platform.trevol.si/docs)`,
 			maxReintentos: opciones.maxRetries ?? 2,
 			timeout: opciones.timeout ?? 65,
 			maxRetryAfter: opciones.maxRetryAfter ?? 60,
