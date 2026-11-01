@@ -9,11 +9,6 @@ import { ConfigurationError, WebhookVerificationError } from './errores.js';
 export type CabecerasEntrantes = Headers | Map<string, string | string[] | undefined> | Record<string, string | string[] | undefined>;
 export type CuerpoCrudo = string | Uint8Array | ArrayBuffer;
 
-export interface OpcionesWebhook {
-	/** Segundos hacia atrás y hacia adelante que se tolera el `webhook-timestamp`. Por defecto 300 (5 minutos); la biblioteca lo fija. */
-	tolerancia?: number;
-}
-
 const NOMBRES = ['webhook-id', 'webhook-timestamp', 'webhook-signature'] as const;
 
 function primero(v: string | string[] | undefined | null): string | undefined {
@@ -56,8 +51,11 @@ function aTexto(cuerpo: unknown): string {
 export class Webhook {
 	readonly #verificador: WebhookEstandar;
 
-	/** @param secreto El secreto del endpoint (`whsec_…`), que se muestra una sola vez al crearlo o rotarlo. */
-	constructor(secreto: string, _opciones: OpcionesWebhook = {}) {
+	/**
+	 * @param secreto El secreto del endpoint (`whsec_…`), que se muestra una sola vez al crearlo o rotarlo.
+	 * La tolerancia de 5 minutos sobre `webhook-timestamp` la fija la biblioteca de Standard Webhooks y no se puede cambiar.
+	 */
+	constructor(secreto: string) {
 		if (typeof secreto !== 'string' || secreto.trim() === '') {
 			throw new ConfigurationError('Falta el secreto del webhook (whsec_…). Se muestra una sola vez al crear o rotar el endpoint.');
 		}

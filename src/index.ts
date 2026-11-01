@@ -21,7 +21,7 @@ export {
 	type ErrorDeCampo,
 	type DatosDeError
 } from './errores.js';
-export { Webhook, type CabecerasEntrantes, type CuerpoCrudo, type OpcionesWebhook } from './webhooks.js';
+export { Webhook, type CabecerasEntrantes, type CuerpoCrudo } from './webhooks.js';
 export { paginar, type Pagina } from './paginacion.js';
 export { decidir, esperaPropia, type Decision, type EntradaDecidir, type Resultado } from './transporte.js';
 export { VERSION, API_VERSION } from './generado/tablas.js';

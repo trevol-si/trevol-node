@@ -4,8 +4,8 @@
 	"description": "SDK de Node.js/TypeScript para la API de Trevol: facturación electrónica ante la DIAN (Colombia).",
 	"keywords": ["trevol", "dian", "factura electrónica", "colombia", "nómina electrónica", "sdk"],
 	"homepage": "https://platform.trevol.si/docs",
-	"repository": { "type": "git", "url": "git+https://github.com/trevol/trevol-node.git" },
-	"bugs": { "url": "https://github.com/trevol/trevol-node/issues" },
+	"repository": { "type": "git", "url": "git+https://github.com/trevol-si/trevol-node.git" },
+	"bugs": { "url": "https://github.com/trevol-si/trevol-node/issues" },
 	"license": "MIT",
 	"type": "module",
 	"main": "./dist/index.js",
@@ -26,7 +26,7 @@
 		"humo": "npm run build && node pruebas/humo/humo.mjs"
 	},
 	"dependencies": {
-		"standardwebhooks": "1.1.1"
+		"standardwebhooks": "^1.1.1"
 	},
 	"devDependencies": {
 		"@types/node": "22.20.5",
