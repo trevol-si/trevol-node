@@ -1,5 +1,6 @@
 # Publicación del SDK de Node (docs/api/43 §2.13 y §2.14). Escrita, NO activa. Un tag `v*` la dispara; el environment `publicacion` exige la
-# aprobación del dueño (required reviewers). Publica con *trusted publishing* (OIDC) y *provenance*: sin tokens guardados.
+# aprobación del dueño (required reviewers). Publica con *trusted publishing* (OIDC) y *provenance*: sin tokens guardados. La 0.1.0 se
+# publicó a mano (npm no deja configurar el publicador de confianza de un paquete que aún no existe); desde la 0.1.1, este flujo.
 name: Publicar
 on:
   push:
@@ -17,8 +18,9 @@ jobs:
         with:
           node-version: '24'
           registry-url: https://registry.npmjs.org
+      - run: npm install -g npm@11   # trusted publishing necesita npm ≥ 11.5.1
       - run: npm ci
       - run: npm run typecheck && npm test && npm run build
       - name: El tag coincide con la versión del paquete
         run: test "v$(node -p "require('./package.json').version")" = "${GITHUB_REF_NAME}"
-      - run: npm publish --provenance --access public
+      - run: npm publish --access public   # con trusted publishing la provenance va sola
