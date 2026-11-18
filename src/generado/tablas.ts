@@ -2,19 +2,28 @@
 /* eslint-disable */
 import {
 	BalanceEventDataFromJSON,
+	CatalogEventDataFromJSON,
 	CertificateEventDataFromJSON,
+	DianDocumentEventDataFromJSON,
+	DianSyncEventDataFromJSON,
 	DocumentEventDataFromJSON,
 	EquivalentDocumentEventDataFromJSON,
+	InvoiceBatchEventDataFromJSON,
+	InvoiceContingencyEventDataFromJSON,
 	NumberingExpiringEventDataFromJSON,
 	NumberingLowEventDataFromJSON,
+	NumberingRangeEventDataFromJSON,
+	NumberingRangeExhaustedEventDataFromJSON,
+	NumberingRequestEventDataFromJSON,
 	PayrollEventDataFromJSON,
 	RadianEventDataFromJSON,
+	ReportRunEventDataFromJSON,
 	SupportDocumentEventDataFromJSON,
 	TestEventDataFromJSON,
 } from './models/index.js';
 
 export const VERSION = "0.1.0";
-export const API_VERSION = "2026-10-22";
+export const API_VERSION = "2026-11-18";
 
 export interface InfoOperacion {
 	readonly operationId: string;
@@ -24,10 +33,28 @@ export interface InfoOperacion {
 	readonly idempotente: boolean;
 	/** seguro: GET, preview, PATCH y todo POST/PUT con Idempotency-Key. solo_429: el resto. */
 	readonly reintento: 'seguro' | 'solo_429';
-	readonly binario: 'pdf' | 'xml' | 'zip' | null;
+	readonly binario: 'pdf' | 'xml' | 'zip' | 'csv' | null;
 }
 
 export const OPERACIONES: readonly InfoOperacion[] = [
+	{
+		"operationId": "associateNumberingRange",
+		"metodo": "POST",
+		"ruta": "/numbering_ranges/{id}/associate",
+		"recurso": "NumberingRanges",
+		"idempotente": true,
+		"reintento": "seguro",
+		"binario": null
+	},
+	{
+		"operationId": "cancelNumberingRequest",
+		"metodo": "POST",
+		"ruta": "/numbering_requests/{id}/cancel",
+		"recurso": "NumberingRequests",
+		"idempotente": false,
+		"reintento": "solo_429",
+		"binario": null
+	},
 	{
 		"operationId": "correctCreditNote",
 		"metodo": "PUT",
@@ -128,10 +155,28 @@ export const OPERACIONES: readonly InfoOperacion[] = [
 		"binario": null
 	},
 	{
+		"operationId": "createCustomer",
+		"metodo": "POST",
+		"ruta": "/customers",
+		"recurso": "Customers",
+		"idempotente": true,
+		"reintento": "seguro",
+		"binario": null
+	},
+	{
 		"operationId": "createDebitNote",
 		"metodo": "POST",
 		"ruta": "/debit_notes",
 		"recurso": "DebitNotes",
+		"idempotente": true,
+		"reintento": "seguro",
+		"binario": null
+	},
+	{
+		"operationId": "createDianSync",
+		"metodo": "POST",
+		"ruta": "/dian_syncs",
+		"recurso": "DianSyncs",
 		"idempotente": true,
 		"reintento": "seguro",
 		"binario": null
@@ -164,6 +209,33 @@ export const OPERACIONES: readonly InfoOperacion[] = [
 		"binario": null
 	},
 	{
+		"operationId": "createInvoiceBatch",
+		"metodo": "POST",
+		"ruta": "/invoice_batches",
+		"recurso": "InvoiceBatches",
+		"idempotente": true,
+		"reintento": "seguro",
+		"binario": null
+	},
+	{
+		"operationId": "createNumberingRequest",
+		"metodo": "POST",
+		"ruta": "/numbering_requests",
+		"recurso": "NumberingRequests",
+		"idempotente": true,
+		"reintento": "seguro",
+		"binario": null
+	},
+	{
+		"operationId": "createPaperNumberingRange",
+		"metodo": "POST",
+		"ruta": "/paper_numbering_ranges",
+		"recurso": "PaperNumberingRanges",
+		"idempotente": true,
+		"reintento": "seguro",
+		"binario": null
+	},
+	{
 		"operationId": "createPayroll",
 		"metodo": "POST",
 		"ruta": "/payrolls",
@@ -182,10 +254,28 @@ export const OPERACIONES: readonly InfoOperacion[] = [
 		"binario": null
 	},
 	{
+		"operationId": "createProduct",
+		"metodo": "POST",
+		"ruta": "/products",
+		"recurso": "Products",
+		"idempotente": true,
+		"reintento": "seguro",
+		"binario": null
+	},
+	{
 		"operationId": "createRadianEvent",
 		"metodo": "POST",
 		"ruta": "/radian_events",
 		"recurso": "RadianEvents",
+		"idempotente": true,
+		"reintento": "seguro",
+		"binario": null
+	},
+	{
+		"operationId": "createReportRun",
+		"metodo": "POST",
+		"ruta": "/report_runs",
+		"recurso": "ReportRuns",
 		"idempotente": true,
 		"reintento": "seguro",
 		"binario": null
@@ -213,6 +303,15 @@ export const OPERACIONES: readonly InfoOperacion[] = [
 		"metodo": "POST",
 		"ruta": "/webhook_endpoints",
 		"recurso": "WebhookEndpoints",
+		"idempotente": false,
+		"reintento": "solo_429",
+		"binario": null
+	},
+	{
+		"operationId": "deactivatePaperNumberingRange",
+		"metodo": "POST",
+		"ruta": "/paper_numbering_ranges/{id}/deactivate",
+		"recurso": "PaperNumberingRanges",
 		"idempotente": false,
 		"reintento": "solo_429",
 		"binario": null
@@ -297,6 +396,15 @@ export const OPERACIONES: readonly InfoOperacion[] = [
 		"idempotente": false,
 		"reintento": "seguro",
 		"binario": "zip"
+	},
+	{
+		"operationId": "downloadDianDocumentXml",
+		"metodo": "GET",
+		"ruta": "/dian_documents/{id}/xml",
+		"recurso": "DianDocuments",
+		"idempotente": false,
+		"reintento": "seguro",
+		"binario": "xml"
 	},
 	{
 		"operationId": "downloadEquivalentDocumentAdjustmentDianResponse",
@@ -506,10 +614,46 @@ export const OPERACIONES: readonly InfoOperacion[] = [
 		"binario": "xml"
 	},
 	{
+		"operationId": "exportDocuments",
+		"metodo": "GET",
+		"ruta": "/reports/documents",
+		"recurso": "Reports",
+		"idempotente": false,
+		"reintento": "seguro",
+		"binario": "csv"
+	},
+	{
+		"operationId": "getDianDocument",
+		"metodo": "GET",
+		"ruta": "/dian_documents/{id}",
+		"recurso": "DianDocuments",
+		"idempotente": false,
+		"reintento": "seguro",
+		"binario": null
+	},
+	{
+		"operationId": "getDianSync",
+		"metodo": "GET",
+		"ruta": "/dian_syncs/{id}",
+		"recurso": "DianSyncs",
+		"idempotente": false,
+		"reintento": "seguro",
+		"binario": null
+	},
+	{
 		"operationId": "getHealth",
 		"metodo": "GET",
 		"ruta": "/health",
 		"recurso": "General",
+		"idempotente": false,
+		"reintento": "seguro",
+		"binario": null
+	},
+	{
+		"operationId": "getRadianStatus",
+		"metodo": "GET",
+		"ruta": "/radian_status",
+		"recurso": "RadianStatus",
 		"idempotente": false,
 		"reintento": "seguro",
 		"binario": null
@@ -533,10 +677,37 @@ export const OPERACIONES: readonly InfoOperacion[] = [
 		"binario": null
 	},
 	{
+		"operationId": "listCustomers",
+		"metodo": "GET",
+		"ruta": "/customers",
+		"recurso": "Customers",
+		"idempotente": false,
+		"reintento": "seguro",
+		"binario": null
+	},
+	{
 		"operationId": "listDebitNotes",
 		"metodo": "GET",
 		"ruta": "/debit_notes",
 		"recurso": "DebitNotes",
+		"idempotente": false,
+		"reintento": "seguro",
+		"binario": null
+	},
+	{
+		"operationId": "listDianDocuments",
+		"metodo": "GET",
+		"ruta": "/dian_documents",
+		"recurso": "DianDocuments",
+		"idempotente": false,
+		"reintento": "seguro",
+		"binario": null
+	},
+	{
+		"operationId": "listDianSyncs",
+		"metodo": "GET",
+		"ruta": "/dian_syncs",
+		"recurso": "DianSyncs",
 		"idempotente": false,
 		"reintento": "seguro",
 		"binario": null
@@ -569,10 +740,46 @@ export const OPERACIONES: readonly InfoOperacion[] = [
 		"binario": null
 	},
 	{
+		"operationId": "listInvoiceBatches",
+		"metodo": "GET",
+		"ruta": "/invoice_batches",
+		"recurso": "InvoiceBatches",
+		"idempotente": false,
+		"reintento": "seguro",
+		"binario": null
+	},
+	{
 		"operationId": "listInvoices",
 		"metodo": "GET",
 		"ruta": "/invoices",
 		"recurso": "Invoices",
+		"idempotente": false,
+		"reintento": "seguro",
+		"binario": null
+	},
+	{
+		"operationId": "listNumberingRanges",
+		"metodo": "GET",
+		"ruta": "/numbering_ranges",
+		"recurso": "NumberingRanges",
+		"idempotente": false,
+		"reintento": "seguro",
+		"binario": null
+	},
+	{
+		"operationId": "listNumberingRequests",
+		"metodo": "GET",
+		"ruta": "/numbering_requests",
+		"recurso": "NumberingRequests",
+		"idempotente": false,
+		"reintento": "seguro",
+		"binario": null
+	},
+	{
+		"operationId": "listPaperNumberingRanges",
+		"metodo": "GET",
+		"ruta": "/paper_numbering_ranges",
+		"recurso": "PaperNumberingRanges",
 		"idempotente": false,
 		"reintento": "seguro",
 		"binario": null
@@ -596,10 +803,28 @@ export const OPERACIONES: readonly InfoOperacion[] = [
 		"binario": null
 	},
 	{
+		"operationId": "listProducts",
+		"metodo": "GET",
+		"ruta": "/products",
+		"recurso": "Products",
+		"idempotente": false,
+		"reintento": "seguro",
+		"binario": null
+	},
+	{
 		"operationId": "listRadianEvents",
 		"metodo": "GET",
 		"ruta": "/radian_events",
 		"recurso": "RadianEvents",
+		"idempotente": false,
+		"reintento": "seguro",
+		"binario": null
+	},
+	{
+		"operationId": "listReportRuns",
+		"metodo": "GET",
+		"ruta": "/report_runs",
+		"recurso": "ReportRuns",
 		"idempotente": false,
 		"reintento": "seguro",
 		"binario": null
@@ -647,6 +872,15 @@ export const OPERACIONES: readonly InfoOperacion[] = [
 		"recurso": "WebhookEndpoints",
 		"idempotente": false,
 		"reintento": "seguro",
+		"binario": null
+	},
+	{
+		"operationId": "markNumberingRequestSubmitted",
+		"metodo": "POST",
+		"ruta": "/numbering_requests/{id}/submitted",
+		"recurso": "NumberingRequests",
+		"idempotente": false,
+		"reintento": "solo_429",
 		"binario": null
 	},
 	{
@@ -731,6 +965,15 @@ export const OPERACIONES: readonly InfoOperacion[] = [
 		"binario": null
 	},
 	{
+		"operationId": "refreshNumberingRanges",
+		"metodo": "POST",
+		"ruta": "/numbering_ranges/refresh",
+		"recurso": "NumberingRanges",
+		"idempotente": false,
+		"reintento": "solo_429",
+		"binario": null
+	},
+	{
 		"operationId": "resendEvent",
 		"metodo": "POST",
 		"ruta": "/events/{id}/resend",
@@ -762,6 +1005,15 @@ export const OPERACIONES: readonly InfoOperacion[] = [
 		"metodo": "GET",
 		"ruta": "/credit_notes/{id}",
 		"recurso": "CreditNotes",
+		"idempotente": false,
+		"reintento": "seguro",
+		"binario": null
+	},
+	{
+		"operationId": "retrieveCustomer",
+		"metodo": "GET",
+		"ruta": "/customers/{id}",
+		"recurso": "Customers",
 		"idempotente": false,
 		"reintento": "seguro",
 		"binario": null
@@ -821,10 +1073,55 @@ export const OPERACIONES: readonly InfoOperacion[] = [
 		"binario": null
 	},
 	{
+		"operationId": "retrieveInvoiceBatch",
+		"metodo": "GET",
+		"ruta": "/invoice_batches/{id}",
+		"recurso": "InvoiceBatches",
+		"idempotente": false,
+		"reintento": "seguro",
+		"binario": null
+	},
+	{
 		"operationId": "retrieveInvoiceTacitAcceptance",
 		"metodo": "GET",
 		"ruta": "/invoices/{id}/tacit_acceptance",
 		"recurso": "Invoices",
+		"idempotente": false,
+		"reintento": "seguro",
+		"binario": null
+	},
+	{
+		"operationId": "retrieveNumberingAssociation",
+		"metodo": "GET",
+		"ruta": "/numbering_associations/{id}",
+		"recurso": "NumberingAssociations",
+		"idempotente": false,
+		"reintento": "seguro",
+		"binario": null
+	},
+	{
+		"operationId": "retrieveNumberingRange",
+		"metodo": "GET",
+		"ruta": "/numbering_ranges/{id}",
+		"recurso": "NumberingRanges",
+		"idempotente": false,
+		"reintento": "seguro",
+		"binario": null
+	},
+	{
+		"operationId": "retrieveNumberingRequest",
+		"metodo": "GET",
+		"ruta": "/numbering_requests/{id}",
+		"recurso": "NumberingRequests",
+		"idempotente": false,
+		"reintento": "seguro",
+		"binario": null
+	},
+	{
+		"operationId": "retrievePaperNumberingRange",
+		"metodo": "GET",
+		"ruta": "/paper_numbering_ranges/{id}",
+		"recurso": "PaperNumberingRanges",
 		"idempotente": false,
 		"reintento": "seguro",
 		"binario": null
@@ -848,10 +1145,37 @@ export const OPERACIONES: readonly InfoOperacion[] = [
 		"binario": null
 	},
 	{
+		"operationId": "retrieveProduct",
+		"metodo": "GET",
+		"ruta": "/products/{id}",
+		"recurso": "Products",
+		"idempotente": false,
+		"reintento": "seguro",
+		"binario": null
+	},
+	{
 		"operationId": "retrieveRadianEvent",
 		"metodo": "GET",
 		"ruta": "/radian_events/{id}",
 		"recurso": "RadianEvents",
+		"idempotente": false,
+		"reintento": "seguro",
+		"binario": null
+	},
+	{
+		"operationId": "retrieveReportRun",
+		"metodo": "GET",
+		"ruta": "/report_runs/{id}",
+		"recurso": "ReportRuns",
+		"idempotente": false,
+		"reintento": "seguro",
+		"binario": null
+	},
+	{
+		"operationId": "retrieveReportRunFile",
+		"metodo": "GET",
+		"ruta": "/report_runs/{id}/file",
+		"recurso": "ReportRuns",
 		"idempotente": false,
 		"reintento": "seguro",
 		"binario": null
@@ -884,12 +1208,30 @@ export const OPERACIONES: readonly InfoOperacion[] = [
 		"binario": null
 	},
 	{
+		"operationId": "retrieveTaxSummary",
+		"metodo": "GET",
+		"ruta": "/reports/tax_summary",
+		"recurso": "Reports",
+		"idempotente": false,
+		"reintento": "seguro",
+		"binario": null
+	},
+	{
 		"operationId": "retrieveWebhookEndpoint",
 		"metodo": "GET",
 		"ruta": "/webhook_endpoints/{id}",
 		"recurso": "WebhookEndpoints",
 		"idempotente": false,
 		"reintento": "seguro",
+		"binario": null
+	},
+	{
+		"operationId": "retryNumberingRequestAutomatic",
+		"metodo": "POST",
+		"ruta": "/numbering_requests/{id}/retry_automatic",
+		"recurso": "NumberingRequests",
+		"idempotente": false,
+		"reintento": "solo_429",
 		"binario": null
 	},
 	{
@@ -1001,6 +1343,33 @@ export const OPERACIONES: readonly InfoOperacion[] = [
 		"binario": null
 	},
 	{
+		"operationId": "updateCustomer",
+		"metodo": "PATCH",
+		"ruta": "/customers/{id}",
+		"recurso": "Customers",
+		"idempotente": false,
+		"reintento": "seguro",
+		"binario": null
+	},
+	{
+		"operationId": "updatePaperNumberingRange",
+		"metodo": "PATCH",
+		"ruta": "/paper_numbering_ranges/{id}",
+		"recurso": "PaperNumberingRanges",
+		"idempotente": false,
+		"reintento": "seguro",
+		"binario": null
+	},
+	{
+		"operationId": "updateProduct",
+		"metodo": "PATCH",
+		"ruta": "/products/{id}",
+		"recurso": "Products",
+		"idempotente": false,
+		"reintento": "seguro",
+		"binario": null
+	},
+	{
 		"operationId": "updateWebhookEndpoint",
 		"metodo": "PATCH",
 		"ruta": "/webhook_endpoints/{id}",
@@ -1015,15 +1384,27 @@ export const OPERACIONES: readonly InfoOperacion[] = [
 export const ETIQUETAS: readonly string[] = [
 	"Balance",
 	"CreditNotes",
+	"Customers",
 	"DebitNotes",
+	"DianDocuments",
+	"DianSyncs",
 	"EquivalentDocumentAdjustments",
 	"EquivalentDocuments",
 	"Events",
 	"General",
+	"InvoiceBatches",
 	"Invoices",
+	"NumberingAssociations",
+	"NumberingRanges",
+	"NumberingRequests",
+	"PaperNumberingRanges",
 	"PayrollAdjustments",
 	"Payrolls",
+	"Products",
 	"RadianEvents",
+	"RadianStatus",
+	"ReportRuns",
+	"Reports",
 	"Requests",
 	"SupportDocumentAdjustments",
 	"SupportDocuments",
@@ -1050,10 +1431,20 @@ export const CLASE_POR_CODE: Readonly<Record<string, string>> = {
 	"previous_event_pending": "ConflictError",
 	"file_unavailable": "ConflictError",
 	"webhook_limit_reached": "ConflictError",
+	"duplicate_customer": "ConflictError",
+	"duplicate_product": "ConflictError",
+	"company_busy": "ConflictError",
+	"confirmation_required": "ConflictError",
+	"numbering_request_in_progress": "ConflictError",
+	"range_protected": "ConflictError",
+	"paper_numbering_limit_reached": "ConflictError",
 	"company_not_enabled": "PreconditionError",
 	"numbering_unavailable": "PreconditionError",
 	"certificate_problem": "PreconditionError",
 	"tacit_acceptance_not_due": "PreconditionError",
+	"automatic_mode_unavailable": "PreconditionError",
+	"portal_read_required": "PreconditionError",
+	"report_too_large": "PreconditionError",
 	"dian_rejected": "DianRejectedError",
 	"insufficient_balance": "BalanceError",
 	"top_up_below_minimum": "BalanceError",
@@ -1087,12 +1478,18 @@ export const EVENTO_DATOS: Readonly<Record<string, (json: any) => unknown>> = {
 	"credit_note.email_failed": DocumentEventDataFromJSON,
 	"credit_note.error": DocumentEventDataFromJSON,
 	"credit_note.rejected": DocumentEventDataFromJSON,
+	"customer.created": CatalogEventDataFromJSON,
+	"customer.deactivated": CatalogEventDataFromJSON,
+	"customer.updated": CatalogEventDataFromJSON,
 	"debit_note.accepted": DocumentEventDataFromJSON,
 	"debit_note.delivered": DocumentEventDataFromJSON,
 	"debit_note.email_bounced": DocumentEventDataFromJSON,
 	"debit_note.email_failed": DocumentEventDataFromJSON,
 	"debit_note.error": DocumentEventDataFromJSON,
 	"debit_note.rejected": DocumentEventDataFromJSON,
+	"dian_document.received": DianDocumentEventDataFromJSON,
+	"dian_sync.completed": DianSyncEventDataFromJSON,
+	"dian_sync.failed": DianSyncEventDataFromJSON,
 	"equivalent_document.accepted": EquivalentDocumentEventDataFromJSON,
 	"equivalent_document.delivered": EquivalentDocumentEventDataFromJSON,
 	"equivalent_document.email_bounced": EquivalentDocumentEventDataFromJSON,
@@ -1106,22 +1503,36 @@ export const EVENTO_DATOS: Readonly<Record<string, (json: any) => unknown>> = {
 	"equivalent_document_adjustment.error": EquivalentDocumentEventDataFromJSON,
 	"equivalent_document_adjustment.rejected": EquivalentDocumentEventDataFromJSON,
 	"invoice.accepted": DocumentEventDataFromJSON,
+	"invoice.contingency": InvoiceContingencyEventDataFromJSON,
 	"invoice.delivered": DocumentEventDataFromJSON,
 	"invoice.email_bounced": DocumentEventDataFromJSON,
 	"invoice.email_failed": DocumentEventDataFromJSON,
 	"invoice.error": DocumentEventDataFromJSON,
 	"invoice.rejected": DocumentEventDataFromJSON,
+	"invoice_batch.completed": InvoiceBatchEventDataFromJSON,
 	"numbering.expiring": NumberingExpiringEventDataFromJSON,
 	"numbering.low": NumberingLowEventDataFromJSON,
+	"numbering_range.associated": NumberingRangeEventDataFromJSON,
+	"numbering_range.association_failed": NumberingRangeEventDataFromJSON,
+	"numbering_range.exhausted": NumberingRangeExhaustedEventDataFromJSON,
+	"numbering_request.action_required": NumberingRequestEventDataFromJSON,
+	"numbering_request.canceled": NumberingRequestEventDataFromJSON,
+	"numbering_request.failed": NumberingRequestEventDataFromJSON,
+	"numbering_request.ready": NumberingRequestEventDataFromJSON,
 	"payroll.accepted": PayrollEventDataFromJSON,
 	"payroll.error": PayrollEventDataFromJSON,
 	"payroll.rejected": PayrollEventDataFromJSON,
 	"payroll_adjustment.accepted": PayrollEventDataFromJSON,
 	"payroll_adjustment.error": PayrollEventDataFromJSON,
 	"payroll_adjustment.rejected": PayrollEventDataFromJSON,
+	"product.created": CatalogEventDataFromJSON,
+	"product.deactivated": CatalogEventDataFromJSON,
+	"product.updated": CatalogEventDataFromJSON,
 	"radian_event.accepted": RadianEventDataFromJSON,
 	"radian_event.error": RadianEventDataFromJSON,
 	"radian_event.rejected": RadianEventDataFromJSON,
+	"report.failed": ReportRunEventDataFromJSON,
+	"report.ready": ReportRunEventDataFromJSON,
 	"support_document.accepted": SupportDocumentEventDataFromJSON,
 	"support_document.error": SupportDocumentEventDataFromJSON,
 	"support_document.rejected": SupportDocumentEventDataFromJSON,

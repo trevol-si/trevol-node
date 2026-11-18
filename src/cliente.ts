@@ -15,7 +15,19 @@ import {
 	RequestsApi,
 	SupportDocumentAdjustmentsApi,
 	SupportDocumentsApi,
-	WebhookEndpointsApi
+	WebhookEndpointsApi,
+	CustomersApi,
+	DianDocumentsApi,
+	DianSyncsApi,
+	InvoiceBatchesApi,
+	NumberingAssociationsApi,
+	NumberingRangesApi,
+	NumberingRequestsApi,
+	PaperNumberingRangesApi,
+	ProductsApi,
+	RadianStatusApi,
+	ReportRunsApi,
+	ReportsApi
 } from './generado/index.js';
 import { API_VERSION, VERSION } from './generado/tablas.js';
 import { ConfigurationError } from './errores.js';
@@ -66,6 +78,19 @@ export class Trevol {
 	readonly supportDocumentAdjustments: SupportDocumentAdjustmentsApi;
 	readonly supportDocuments: SupportDocumentsApi;
 	readonly webhookEndpoints: WebhookEndpointsApi;
+	// La API de noviembre de 2026 (docs/api/34 a 39).
+	readonly customers: CustomersApi;
+	readonly dianDocuments: DianDocumentsApi;
+	readonly dianSyncs: DianSyncsApi;
+	readonly invoiceBatches: InvoiceBatchesApi;
+	readonly numberingAssociations: NumberingAssociationsApi;
+	readonly numberingRanges: NumberingRangesApi;
+	readonly numberingRequests: NumberingRequestsApi;
+	readonly paperNumberingRanges: PaperNumberingRangesApi;
+	readonly products: ProductsApi;
+	readonly radianStatus: RadianStatusApi;
+	readonly reportRuns: ReportRunsApi;
+	readonly reports: ReportsApi;
 
 	/** @param llave tvl_test_… o tvl_live_…; si falta se lee `TREVOL_API_KEY`. */
 	constructor(llave?: string, opciones: OpcionesTrevol = {}) {
@@ -120,6 +145,18 @@ export class Trevol {
 		this.supportDocumentAdjustments = new SupportDocumentAdjustmentsApi(config);
 		this.supportDocuments = new SupportDocumentsApi(config);
 		this.webhookEndpoints = new WebhookEndpointsApi(config);
+		this.customers = new CustomersApi(config);
+		this.dianDocuments = new DianDocumentsApi(config);
+		this.dianSyncs = new DianSyncsApi(config);
+		this.invoiceBatches = new InvoiceBatchesApi(config);
+		this.numberingAssociations = new NumberingAssociationsApi(config);
+		this.numberingRanges = new NumberingRangesApi(config);
+		this.numberingRequests = new NumberingRequestsApi(config);
+		this.paperNumberingRanges = new PaperNumberingRangesApi(config);
+		this.products = new ProductsApi(config);
+		this.radianStatus = new RadianStatusApi(config);
+		this.reportRuns = new ReportRunsApi(config);
+		this.reports = new ReportsApi(config);
 	}
 
 	/**

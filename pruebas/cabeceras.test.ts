@@ -9,7 +9,7 @@ describe('cabeceras del transporte', () => {
     const c = peticiones[0]!.cabeceras;
     expect(c.get('authorization')).toBe(`Bearer ${LLAVE_TEST}`);
     expect(c.get('trevol-version')).toBe(API_VERSION);
-    expect(API_VERSION).toBe('2026-10-22');
+    expect(API_VERSION).toBe('2026-11-18');
     expect(c.get('user-agent')).toMatch(new RegExp(`^trevol-node/${VERSION.replaceAll('.', '\\.')} \\(node v?\\d+.*\\+https://platform\\.trevol\\.si/docs\\)$`));
     expect(c.get('accept')).toBe('application/json, application/problem+json');
     for (const [k] of c) {
