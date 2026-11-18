@@ -40,9 +40,13 @@ export interface Acquirer {
      */
     name?: string | null;
     /**
-     * 
+     * Null si la DIAN no lo tiene o si la llave no tiene el permiso `customers:read` (es un dato personal).
      */
     email?: string | null;
+    /**
+     * Solo si la llave no tiene el permiso `customers:read`: `email` viene en null.
+     */
+    personal_data?: AcquirerPersonalDataEnum;
 }
 
 
@@ -53,6 +57,14 @@ export const AcquirerObjectEnum = {
     Acquirer: 'acquirer',
 } as const;
 export type AcquirerObjectEnum = typeof AcquirerObjectEnum[keyof typeof AcquirerObjectEnum];
+
+/**
+ * @export
+ */
+export const AcquirerPersonalDataEnum = {
+    Redacted: 'redacted',
+} as const;
+export type AcquirerPersonalDataEnum = typeof AcquirerPersonalDataEnum[keyof typeof AcquirerPersonalDataEnum];
 
 
 /**
@@ -78,6 +90,7 @@ export function AcquirerFromJSONTyped(json: any, ignoreDiscriminator: boolean): 
         'found': json['found'] == null ? undefined : json['found'],
         'name': json['name'] === undefined ? undefined : json['name'] === null ? null : json['name'],
         'email': json['email'] === undefined ? undefined : json['email'] === null ? null : json['email'],
+        'personal_data': json['personal_data'] == null ? undefined : json['personal_data'],
     };
 }
 
@@ -98,6 +111,7 @@ export function AcquirerToJSONTyped(value?: Acquirer | null, ignoreDiscriminator
         'found': value['found'],
         'name': value['name'],
         'email': value['email'],
+        'personal_data': value['personal_data'],
     };
 }
 
