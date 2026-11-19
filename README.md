@@ -10,7 +10,7 @@ electrónica y eventos RADIAN ante la DIAN (Colombia). Documentación: <https://
 > Standard Webhooks signature verification, cursor pagination iterators and PDF/XML/ZIP downloads. Account keys (`tva_test_`/`tva_live_`)
 > manage several companies: `trevol.account.*`, and `company` / `withCompany()` for company operations. Docs are in Spanish like the API.
 
-**Versión 0.3.0** (sin publicar) — API `2026-11-18`. Licencia MIT.
+**Versión 0.3.0** — API `2026-11-18`. Licencia MIT.
 
 ## Instalación
 
@@ -129,7 +129,7 @@ No son errores ni se reintentan: se devuelven como el modelo de la respuesta. **
 Hasta 2 reintentos (3 intentos) con espera creciente (0,5 s, 1 s, 2 s… con tope de 8 s y un poco de azar) ante un error de red, 429, 500,
 502, 503, 504, un 409 `request_in_progress` o `previous_event_pending`, y todo problema que diga `retryable: true` (salvo el 402). Respeta
 `Retry-After`; si pide más de `maxRetryAfter` (60 s) no espera y lanza el error con `error.retryAfter`. Las operaciones sin
-`Idempotency-Key` (crear un endpoint, `…/send`, `DELETE`) solo se reintentan con 429. Los 202 y los errores finales (400, 401, 402, 403, 404,
+`Idempotency-Key` (crear un endpoint, `…/send`, `DELETE`) solo se reintentan con 429. Crear una llave de empresa con la de administración, igual: un reintento la devolvería sin su token. Los 202 y los errores finales (400, 401, 402, 403, 404,
 422 y los 409 `invalid_state`, `external_id_in_use`, `duplicate_document`) **nunca** se reintentan.
 
 ### La versión de la API
