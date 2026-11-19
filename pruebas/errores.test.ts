@@ -12,7 +12,7 @@ const ESTADO: Record<string, number> = {
 };
 
 describe('errores tipados a través de un método generado', () => {
-  it('cubre los 40 code', () => expect(todos).toHaveLength(40));
+  it('cubre los 43 code', () => expect(todos).toHaveLength(43));
   for (const [clase, code] of todos) {
     it(`${code} → ${clase}`, async () => {
       // retryable false y sin reintentos: el error sale de la primera respuesta

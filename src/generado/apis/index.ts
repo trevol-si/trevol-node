@@ -1,5 +1,6 @@
 /* tslint:disable */
 /* eslint-disable */
+export * from './AccountApi.js';
 export * from './BalanceApi.js';
 export * from './CreditNotesApi.js';
 export * from './CustomersApi.js';

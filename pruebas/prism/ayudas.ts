@@ -8,6 +8,14 @@ export const LLAVE = process.env.TREVOL_API_KEY ?? 'tvl_test_' + 'a1'.repeat(32)
 export const clientePrism = (opciones: ConstructorParameters<typeof Trevol>[1] = {}) =>
 	new Trevol(LLAVE, { baseUrl: URL_PRISM, maxRetries: 0, ...opciones });
 
+/** Una llave de administración de prueba (Prism no la distingue de una tvl_: las dos son Bearer). */
+export const LLAVE_ADMINISTRACION = 'tva_test_' + 'c4'.repeat(32);
+export const EMPRESA = 'com_3f0c9a1e5b2d4c7f8a6e1d2c3b4a5f60';
+
+/** Un cliente con la llave de administración contra Prism. */
+export const clienteAdministracionPrism = (opciones: ConstructorParameters<typeof Trevol>[1] = {}) =>
+	new Trevol(LLAVE_ADMINISTRACION, { baseUrl: URL_PRISM, maxRetries: 0, ...opciones });
+
 /** Si Prism rechaza la petición (cuerpo mal serializado, cabecera olvidada…) lo dice en `sl-violations`: se lo pegamos al error. */
 export async function conViolaciones<T>(f: () => Promise<T>): Promise<T> {
 	try {

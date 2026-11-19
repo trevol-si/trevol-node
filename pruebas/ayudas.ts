@@ -5,6 +5,10 @@ import { Trevol, type OpcionesTrevol } from '../src/index.js';
 export const HEX = '3f0c1a2b'.repeat(8);
 export const LLAVE_TEST = 'tvl_test_' + 'a1'.repeat(32);
 export const LLAVE_LIVE = 'tvl_live_' + 'b2'.repeat(32);
+export const LLAVE_ADMIN_TEST = 'tva_test_' + 'c4'.repeat(32);
+export const LLAVE_ADMIN_LIVE = 'tva_live_' + 'd5'.repeat(32);
+export const EMPRESA = 'com_3f0c9a1e5b2d4c7f8a6e1d2c3b4a5f60';
+export const OTRA_EMPRESA = 'com_7a1b2c3d4e5f60718293a4b5c6d7e8f9';
 export const BASE = 'https://api.trevol.si/v1';
 
 export const datos = <T = any>(nombre: string): T => JSON.parse(readFileSync(new URL(`./datos/${nombre}`, import.meta.url), 'utf8'));

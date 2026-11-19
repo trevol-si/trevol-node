@@ -1,13 +1,15 @@
 import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 import {
+	ConfigurationError,
 	ConflictError,
 	PreconditionError,
+	RateLimitError,
 	TrevolError,
 	Webhook,
 	type InvoiceInput
 } from '../../src/index.js';
-import { URL_PRISM, clientePrism, conViolaciones, prefer } from './ayudas.js';
+import { EMPRESA, URL_PRISM, clienteAdministracionPrism, clientePrism, conViolaciones, prefer } from './ayudas.js';
 
 const operaciones: Array<{ operationId: string; ejemplos: Array<{ nombre: string; valor: any }> }> = JSON.parse(
 	readFileSync(new URL('../datos/operaciones.json', import.meta.url), 'utf8')
@@ -111,5 +113,71 @@ describe.skipIf(!URL_PRISM)('contra Prism (servidor simulado desde docs/api/open
 
 	it('verifica un webhook firmado por nosotros mismos (sanidad de la ruta completa)', () => {
 		expect(typeof Webhook).toBe('function');
+	});
+});
+
+describe.skipIf(!URL_PRISM)('la llave de administración contra Prism', () => {
+	const admin = clienteAdministracionPrism();
+	const LLAVE_DE_EMPRESA = 'key_' + '0'.repeat(32);
+
+	it('retrieveAccount y retrieveAccountCompany', async () => {
+		const info = await conViolaciones(() => admin.account.retrieveAccount());
+		expect(info.object).toBe('account_key_info');
+		const empresa = await conViolaciones(() => admin.account.retrieveAccountCompany({ id: EMPRESA }));
+		expect(empresa.object).toBe('company');
+	});
+
+	it('paginate en las cinco listas de account (con tope de 3: Prism repite la misma página)', async () => {
+		const listas = [
+			(c: string | undefined) => admin.account.listAccountCompanies({ limit: 2, status: 'enabled', startingAfter: c }),
+			(c: string | undefined) => admin.account.listAccountCompanyApiKeys({ id: EMPRESA, status: 'active', startingAfter: c }),
+			(c: string | undefined) => admin.account.listAccountDianDocuments({ direction: 'received', company: EMPRESA, issuedFrom: '2026-11-01', startingAfter: c }),
+			(c: string | undefined) => admin.account.listAccountRadianEvents({ code: '030', startingAfter: c }),
+			(c: string | undefined) => admin.account.listAccountRequests({ status: 403, startingAfter: c })
+		];
+		for (const pedir of listas) {
+			const ids: unknown[] = [];
+			for await (const x of admin.paginate((c) => conViolaciones(() => pedir(c) as Promise<{ data?: Array<{ id?: string }> }>))) {
+				ids.push(x.id);
+				if (ids.length === 3) break;
+			}
+			expect(ids.length).toBeGreaterThan(0);
+		}
+	});
+
+	it('reserva una empresa, le crea una llave y la revoca (Prism exige la Idempotency-Key donde la pide la especificación)', async () => {
+		const empresa = await conViolaciones(() => admin.account.createAccountCompany({ accountCompanyInput: { nit: '901234567', name: 'FERRETERÍA EL ROBLE SAS', email: 'facturacion@elroble.example' } }));
+		expect(empresa.object).toBe('company');
+		const llave = await conViolaciones(() => admin.account.createAccountCompanyApiKey({ id: EMPRESA, accountApiKeyInput: { name: 'ERP de la bodega', permissions: 'write' } }));
+		expect(llave.object).toBe('api_key');
+		const revocada = await conViolaciones(() => admin.account.revokeAccountCompanyApiKey({ id: EMPRESA, keyId: LLAVE_DE_EMPRESA }));
+		expect(revocada.status).toBe('revoked');
+	});
+
+	it('Prefer: code=409 example=existe → ConflictError company_exists con problem.company', async () => {
+		const e = await admin.account.createAccountCompany({ accountCompanyInput: { nit: '900373427' } }, prefer('code=409, example=existe')).catch((x) => x);
+		expect(e).toBeInstanceOf(ConflictError);
+		expect(e.code).toBe('company_exists');
+		expect(e.problem.company.object).toBe('company');
+	});
+
+	it('Prefer: code=429 example=altas → RateLimitError company_limit_reached con retryAfter', async () => {
+		const e = await admin.account.createAccountCompany({ accountCompanyInput: { nit: '900373427' } }, prefer('code=429, example=altas')).catch((x) => x);
+		expect(e).toBeInstanceOf(RateLimitError);
+		expect(e.code).toBe('company_limit_reached');
+		expect(e.retryAfter).toBeGreaterThan(0);
+	});
+
+	it('una operación de empresa con company y con withCompany pasa la validación de Prism', async () => {
+		const conEmpresa = clienteAdministracionPrism({ company: EMPRESA });
+		const pagina = await conViolaciones(() => conEmpresa.invoices.listInvoices({ limit: 1 }));
+		expect(pagina.object).toBe('list');
+		const doc = await conViolaciones(() => admin.withCompany(EMPRESA).invoices.createInvoice({ invoiceInput: ejemplo('createInvoice') as InvoiceInput }));
+		expect(doc.object).toBe('invoice');
+	});
+
+	it('sin empresa, o con una tvl_ en account: ConfigurationError antes de llamar', async () => {
+		expect(await admin.invoices.listInvoices().catch((x) => x)).toBeInstanceOf(ConfigurationError);
+		expect(await clientePrism().account.retrieveAccount().catch((x) => x)).toBeInstanceOf(ConfigurationError);
 	});
 });

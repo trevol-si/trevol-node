@@ -25,7 +25,7 @@ export { Webhook, type CabecerasEntrantes, type CuerpoCrudo } from './webhooks.j
 export { paginar, type Pagina } from './paginacion.js';
 export { decidir, esperaPropia, type Decision, type EntradaDecidir, type Resultado } from './transporte.js';
 export { VERSION, API_VERSION } from './generado/tablas.js';
-export type { Entorno } from './llave.js';
+export type { Entorno, TipoDeLlave } from './llave.js';
 // Los modelos y las clases de API generados (para tipar tu código).
 export * from './generado/models/index.js';
 export * from './generado/apis/index.js';

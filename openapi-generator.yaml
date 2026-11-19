@@ -21,6 +21,6 @@ additionalProperties:
   withInterfaces: false
   typescriptThreePlus: true
   npmName: "@trevol/sdk-generado"
-  npmVersion: 0.2.0
+  npmVersion: 0.3.0
   hideGenerationTimestamp: true
   sortParamsByRequiredFlag: true

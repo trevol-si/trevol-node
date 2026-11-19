@@ -3,6 +3,7 @@
 // el `fetch` crudo si ningún `onError` lo relanza: ver `middlewareDeErrores`).
 import { CLASE_POR_CODE, CLASE_POR_ESTADO, OPERACIONES, type InfoOperacion } from './generado/tablas.js';
 import { APIConnectionError, ConfigurationError, TrevolError, errorDeRespuesta } from './errores.js';
+import type { Entorno, TipoDeLlave } from './llave.js';
 
 export type ClaseReintento = 'seguro' | 'solo_429';
 
@@ -91,8 +92,55 @@ export function validarClave(clave: string): void {
 	}
 }
 
+// ── La empresa y el entorno de una llave de administración ──────────────────
+const CABECERA_EMPRESA = 'Trevol-Company';
+const CABECERA_ENTORNO = 'Trevol-Environment';
+
+export interface LlaveDelTransporte {
+	tipoLlave: TipoDeLlave;
+	/** El entorno del prefijo de la llave: va en `Trevol-Environment` con una llave de administración. */
+	entorno: Entorno;
+	/** El `com_…` de la empresa (solo con una llave de administración); null si el cliente no tiene empresa. */
+	empresa: string | null;
+}
+
+function esRutaDeCuenta(ruta: string): boolean {
+	return ruta === '/account' || ruta.startsWith('/account/');
+}
+
+/**
+ * Pone o quita `Trevol-Company` y `Trevol-Environment` según la llave y la operación (docs/api/35 §18.1). Con una llave de empresa (`tvl_`)
+ * nunca van, aunque la persona las ponga a mano. Con una de administración (`tva_`) van en cada operación de una empresa; si el cliente no
+ * tiene empresa, error ANTES de llamar. En las de `/account` y en `/health` no van. Lanza `ConfigurationError` sin mencionar la llave.
+ */
+export function aplicarLlave(cabeceras: Headers, l: LlaveDelTransporte, op: InfoOperacion | undefined, ruta: string): void {
+	cabeceras.delete(CABECERA_EMPRESA);
+	cabeceras.delete(CABECERA_ENTORNO);
+	if (l.tipoLlave === 'api') {
+		if (op?.llave === 'administracion') {
+			throw new ConfigurationError(
+				`Las operaciones de account piden una llave de administración (tva_…); ${op.operationId} no se puede llamar con una llave de empresa (tvl_…).`
+			);
+		}
+		return;
+	}
+	if (op) {
+		if (op.llave !== 'api_o_administracion') return;
+		if (l.empresa === null) {
+			throw new ConfigurationError(
+				`Con una llave de administración, indica la empresa: company al crear el cliente o withCompany('com_…') (${op.operationId} es una operación de una empresa).`
+			);
+		}
+	} else if (l.empresa === null || esRutaDeCuenta(ruta)) {
+		// Una ruta que la tabla no conoce (una petición cruda): las cabeceras van solo si hay empresa y no es de /account.
+		return;
+	}
+	cabeceras.set(CABECERA_EMPRESA, l.empresa);
+	cabeceras.set(CABECERA_ENTORNO, l.entorno);
+}
+
 // ── El fetch con reintentos ─────────────────────────────────────────────────
-export interface OpcionesTransporte {
+export interface OpcionesTransporte extends LlaveDelTransporte {
 	llave: string;
 	apiVersion: string;
 	baseUrl: string;
@@ -136,6 +184,7 @@ export function crearFetch(o: OpcionesTransporte): (url: RequestInfo | URL, init
 		const reintento: ClaseReintento = op ? op.reintento : metodo === 'GET' ? 'seguro' : 'solo_429';
 
 		const cabeceras = new Headers(init.headers);
+		aplicarLlave(cabeceras, o, op, ruta);
 		cabeceras.set('Authorization', `Bearer ${o.llave}`);
 		cabeceras.set('Trevol-Version', o.apiVersion);
 		if (typeof window === 'undefined') cabeceras.set('User-Agent', o.userAgent);

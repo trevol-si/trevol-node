@@ -22,7 +22,7 @@ import {
 	TestEventDataFromJSON,
 } from './models/index.js';
 
-export const VERSION = "0.2.0";
+export const VERSION = "0.3.0";
 export const API_VERSION = "2026-11-18";
 
 export interface InfoOperacion {
@@ -31,9 +31,11 @@ export interface InfoOperacion {
 	readonly ruta: string;
 	readonly recurso: string;
 	readonly idempotente: boolean;
-	/** seguro: GET, preview, PATCH y todo POST/PUT con Idempotency-Key. solo_429: el resto. */
+	/** seguro: GET, preview, PATCH y todo POST/PUT con Idempotency-Key que no devuelva un secreto una sola vez. solo_429: el resto. */
 	readonly reintento: 'seguro' | 'solo_429';
 	readonly binario: 'pdf' | 'xml' | 'zip' | 'csv' | null;
+	/** Qué llave admite: la de una empresa (tvl_) o la de administración (tva_, con Trevol-Company y Trevol-Environment); solo la de administración; ninguna. */
+	readonly llave: 'api_o_administracion' | 'administracion' | 'ninguna';
 }
 
 export const OPERACIONES: readonly InfoOperacion[] = [
@@ -44,7 +46,8 @@ export const OPERACIONES: readonly InfoOperacion[] = [
 		"recurso": "NumberingRanges",
 		"idempotente": true,
 		"reintento": "seguro",
-		"binario": null
+		"binario": null,
+		"llave": "api_o_administracion"
 	},
 	{
 		"operationId": "cancelNumberingRequest",
@@ -53,7 +56,8 @@ export const OPERACIONES: readonly InfoOperacion[] = [
 		"recurso": "NumberingRequests",
 		"idempotente": false,
 		"reintento": "solo_429",
-		"binario": null
+		"binario": null,
+		"llave": "api_o_administracion"
 	},
 	{
 		"operationId": "correctCreditNote",
@@ -62,7 +66,8 @@ export const OPERACIONES: readonly InfoOperacion[] = [
 		"recurso": "CreditNotes",
 		"idempotente": true,
 		"reintento": "seguro",
-		"binario": null
+		"binario": null,
+		"llave": "api_o_administracion"
 	},
 	{
 		"operationId": "correctDebitNote",
@@ -71,7 +76,8 @@ export const OPERACIONES: readonly InfoOperacion[] = [
 		"recurso": "DebitNotes",
 		"idempotente": true,
 		"reintento": "seguro",
-		"binario": null
+		"binario": null,
+		"llave": "api_o_administracion"
 	},
 	{
 		"operationId": "correctEquivalentDocument",
@@ -80,7 +86,8 @@ export const OPERACIONES: readonly InfoOperacion[] = [
 		"recurso": "EquivalentDocuments",
 		"idempotente": true,
 		"reintento": "seguro",
-		"binario": null
+		"binario": null,
+		"llave": "api_o_administracion"
 	},
 	{
 		"operationId": "correctEquivalentDocumentAdjustment",
@@ -89,7 +96,8 @@ export const OPERACIONES: readonly InfoOperacion[] = [
 		"recurso": "EquivalentDocumentAdjustments",
 		"idempotente": true,
 		"reintento": "seguro",
-		"binario": null
+		"binario": null,
+		"llave": "api_o_administracion"
 	},
 	{
 		"operationId": "correctInvoice",
@@ -98,7 +106,8 @@ export const OPERACIONES: readonly InfoOperacion[] = [
 		"recurso": "Invoices",
 		"idempotente": true,
 		"reintento": "seguro",
-		"binario": null
+		"binario": null,
+		"llave": "api_o_administracion"
 	},
 	{
 		"operationId": "correctPayroll",
@@ -107,7 +116,8 @@ export const OPERACIONES: readonly InfoOperacion[] = [
 		"recurso": "Payrolls",
 		"idempotente": true,
 		"reintento": "seguro",
-		"binario": null
+		"binario": null,
+		"llave": "api_o_administracion"
 	},
 	{
 		"operationId": "correctPayrollAdjustment",
@@ -116,7 +126,8 @@ export const OPERACIONES: readonly InfoOperacion[] = [
 		"recurso": "PayrollAdjustments",
 		"idempotente": true,
 		"reintento": "seguro",
-		"binario": null
+		"binario": null,
+		"llave": "api_o_administracion"
 	},
 	{
 		"operationId": "correctSupportDocument",
@@ -125,7 +136,8 @@ export const OPERACIONES: readonly InfoOperacion[] = [
 		"recurso": "SupportDocuments",
 		"idempotente": true,
 		"reintento": "seguro",
-		"binario": null
+		"binario": null,
+		"llave": "api_o_administracion"
 	},
 	{
 		"operationId": "correctSupportDocumentAdjustment",
@@ -134,7 +146,28 @@ export const OPERACIONES: readonly InfoOperacion[] = [
 		"recurso": "SupportDocumentAdjustments",
 		"idempotente": true,
 		"reintento": "seguro",
-		"binario": null
+		"binario": null,
+		"llave": "api_o_administracion"
+	},
+	{
+		"operationId": "createAccountCompany",
+		"metodo": "POST",
+		"ruta": "/account/companies",
+		"recurso": "Account",
+		"idempotente": true,
+		"reintento": "seguro",
+		"binario": null,
+		"llave": "administracion"
+	},
+	{
+		"operationId": "createAccountCompanyApiKey",
+		"metodo": "POST",
+		"ruta": "/account/companies/{id}/api_keys",
+		"recurso": "Account",
+		"idempotente": true,
+		"reintento": "solo_429",
+		"binario": null,
+		"llave": "administracion"
 	},
 	{
 		"operationId": "createBalanceTopUp",
@@ -143,7 +176,8 @@ export const OPERACIONES: readonly InfoOperacion[] = [
 		"recurso": "Balance",
 		"idempotente": true,
 		"reintento": "seguro",
-		"binario": null
+		"binario": null,
+		"llave": "api_o_administracion"
 	},
 	{
 		"operationId": "createCreditNote",
@@ -152,7 +186,8 @@ export const OPERACIONES: readonly InfoOperacion[] = [
 		"recurso": "CreditNotes",
 		"idempotente": true,
 		"reintento": "seguro",
-		"binario": null
+		"binario": null,
+		"llave": "api_o_administracion"
 	},
 	{
 		"operationId": "createCustomer",
@@ -161,7 +196,8 @@ export const OPERACIONES: readonly InfoOperacion[] = [
 		"recurso": "Customers",
 		"idempotente": true,
 		"reintento": "seguro",
-		"binario": null
+		"binario": null,
+		"llave": "api_o_administracion"
 	},
 	{
 		"operationId": "createDebitNote",
@@ -170,7 +206,8 @@ export const OPERACIONES: readonly InfoOperacion[] = [
 		"recurso": "DebitNotes",
 		"idempotente": true,
 		"reintento": "seguro",
-		"binario": null
+		"binario": null,
+		"llave": "api_o_administracion"
 	},
 	{
 		"operationId": "createDianSync",
@@ -179,7 +216,8 @@ export const OPERACIONES: readonly InfoOperacion[] = [
 		"recurso": "DianSyncs",
 		"idempotente": true,
 		"reintento": "seguro",
-		"binario": null
+		"binario": null,
+		"llave": "api_o_administracion"
 	},
 	{
 		"operationId": "createEquivalentDocument",
@@ -188,7 +226,8 @@ export const OPERACIONES: readonly InfoOperacion[] = [
 		"recurso": "EquivalentDocuments",
 		"idempotente": true,
 		"reintento": "seguro",
-		"binario": null
+		"binario": null,
+		"llave": "api_o_administracion"
 	},
 	{
 		"operationId": "createEquivalentDocumentAdjustment",
@@ -197,7 +236,8 @@ export const OPERACIONES: readonly InfoOperacion[] = [
 		"recurso": "EquivalentDocumentAdjustments",
 		"idempotente": true,
 		"reintento": "seguro",
-		"binario": null
+		"binario": null,
+		"llave": "api_o_administracion"
 	},
 	{
 		"operationId": "createInvoice",
@@ -206,7 +246,8 @@ export const OPERACIONES: readonly InfoOperacion[] = [
 		"recurso": "Invoices",
 		"idempotente": true,
 		"reintento": "seguro",
-		"binario": null
+		"binario": null,
+		"llave": "api_o_administracion"
 	},
 	{
 		"operationId": "createInvoiceBatch",
@@ -215,7 +256,8 @@ export const OPERACIONES: readonly InfoOperacion[] = [
 		"recurso": "InvoiceBatches",
 		"idempotente": true,
 		"reintento": "seguro",
-		"binario": null
+		"binario": null,
+		"llave": "api_o_administracion"
 	},
 	{
 		"operationId": "createNumberingRequest",
@@ -224,7 +266,8 @@ export const OPERACIONES: readonly InfoOperacion[] = [
 		"recurso": "NumberingRequests",
 		"idempotente": true,
 		"reintento": "seguro",
-		"binario": null
+		"binario": null,
+		"llave": "api_o_administracion"
 	},
 	{
 		"operationId": "createPaperNumberingRange",
@@ -233,7 +276,8 @@ export const OPERACIONES: readonly InfoOperacion[] = [
 		"recurso": "PaperNumberingRanges",
 		"idempotente": true,
 		"reintento": "seguro",
-		"binario": null
+		"binario": null,
+		"llave": "api_o_administracion"
 	},
 	{
 		"operationId": "createPayroll",
@@ -242,7 +286,8 @@ export const OPERACIONES: readonly InfoOperacion[] = [
 		"recurso": "Payrolls",
 		"idempotente": true,
 		"reintento": "seguro",
-		"binario": null
+		"binario": null,
+		"llave": "api_o_administracion"
 	},
 	{
 		"operationId": "createPayrollAdjustment",
@@ -251,7 +296,8 @@ export const OPERACIONES: readonly InfoOperacion[] = [
 		"recurso": "PayrollAdjustments",
 		"idempotente": true,
 		"reintento": "seguro",
-		"binario": null
+		"binario": null,
+		"llave": "api_o_administracion"
 	},
 	{
 		"operationId": "createProduct",
@@ -260,7 +306,8 @@ export const OPERACIONES: readonly InfoOperacion[] = [
 		"recurso": "Products",
 		"idempotente": true,
 		"reintento": "seguro",
-		"binario": null
+		"binario": null,
+		"llave": "api_o_administracion"
 	},
 	{
 		"operationId": "createRadianEvent",
@@ -269,7 +316,8 @@ export const OPERACIONES: readonly InfoOperacion[] = [
 		"recurso": "RadianEvents",
 		"idempotente": true,
 		"reintento": "seguro",
-		"binario": null
+		"binario": null,
+		"llave": "api_o_administracion"
 	},
 	{
 		"operationId": "createReportRun",
@@ -278,7 +326,8 @@ export const OPERACIONES: readonly InfoOperacion[] = [
 		"recurso": "ReportRuns",
 		"idempotente": true,
 		"reintento": "seguro",
-		"binario": null
+		"binario": null,
+		"llave": "api_o_administracion"
 	},
 	{
 		"operationId": "createSupportDocument",
@@ -287,7 +336,8 @@ export const OPERACIONES: readonly InfoOperacion[] = [
 		"recurso": "SupportDocuments",
 		"idempotente": true,
 		"reintento": "seguro",
-		"binario": null
+		"binario": null,
+		"llave": "api_o_administracion"
 	},
 	{
 		"operationId": "createSupportDocumentAdjustment",
@@ -296,7 +346,8 @@ export const OPERACIONES: readonly InfoOperacion[] = [
 		"recurso": "SupportDocumentAdjustments",
 		"idempotente": true,
 		"reintento": "seguro",
-		"binario": null
+		"binario": null,
+		"llave": "api_o_administracion"
 	},
 	{
 		"operationId": "createWebhookEndpoint",
@@ -305,7 +356,8 @@ export const OPERACIONES: readonly InfoOperacion[] = [
 		"recurso": "WebhookEndpoints",
 		"idempotente": false,
 		"reintento": "solo_429",
-		"binario": null
+		"binario": null,
+		"llave": "api_o_administracion"
 	},
 	{
 		"operationId": "deactivatePaperNumberingRange",
@@ -314,7 +366,8 @@ export const OPERACIONES: readonly InfoOperacion[] = [
 		"recurso": "PaperNumberingRanges",
 		"idempotente": false,
 		"reintento": "solo_429",
-		"binario": null
+		"binario": null,
+		"llave": "api_o_administracion"
 	},
 	{
 		"operationId": "deleteWebhookEndpoint",
@@ -323,7 +376,8 @@ export const OPERACIONES: readonly InfoOperacion[] = [
 		"recurso": "WebhookEndpoints",
 		"idempotente": false,
 		"reintento": "solo_429",
-		"binario": null
+		"binario": null,
+		"llave": "api_o_administracion"
 	},
 	{
 		"operationId": "downloadCreditNoteDianResponse",
@@ -332,7 +386,8 @@ export const OPERACIONES: readonly InfoOperacion[] = [
 		"recurso": "CreditNotes",
 		"idempotente": false,
 		"reintento": "seguro",
-		"binario": "xml"
+		"binario": "xml",
+		"llave": "api_o_administracion"
 	},
 	{
 		"operationId": "downloadCreditNotePdf",
@@ -341,7 +396,8 @@ export const OPERACIONES: readonly InfoOperacion[] = [
 		"recurso": "CreditNotes",
 		"idempotente": false,
 		"reintento": "seguro",
-		"binario": "pdf"
+		"binario": "pdf",
+		"llave": "api_o_administracion"
 	},
 	{
 		"operationId": "downloadCreditNoteXml",
@@ -350,7 +406,8 @@ export const OPERACIONES: readonly InfoOperacion[] = [
 		"recurso": "CreditNotes",
 		"idempotente": false,
 		"reintento": "seguro",
-		"binario": "xml"
+		"binario": "xml",
+		"llave": "api_o_administracion"
 	},
 	{
 		"operationId": "downloadCreditNoteZip",
@@ -359,7 +416,8 @@ export const OPERACIONES: readonly InfoOperacion[] = [
 		"recurso": "CreditNotes",
 		"idempotente": false,
 		"reintento": "seguro",
-		"binario": "zip"
+		"binario": "zip",
+		"llave": "api_o_administracion"
 	},
 	{
 		"operationId": "downloadDebitNoteDianResponse",
@@ -368,7 +426,8 @@ export const OPERACIONES: readonly InfoOperacion[] = [
 		"recurso": "DebitNotes",
 		"idempotente": false,
 		"reintento": "seguro",
-		"binario": "xml"
+		"binario": "xml",
+		"llave": "api_o_administracion"
 	},
 	{
 		"operationId": "downloadDebitNotePdf",
@@ -377,7 +436,8 @@ export const OPERACIONES: readonly InfoOperacion[] = [
 		"recurso": "DebitNotes",
 		"idempotente": false,
 		"reintento": "seguro",
-		"binario": "pdf"
+		"binario": "pdf",
+		"llave": "api_o_administracion"
 	},
 	{
 		"operationId": "downloadDebitNoteXml",
@@ -386,7 +446,8 @@ export const OPERACIONES: readonly InfoOperacion[] = [
 		"recurso": "DebitNotes",
 		"idempotente": false,
 		"reintento": "seguro",
-		"binario": "xml"
+		"binario": "xml",
+		"llave": "api_o_administracion"
 	},
 	{
 		"operationId": "downloadDebitNoteZip",
@@ -395,7 +456,8 @@ export const OPERACIONES: readonly InfoOperacion[] = [
 		"recurso": "DebitNotes",
 		"idempotente": false,
 		"reintento": "seguro",
-		"binario": "zip"
+		"binario": "zip",
+		"llave": "api_o_administracion"
 	},
 	{
 		"operationId": "downloadDianDocumentXml",
@@ -404,7 +466,8 @@ export const OPERACIONES: readonly InfoOperacion[] = [
 		"recurso": "DianDocuments",
 		"idempotente": false,
 		"reintento": "seguro",
-		"binario": "xml"
+		"binario": "xml",
+		"llave": "api_o_administracion"
 	},
 	{
 		"operationId": "downloadEquivalentDocumentAdjustmentDianResponse",
@@ -413,7 +476,8 @@ export const OPERACIONES: readonly InfoOperacion[] = [
 		"recurso": "EquivalentDocumentAdjustments",
 		"idempotente": false,
 		"reintento": "seguro",
-		"binario": "xml"
+		"binario": "xml",
+		"llave": "api_o_administracion"
 	},
 	{
 		"operationId": "downloadEquivalentDocumentAdjustmentPdf",
@@ -422,7 +486,8 @@ export const OPERACIONES: readonly InfoOperacion[] = [
 		"recurso": "EquivalentDocumentAdjustments",
 		"idempotente": false,
 		"reintento": "seguro",
-		"binario": "pdf"
+		"binario": "pdf",
+		"llave": "api_o_administracion"
 	},
 	{
 		"operationId": "downloadEquivalentDocumentAdjustmentXml",
@@ -431,7 +496,8 @@ export const OPERACIONES: readonly InfoOperacion[] = [
 		"recurso": "EquivalentDocumentAdjustments",
 		"idempotente": false,
 		"reintento": "seguro",
-		"binario": "xml"
+		"binario": "xml",
+		"llave": "api_o_administracion"
 	},
 	{
 		"operationId": "downloadEquivalentDocumentAdjustmentZip",
@@ -440,7 +506,8 @@ export const OPERACIONES: readonly InfoOperacion[] = [
 		"recurso": "EquivalentDocumentAdjustments",
 		"idempotente": false,
 		"reintento": "seguro",
-		"binario": "zip"
+		"binario": "zip",
+		"llave": "api_o_administracion"
 	},
 	{
 		"operationId": "downloadEquivalentDocumentDianResponse",
@@ -449,7 +516,8 @@ export const OPERACIONES: readonly InfoOperacion[] = [
 		"recurso": "EquivalentDocuments",
 		"idempotente": false,
 		"reintento": "seguro",
-		"binario": "xml"
+		"binario": "xml",
+		"llave": "api_o_administracion"
 	},
 	{
 		"operationId": "downloadEquivalentDocumentPdf",
@@ -458,7 +526,8 @@ export const OPERACIONES: readonly InfoOperacion[] = [
 		"recurso": "EquivalentDocuments",
 		"idempotente": false,
 		"reintento": "seguro",
-		"binario": "pdf"
+		"binario": "pdf",
+		"llave": "api_o_administracion"
 	},
 	{
 		"operationId": "downloadEquivalentDocumentXml",
@@ -467,7 +536,8 @@ export const OPERACIONES: readonly InfoOperacion[] = [
 		"recurso": "EquivalentDocuments",
 		"idempotente": false,
 		"reintento": "seguro",
-		"binario": "xml"
+		"binario": "xml",
+		"llave": "api_o_administracion"
 	},
 	{
 		"operationId": "downloadEquivalentDocumentZip",
@@ -476,7 +546,8 @@ export const OPERACIONES: readonly InfoOperacion[] = [
 		"recurso": "EquivalentDocuments",
 		"idempotente": false,
 		"reintento": "seguro",
-		"binario": "zip"
+		"binario": "zip",
+		"llave": "api_o_administracion"
 	},
 	{
 		"operationId": "downloadInvoiceDianResponse",
@@ -485,7 +556,8 @@ export const OPERACIONES: readonly InfoOperacion[] = [
 		"recurso": "Invoices",
 		"idempotente": false,
 		"reintento": "seguro",
-		"binario": "xml"
+		"binario": "xml",
+		"llave": "api_o_administracion"
 	},
 	{
 		"operationId": "downloadInvoicePdf",
@@ -494,7 +566,8 @@ export const OPERACIONES: readonly InfoOperacion[] = [
 		"recurso": "Invoices",
 		"idempotente": false,
 		"reintento": "seguro",
-		"binario": "pdf"
+		"binario": "pdf",
+		"llave": "api_o_administracion"
 	},
 	{
 		"operationId": "downloadInvoiceXml",
@@ -503,7 +576,8 @@ export const OPERACIONES: readonly InfoOperacion[] = [
 		"recurso": "Invoices",
 		"idempotente": false,
 		"reintento": "seguro",
-		"binario": "xml"
+		"binario": "xml",
+		"llave": "api_o_administracion"
 	},
 	{
 		"operationId": "downloadInvoiceZip",
@@ -512,7 +586,8 @@ export const OPERACIONES: readonly InfoOperacion[] = [
 		"recurso": "Invoices",
 		"idempotente": false,
 		"reintento": "seguro",
-		"binario": "zip"
+		"binario": "zip",
+		"llave": "api_o_administracion"
 	},
 	{
 		"operationId": "downloadPayrollAdjustmentDianResponse",
@@ -521,7 +596,8 @@ export const OPERACIONES: readonly InfoOperacion[] = [
 		"recurso": "PayrollAdjustments",
 		"idempotente": false,
 		"reintento": "seguro",
-		"binario": "xml"
+		"binario": "xml",
+		"llave": "api_o_administracion"
 	},
 	{
 		"operationId": "downloadPayrollAdjustmentXml",
@@ -530,7 +606,8 @@ export const OPERACIONES: readonly InfoOperacion[] = [
 		"recurso": "PayrollAdjustments",
 		"idempotente": false,
 		"reintento": "seguro",
-		"binario": "xml"
+		"binario": "xml",
+		"llave": "api_o_administracion"
 	},
 	{
 		"operationId": "downloadPayrollAdjustmentZip",
@@ -539,7 +616,8 @@ export const OPERACIONES: readonly InfoOperacion[] = [
 		"recurso": "PayrollAdjustments",
 		"idempotente": false,
 		"reintento": "seguro",
-		"binario": "zip"
+		"binario": "zip",
+		"llave": "api_o_administracion"
 	},
 	{
 		"operationId": "downloadPayrollDianResponse",
@@ -548,7 +626,8 @@ export const OPERACIONES: readonly InfoOperacion[] = [
 		"recurso": "Payrolls",
 		"idempotente": false,
 		"reintento": "seguro",
-		"binario": "xml"
+		"binario": "xml",
+		"llave": "api_o_administracion"
 	},
 	{
 		"operationId": "downloadPayrollXml",
@@ -557,7 +636,8 @@ export const OPERACIONES: readonly InfoOperacion[] = [
 		"recurso": "Payrolls",
 		"idempotente": false,
 		"reintento": "seguro",
-		"binario": "xml"
+		"binario": "xml",
+		"llave": "api_o_administracion"
 	},
 	{
 		"operationId": "downloadPayrollZip",
@@ -566,7 +646,8 @@ export const OPERACIONES: readonly InfoOperacion[] = [
 		"recurso": "Payrolls",
 		"idempotente": false,
 		"reintento": "seguro",
-		"binario": "zip"
+		"binario": "zip",
+		"llave": "api_o_administracion"
 	},
 	{
 		"operationId": "downloadRadianEventXml",
@@ -575,7 +656,8 @@ export const OPERACIONES: readonly InfoOperacion[] = [
 		"recurso": "RadianEvents",
 		"idempotente": false,
 		"reintento": "seguro",
-		"binario": "xml"
+		"binario": "xml",
+		"llave": "api_o_administracion"
 	},
 	{
 		"operationId": "downloadSupportDocumentAdjustmentDianResponse",
@@ -584,7 +666,8 @@ export const OPERACIONES: readonly InfoOperacion[] = [
 		"recurso": "SupportDocumentAdjustments",
 		"idempotente": false,
 		"reintento": "seguro",
-		"binario": "xml"
+		"binario": "xml",
+		"llave": "api_o_administracion"
 	},
 	{
 		"operationId": "downloadSupportDocumentAdjustmentXml",
@@ -593,7 +676,8 @@ export const OPERACIONES: readonly InfoOperacion[] = [
 		"recurso": "SupportDocumentAdjustments",
 		"idempotente": false,
 		"reintento": "seguro",
-		"binario": "xml"
+		"binario": "xml",
+		"llave": "api_o_administracion"
 	},
 	{
 		"operationId": "downloadSupportDocumentDianResponse",
@@ -602,7 +686,8 @@ export const OPERACIONES: readonly InfoOperacion[] = [
 		"recurso": "SupportDocuments",
 		"idempotente": false,
 		"reintento": "seguro",
-		"binario": "xml"
+		"binario": "xml",
+		"llave": "api_o_administracion"
 	},
 	{
 		"operationId": "downloadSupportDocumentXml",
@@ -611,7 +696,8 @@ export const OPERACIONES: readonly InfoOperacion[] = [
 		"recurso": "SupportDocuments",
 		"idempotente": false,
 		"reintento": "seguro",
-		"binario": "xml"
+		"binario": "xml",
+		"llave": "api_o_administracion"
 	},
 	{
 		"operationId": "exportDocuments",
@@ -620,7 +706,8 @@ export const OPERACIONES: readonly InfoOperacion[] = [
 		"recurso": "Reports",
 		"idempotente": false,
 		"reintento": "seguro",
-		"binario": "csv"
+		"binario": "csv",
+		"llave": "api_o_administracion"
 	},
 	{
 		"operationId": "getDianDocument",
@@ -629,7 +716,8 @@ export const OPERACIONES: readonly InfoOperacion[] = [
 		"recurso": "DianDocuments",
 		"idempotente": false,
 		"reintento": "seguro",
-		"binario": null
+		"binario": null,
+		"llave": "api_o_administracion"
 	},
 	{
 		"operationId": "getDianSync",
@@ -638,7 +726,8 @@ export const OPERACIONES: readonly InfoOperacion[] = [
 		"recurso": "DianSyncs",
 		"idempotente": false,
 		"reintento": "seguro",
-		"binario": null
+		"binario": null,
+		"llave": "api_o_administracion"
 	},
 	{
 		"operationId": "getHealth",
@@ -647,7 +736,8 @@ export const OPERACIONES: readonly InfoOperacion[] = [
 		"recurso": "General",
 		"idempotente": false,
 		"reintento": "seguro",
-		"binario": null
+		"binario": null,
+		"llave": "ninguna"
 	},
 	{
 		"operationId": "getRadianStatus",
@@ -656,7 +746,58 @@ export const OPERACIONES: readonly InfoOperacion[] = [
 		"recurso": "RadianStatus",
 		"idempotente": false,
 		"reintento": "seguro",
-		"binario": null
+		"binario": null,
+		"llave": "api_o_administracion"
+	},
+	{
+		"operationId": "listAccountCompanies",
+		"metodo": "GET",
+		"ruta": "/account/companies",
+		"recurso": "Account",
+		"idempotente": false,
+		"reintento": "seguro",
+		"binario": null,
+		"llave": "administracion"
+	},
+	{
+		"operationId": "listAccountCompanyApiKeys",
+		"metodo": "GET",
+		"ruta": "/account/companies/{id}/api_keys",
+		"recurso": "Account",
+		"idempotente": false,
+		"reintento": "seguro",
+		"binario": null,
+		"llave": "administracion"
+	},
+	{
+		"operationId": "listAccountDianDocuments",
+		"metodo": "GET",
+		"ruta": "/account/dian_documents",
+		"recurso": "Account",
+		"idempotente": false,
+		"reintento": "seguro",
+		"binario": null,
+		"llave": "administracion"
+	},
+	{
+		"operationId": "listAccountRadianEvents",
+		"metodo": "GET",
+		"ruta": "/account/radian_events",
+		"recurso": "Account",
+		"idempotente": false,
+		"reintento": "seguro",
+		"binario": null,
+		"llave": "administracion"
+	},
+	{
+		"operationId": "listAccountRequests",
+		"metodo": "GET",
+		"ruta": "/account/requests",
+		"recurso": "Account",
+		"idempotente": false,
+		"reintento": "seguro",
+		"binario": null,
+		"llave": "administracion"
 	},
 	{
 		"operationId": "listBalanceTransactions",
@@ -665,7 +806,8 @@ export const OPERACIONES: readonly InfoOperacion[] = [
 		"recurso": "Balance",
 		"idempotente": false,
 		"reintento": "seguro",
-		"binario": null
+		"binario": null,
+		"llave": "api_o_administracion"
 	},
 	{
 		"operationId": "listCreditNotes",
@@ -674,7 +816,8 @@ export const OPERACIONES: readonly InfoOperacion[] = [
 		"recurso": "CreditNotes",
 		"idempotente": false,
 		"reintento": "seguro",
-		"binario": null
+		"binario": null,
+		"llave": "api_o_administracion"
 	},
 	{
 		"operationId": "listCustomers",
@@ -683,7 +826,8 @@ export const OPERACIONES: readonly InfoOperacion[] = [
 		"recurso": "Customers",
 		"idempotente": false,
 		"reintento": "seguro",
-		"binario": null
+		"binario": null,
+		"llave": "api_o_administracion"
 	},
 	{
 		"operationId": "listDebitNotes",
@@ -692,7 +836,8 @@ export const OPERACIONES: readonly InfoOperacion[] = [
 		"recurso": "DebitNotes",
 		"idempotente": false,
 		"reintento": "seguro",
-		"binario": null
+		"binario": null,
+		"llave": "api_o_administracion"
 	},
 	{
 		"operationId": "listDianDocuments",
@@ -701,7 +846,8 @@ export const OPERACIONES: readonly InfoOperacion[] = [
 		"recurso": "DianDocuments",
 		"idempotente": false,
 		"reintento": "seguro",
-		"binario": null
+		"binario": null,
+		"llave": "api_o_administracion"
 	},
 	{
 		"operationId": "listDianSyncs",
@@ -710,7 +856,8 @@ export const OPERACIONES: readonly InfoOperacion[] = [
 		"recurso": "DianSyncs",
 		"idempotente": false,
 		"reintento": "seguro",
-		"binario": null
+		"binario": null,
+		"llave": "api_o_administracion"
 	},
 	{
 		"operationId": "listEquivalentDocumentAdjustments",
@@ -719,7 +866,8 @@ export const OPERACIONES: readonly InfoOperacion[] = [
 		"recurso": "EquivalentDocumentAdjustments",
 		"idempotente": false,
 		"reintento": "seguro",
-		"binario": null
+		"binario": null,
+		"llave": "api_o_administracion"
 	},
 	{
 		"operationId": "listEquivalentDocuments",
@@ -728,7 +876,8 @@ export const OPERACIONES: readonly InfoOperacion[] = [
 		"recurso": "EquivalentDocuments",
 		"idempotente": false,
 		"reintento": "seguro",
-		"binario": null
+		"binario": null,
+		"llave": "api_o_administracion"
 	},
 	{
 		"operationId": "listEvents",
@@ -737,7 +886,8 @@ export const OPERACIONES: readonly InfoOperacion[] = [
 		"recurso": "Events",
 		"idempotente": false,
 		"reintento": "seguro",
-		"binario": null
+		"binario": null,
+		"llave": "api_o_administracion"
 	},
 	{
 		"operationId": "listInvoiceBatches",
@@ -746,7 +896,8 @@ export const OPERACIONES: readonly InfoOperacion[] = [
 		"recurso": "InvoiceBatches",
 		"idempotente": false,
 		"reintento": "seguro",
-		"binario": null
+		"binario": null,
+		"llave": "api_o_administracion"
 	},
 	{
 		"operationId": "listInvoices",
@@ -755,7 +906,8 @@ export const OPERACIONES: readonly InfoOperacion[] = [
 		"recurso": "Invoices",
 		"idempotente": false,
 		"reintento": "seguro",
-		"binario": null
+		"binario": null,
+		"llave": "api_o_administracion"
 	},
 	{
 		"operationId": "listNumberingRanges",
@@ -764,7 +916,8 @@ export const OPERACIONES: readonly InfoOperacion[] = [
 		"recurso": "NumberingRanges",
 		"idempotente": false,
 		"reintento": "seguro",
-		"binario": null
+		"binario": null,
+		"llave": "api_o_administracion"
 	},
 	{
 		"operationId": "listNumberingRequests",
@@ -773,7 +926,8 @@ export const OPERACIONES: readonly InfoOperacion[] = [
 		"recurso": "NumberingRequests",
 		"idempotente": false,
 		"reintento": "seguro",
-		"binario": null
+		"binario": null,
+		"llave": "api_o_administracion"
 	},
 	{
 		"operationId": "listPaperNumberingRanges",
@@ -782,7 +936,8 @@ export const OPERACIONES: readonly InfoOperacion[] = [
 		"recurso": "PaperNumberingRanges",
 		"idempotente": false,
 		"reintento": "seguro",
-		"binario": null
+		"binario": null,
+		"llave": "api_o_administracion"
 	},
 	{
 		"operationId": "listPayrollAdjustments",
@@ -791,7 +946,8 @@ export const OPERACIONES: readonly InfoOperacion[] = [
 		"recurso": "PayrollAdjustments",
 		"idempotente": false,
 		"reintento": "seguro",
-		"binario": null
+		"binario": null,
+		"llave": "api_o_administracion"
 	},
 	{
 		"operationId": "listPayrolls",
@@ -800,7 +956,8 @@ export const OPERACIONES: readonly InfoOperacion[] = [
 		"recurso": "Payrolls",
 		"idempotente": false,
 		"reintento": "seguro",
-		"binario": null
+		"binario": null,
+		"llave": "api_o_administracion"
 	},
 	{
 		"operationId": "listProducts",
@@ -809,7 +966,8 @@ export const OPERACIONES: readonly InfoOperacion[] = [
 		"recurso": "Products",
 		"idempotente": false,
 		"reintento": "seguro",
-		"binario": null
+		"binario": null,
+		"llave": "api_o_administracion"
 	},
 	{
 		"operationId": "listRadianEvents",
@@ -818,7 +976,8 @@ export const OPERACIONES: readonly InfoOperacion[] = [
 		"recurso": "RadianEvents",
 		"idempotente": false,
 		"reintento": "seguro",
-		"binario": null
+		"binario": null,
+		"llave": "api_o_administracion"
 	},
 	{
 		"operationId": "listReportRuns",
@@ -827,7 +986,8 @@ export const OPERACIONES: readonly InfoOperacion[] = [
 		"recurso": "ReportRuns",
 		"idempotente": false,
 		"reintento": "seguro",
-		"binario": null
+		"binario": null,
+		"llave": "api_o_administracion"
 	},
 	{
 		"operationId": "listRequests",
@@ -836,7 +996,8 @@ export const OPERACIONES: readonly InfoOperacion[] = [
 		"recurso": "Requests",
 		"idempotente": false,
 		"reintento": "seguro",
-		"binario": null
+		"binario": null,
+		"llave": "api_o_administracion"
 	},
 	{
 		"operationId": "listSupportDocumentAdjustments",
@@ -845,7 +1006,8 @@ export const OPERACIONES: readonly InfoOperacion[] = [
 		"recurso": "SupportDocumentAdjustments",
 		"idempotente": false,
 		"reintento": "seguro",
-		"binario": null
+		"binario": null,
+		"llave": "api_o_administracion"
 	},
 	{
 		"operationId": "listSupportDocuments",
@@ -854,7 +1016,8 @@ export const OPERACIONES: readonly InfoOperacion[] = [
 		"recurso": "SupportDocuments",
 		"idempotente": false,
 		"reintento": "seguro",
-		"binario": null
+		"binario": null,
+		"llave": "api_o_administracion"
 	},
 	{
 		"operationId": "listWebhookEndpointDeliveries",
@@ -863,7 +1026,8 @@ export const OPERACIONES: readonly InfoOperacion[] = [
 		"recurso": "WebhookEndpoints",
 		"idempotente": false,
 		"reintento": "seguro",
-		"binario": null
+		"binario": null,
+		"llave": "api_o_administracion"
 	},
 	{
 		"operationId": "listWebhookEndpoints",
@@ -872,7 +1036,8 @@ export const OPERACIONES: readonly InfoOperacion[] = [
 		"recurso": "WebhookEndpoints",
 		"idempotente": false,
 		"reintento": "seguro",
-		"binario": null
+		"binario": null,
+		"llave": "api_o_administracion"
 	},
 	{
 		"operationId": "markNumberingRequestSubmitted",
@@ -881,7 +1046,8 @@ export const OPERACIONES: readonly InfoOperacion[] = [
 		"recurso": "NumberingRequests",
 		"idempotente": false,
 		"reintento": "solo_429",
-		"binario": null
+		"binario": null,
+		"llave": "api_o_administracion"
 	},
 	{
 		"operationId": "previewCreditNote",
@@ -890,7 +1056,8 @@ export const OPERACIONES: readonly InfoOperacion[] = [
 		"recurso": "CreditNotes",
 		"idempotente": false,
 		"reintento": "seguro",
-		"binario": null
+		"binario": null,
+		"llave": "api_o_administracion"
 	},
 	{
 		"operationId": "previewDebitNote",
@@ -899,7 +1066,8 @@ export const OPERACIONES: readonly InfoOperacion[] = [
 		"recurso": "DebitNotes",
 		"idempotente": false,
 		"reintento": "seguro",
-		"binario": null
+		"binario": null,
+		"llave": "api_o_administracion"
 	},
 	{
 		"operationId": "previewEquivalentDocument",
@@ -908,7 +1076,8 @@ export const OPERACIONES: readonly InfoOperacion[] = [
 		"recurso": "EquivalentDocuments",
 		"idempotente": false,
 		"reintento": "seguro",
-		"binario": null
+		"binario": null,
+		"llave": "api_o_administracion"
 	},
 	{
 		"operationId": "previewEquivalentDocumentAdjustment",
@@ -917,7 +1086,8 @@ export const OPERACIONES: readonly InfoOperacion[] = [
 		"recurso": "EquivalentDocumentAdjustments",
 		"idempotente": false,
 		"reintento": "seguro",
-		"binario": null
+		"binario": null,
+		"llave": "api_o_administracion"
 	},
 	{
 		"operationId": "previewInvoice",
@@ -926,7 +1096,8 @@ export const OPERACIONES: readonly InfoOperacion[] = [
 		"recurso": "Invoices",
 		"idempotente": false,
 		"reintento": "seguro",
-		"binario": null
+		"binario": null,
+		"llave": "api_o_administracion"
 	},
 	{
 		"operationId": "previewPayroll",
@@ -935,7 +1106,8 @@ export const OPERACIONES: readonly InfoOperacion[] = [
 		"recurso": "Payrolls",
 		"idempotente": false,
 		"reintento": "seguro",
-		"binario": null
+		"binario": null,
+		"llave": "api_o_administracion"
 	},
 	{
 		"operationId": "previewPayrollAdjustment",
@@ -944,7 +1116,8 @@ export const OPERACIONES: readonly InfoOperacion[] = [
 		"recurso": "PayrollAdjustments",
 		"idempotente": false,
 		"reintento": "seguro",
-		"binario": null
+		"binario": null,
+		"llave": "api_o_administracion"
 	},
 	{
 		"operationId": "previewSupportDocument",
@@ -953,7 +1126,8 @@ export const OPERACIONES: readonly InfoOperacion[] = [
 		"recurso": "SupportDocuments",
 		"idempotente": false,
 		"reintento": "seguro",
-		"binario": null
+		"binario": null,
+		"llave": "api_o_administracion"
 	},
 	{
 		"operationId": "previewSupportDocumentAdjustment",
@@ -962,7 +1136,8 @@ export const OPERACIONES: readonly InfoOperacion[] = [
 		"recurso": "SupportDocumentAdjustments",
 		"idempotente": false,
 		"reintento": "seguro",
-		"binario": null
+		"binario": null,
+		"llave": "api_o_administracion"
 	},
 	{
 		"operationId": "refreshNumberingRanges",
@@ -971,7 +1146,8 @@ export const OPERACIONES: readonly InfoOperacion[] = [
 		"recurso": "NumberingRanges",
 		"idempotente": false,
 		"reintento": "solo_429",
-		"binario": null
+		"binario": null,
+		"llave": "api_o_administracion"
 	},
 	{
 		"operationId": "resendEvent",
@@ -980,7 +1156,28 @@ export const OPERACIONES: readonly InfoOperacion[] = [
 		"recurso": "Events",
 		"idempotente": false,
 		"reintento": "solo_429",
-		"binario": null
+		"binario": null,
+		"llave": "api_o_administracion"
+	},
+	{
+		"operationId": "retrieveAccount",
+		"metodo": "GET",
+		"ruta": "/account",
+		"recurso": "Account",
+		"idempotente": false,
+		"reintento": "seguro",
+		"binario": null,
+		"llave": "administracion"
+	},
+	{
+		"operationId": "retrieveAccountCompany",
+		"metodo": "GET",
+		"ruta": "/account/companies/{id}",
+		"recurso": "Account",
+		"idempotente": false,
+		"reintento": "seguro",
+		"binario": null,
+		"llave": "administracion"
 	},
 	{
 		"operationId": "retrieveBalance",
@@ -989,7 +1186,8 @@ export const OPERACIONES: readonly InfoOperacion[] = [
 		"recurso": "Balance",
 		"idempotente": false,
 		"reintento": "seguro",
-		"binario": null
+		"binario": null,
+		"llave": "api_o_administracion"
 	},
 	{
 		"operationId": "retrieveCompany",
@@ -998,7 +1196,8 @@ export const OPERACIONES: readonly InfoOperacion[] = [
 		"recurso": "General",
 		"idempotente": false,
 		"reintento": "seguro",
-		"binario": null
+		"binario": null,
+		"llave": "api_o_administracion"
 	},
 	{
 		"operationId": "retrieveCreditNote",
@@ -1007,7 +1206,8 @@ export const OPERACIONES: readonly InfoOperacion[] = [
 		"recurso": "CreditNotes",
 		"idempotente": false,
 		"reintento": "seguro",
-		"binario": null
+		"binario": null,
+		"llave": "api_o_administracion"
 	},
 	{
 		"operationId": "retrieveCustomer",
@@ -1016,7 +1216,8 @@ export const OPERACIONES: readonly InfoOperacion[] = [
 		"recurso": "Customers",
 		"idempotente": false,
 		"reintento": "seguro",
-		"binario": null
+		"binario": null,
+		"llave": "api_o_administracion"
 	},
 	{
 		"operationId": "retrieveDebitNote",
@@ -1025,7 +1226,8 @@ export const OPERACIONES: readonly InfoOperacion[] = [
 		"recurso": "DebitNotes",
 		"idempotente": false,
 		"reintento": "seguro",
-		"binario": null
+		"binario": null,
+		"llave": "api_o_administracion"
 	},
 	{
 		"operationId": "retrieveDianAcquirer",
@@ -1034,7 +1236,8 @@ export const OPERACIONES: readonly InfoOperacion[] = [
 		"recurso": "General",
 		"idempotente": false,
 		"reintento": "seguro",
-		"binario": null
+		"binario": null,
+		"llave": "api_o_administracion"
 	},
 	{
 		"operationId": "retrieveEquivalentDocument",
@@ -1043,7 +1246,8 @@ export const OPERACIONES: readonly InfoOperacion[] = [
 		"recurso": "EquivalentDocuments",
 		"idempotente": false,
 		"reintento": "seguro",
-		"binario": null
+		"binario": null,
+		"llave": "api_o_administracion"
 	},
 	{
 		"operationId": "retrieveEquivalentDocumentAdjustment",
@@ -1052,7 +1256,8 @@ export const OPERACIONES: readonly InfoOperacion[] = [
 		"recurso": "EquivalentDocumentAdjustments",
 		"idempotente": false,
 		"reintento": "seguro",
-		"binario": null
+		"binario": null,
+		"llave": "api_o_administracion"
 	},
 	{
 		"operationId": "retrieveEvent",
@@ -1061,7 +1266,8 @@ export const OPERACIONES: readonly InfoOperacion[] = [
 		"recurso": "Events",
 		"idempotente": false,
 		"reintento": "seguro",
-		"binario": null
+		"binario": null,
+		"llave": "api_o_administracion"
 	},
 	{
 		"operationId": "retrieveInvoice",
@@ -1070,7 +1276,8 @@ export const OPERACIONES: readonly InfoOperacion[] = [
 		"recurso": "Invoices",
 		"idempotente": false,
 		"reintento": "seguro",
-		"binario": null
+		"binario": null,
+		"llave": "api_o_administracion"
 	},
 	{
 		"operationId": "retrieveInvoiceBatch",
@@ -1079,7 +1286,8 @@ export const OPERACIONES: readonly InfoOperacion[] = [
 		"recurso": "InvoiceBatches",
 		"idempotente": false,
 		"reintento": "seguro",
-		"binario": null
+		"binario": null,
+		"llave": "api_o_administracion"
 	},
 	{
 		"operationId": "retrieveInvoiceTacitAcceptance",
@@ -1088,7 +1296,8 @@ export const OPERACIONES: readonly InfoOperacion[] = [
 		"recurso": "Invoices",
 		"idempotente": false,
 		"reintento": "seguro",
-		"binario": null
+		"binario": null,
+		"llave": "api_o_administracion"
 	},
 	{
 		"operationId": "retrieveNumberingAssociation",
@@ -1097,7 +1306,8 @@ export const OPERACIONES: readonly InfoOperacion[] = [
 		"recurso": "NumberingAssociations",
 		"idempotente": false,
 		"reintento": "seguro",
-		"binario": null
+		"binario": null,
+		"llave": "api_o_administracion"
 	},
 	{
 		"operationId": "retrieveNumberingRange",
@@ -1106,7 +1316,8 @@ export const OPERACIONES: readonly InfoOperacion[] = [
 		"recurso": "NumberingRanges",
 		"idempotente": false,
 		"reintento": "seguro",
-		"binario": null
+		"binario": null,
+		"llave": "api_o_administracion"
 	},
 	{
 		"operationId": "retrieveNumberingRequest",
@@ -1115,7 +1326,8 @@ export const OPERACIONES: readonly InfoOperacion[] = [
 		"recurso": "NumberingRequests",
 		"idempotente": false,
 		"reintento": "seguro",
-		"binario": null
+		"binario": null,
+		"llave": "api_o_administracion"
 	},
 	{
 		"operationId": "retrievePaperNumberingRange",
@@ -1124,7 +1336,8 @@ export const OPERACIONES: readonly InfoOperacion[] = [
 		"recurso": "PaperNumberingRanges",
 		"idempotente": false,
 		"reintento": "seguro",
-		"binario": null
+		"binario": null,
+		"llave": "api_o_administracion"
 	},
 	{
 		"operationId": "retrievePayroll",
@@ -1133,7 +1346,8 @@ export const OPERACIONES: readonly InfoOperacion[] = [
 		"recurso": "Payrolls",
 		"idempotente": false,
 		"reintento": "seguro",
-		"binario": null
+		"binario": null,
+		"llave": "api_o_administracion"
 	},
 	{
 		"operationId": "retrievePayrollAdjustment",
@@ -1142,7 +1356,8 @@ export const OPERACIONES: readonly InfoOperacion[] = [
 		"recurso": "PayrollAdjustments",
 		"idempotente": false,
 		"reintento": "seguro",
-		"binario": null
+		"binario": null,
+		"llave": "api_o_administracion"
 	},
 	{
 		"operationId": "retrieveProduct",
@@ -1151,7 +1366,8 @@ export const OPERACIONES: readonly InfoOperacion[] = [
 		"recurso": "Products",
 		"idempotente": false,
 		"reintento": "seguro",
-		"binario": null
+		"binario": null,
+		"llave": "api_o_administracion"
 	},
 	{
 		"operationId": "retrieveRadianEvent",
@@ -1160,7 +1376,8 @@ export const OPERACIONES: readonly InfoOperacion[] = [
 		"recurso": "RadianEvents",
 		"idempotente": false,
 		"reintento": "seguro",
-		"binario": null
+		"binario": null,
+		"llave": "api_o_administracion"
 	},
 	{
 		"operationId": "retrieveReportRun",
@@ -1169,7 +1386,8 @@ export const OPERACIONES: readonly InfoOperacion[] = [
 		"recurso": "ReportRuns",
 		"idempotente": false,
 		"reintento": "seguro",
-		"binario": null
+		"binario": null,
+		"llave": "api_o_administracion"
 	},
 	{
 		"operationId": "retrieveReportRunFile",
@@ -1178,7 +1396,8 @@ export const OPERACIONES: readonly InfoOperacion[] = [
 		"recurso": "ReportRuns",
 		"idempotente": false,
 		"reintento": "seguro",
-		"binario": null
+		"binario": null,
+		"llave": "api_o_administracion"
 	},
 	{
 		"operationId": "retrieveSupportDocument",
@@ -1187,7 +1406,8 @@ export const OPERACIONES: readonly InfoOperacion[] = [
 		"recurso": "SupportDocuments",
 		"idempotente": false,
 		"reintento": "seguro",
-		"binario": null
+		"binario": null,
+		"llave": "api_o_administracion"
 	},
 	{
 		"operationId": "retrieveSupportDocumentAdjustment",
@@ -1196,7 +1416,8 @@ export const OPERACIONES: readonly InfoOperacion[] = [
 		"recurso": "SupportDocumentAdjustments",
 		"idempotente": false,
 		"reintento": "seguro",
-		"binario": null
+		"binario": null,
+		"llave": "api_o_administracion"
 	},
 	{
 		"operationId": "retrieveTacitAcceptanceByCufe",
@@ -1205,7 +1426,8 @@ export const OPERACIONES: readonly InfoOperacion[] = [
 		"recurso": "RadianEvents",
 		"idempotente": false,
 		"reintento": "seguro",
-		"binario": null
+		"binario": null,
+		"llave": "api_o_administracion"
 	},
 	{
 		"operationId": "retrieveTaxSummary",
@@ -1214,7 +1436,8 @@ export const OPERACIONES: readonly InfoOperacion[] = [
 		"recurso": "Reports",
 		"idempotente": false,
 		"reintento": "seguro",
-		"binario": null
+		"binario": null,
+		"llave": "api_o_administracion"
 	},
 	{
 		"operationId": "retrieveWebhookEndpoint",
@@ -1223,7 +1446,8 @@ export const OPERACIONES: readonly InfoOperacion[] = [
 		"recurso": "WebhookEndpoints",
 		"idempotente": false,
 		"reintento": "seguro",
-		"binario": null
+		"binario": null,
+		"llave": "api_o_administracion"
 	},
 	{
 		"operationId": "retryNumberingRequestAutomatic",
@@ -1232,7 +1456,18 @@ export const OPERACIONES: readonly InfoOperacion[] = [
 		"recurso": "NumberingRequests",
 		"idempotente": false,
 		"reintento": "solo_429",
-		"binario": null
+		"binario": null,
+		"llave": "api_o_administracion"
+	},
+	{
+		"operationId": "revokeAccountCompanyApiKey",
+		"metodo": "DELETE",
+		"ruta": "/account/companies/{id}/api_keys/{key_id}",
+		"recurso": "Account",
+		"idempotente": false,
+		"reintento": "solo_429",
+		"binario": null,
+		"llave": "administracion"
 	},
 	{
 		"operationId": "rotateWebhookEndpointSecret",
@@ -1241,7 +1476,8 @@ export const OPERACIONES: readonly InfoOperacion[] = [
 		"recurso": "WebhookEndpoints",
 		"idempotente": false,
 		"reintento": "solo_429",
-		"binario": null
+		"binario": null,
+		"llave": "api_o_administracion"
 	},
 	{
 		"operationId": "sendCreditNote",
@@ -1250,7 +1486,8 @@ export const OPERACIONES: readonly InfoOperacion[] = [
 		"recurso": "CreditNotes",
 		"idempotente": false,
 		"reintento": "solo_429",
-		"binario": null
+		"binario": null,
+		"llave": "api_o_administracion"
 	},
 	{
 		"operationId": "sendDebitNote",
@@ -1259,7 +1496,8 @@ export const OPERACIONES: readonly InfoOperacion[] = [
 		"recurso": "DebitNotes",
 		"idempotente": false,
 		"reintento": "solo_429",
-		"binario": null
+		"binario": null,
+		"llave": "api_o_administracion"
 	},
 	{
 		"operationId": "sendEquivalentDocument",
@@ -1268,7 +1506,8 @@ export const OPERACIONES: readonly InfoOperacion[] = [
 		"recurso": "EquivalentDocuments",
 		"idempotente": false,
 		"reintento": "solo_429",
-		"binario": null
+		"binario": null,
+		"llave": "api_o_administracion"
 	},
 	{
 		"operationId": "sendEquivalentDocumentAdjustment",
@@ -1277,7 +1516,8 @@ export const OPERACIONES: readonly InfoOperacion[] = [
 		"recurso": "EquivalentDocumentAdjustments",
 		"idempotente": false,
 		"reintento": "solo_429",
-		"binario": null
+		"binario": null,
+		"llave": "api_o_administracion"
 	},
 	{
 		"operationId": "sendInvoice",
@@ -1286,7 +1526,8 @@ export const OPERACIONES: readonly InfoOperacion[] = [
 		"recurso": "Invoices",
 		"idempotente": false,
 		"reintento": "solo_429",
-		"binario": null
+		"binario": null,
+		"llave": "api_o_administracion"
 	},
 	{
 		"operationId": "sendPayroll",
@@ -1295,7 +1536,8 @@ export const OPERACIONES: readonly InfoOperacion[] = [
 		"recurso": "Payrolls",
 		"idempotente": false,
 		"reintento": "solo_429",
-		"binario": null
+		"binario": null,
+		"llave": "api_o_administracion"
 	},
 	{
 		"operationId": "sendPayrollAdjustment",
@@ -1304,7 +1546,8 @@ export const OPERACIONES: readonly InfoOperacion[] = [
 		"recurso": "PayrollAdjustments",
 		"idempotente": false,
 		"reintento": "solo_429",
-		"binario": null
+		"binario": null,
+		"llave": "api_o_administracion"
 	},
 	{
 		"operationId": "sendRadianEvent",
@@ -1313,7 +1556,8 @@ export const OPERACIONES: readonly InfoOperacion[] = [
 		"recurso": "RadianEvents",
 		"idempotente": false,
 		"reintento": "solo_429",
-		"binario": null
+		"binario": null,
+		"llave": "api_o_administracion"
 	},
 	{
 		"operationId": "sendSupportDocument",
@@ -1322,7 +1566,8 @@ export const OPERACIONES: readonly InfoOperacion[] = [
 		"recurso": "SupportDocuments",
 		"idempotente": false,
 		"reintento": "solo_429",
-		"binario": null
+		"binario": null,
+		"llave": "api_o_administracion"
 	},
 	{
 		"operationId": "sendSupportDocumentAdjustment",
@@ -1331,7 +1576,8 @@ export const OPERACIONES: readonly InfoOperacion[] = [
 		"recurso": "SupportDocumentAdjustments",
 		"idempotente": false,
 		"reintento": "solo_429",
-		"binario": null
+		"binario": null,
+		"llave": "api_o_administracion"
 	},
 	{
 		"operationId": "testWebhookEndpoint",
@@ -1340,7 +1586,8 @@ export const OPERACIONES: readonly InfoOperacion[] = [
 		"recurso": "WebhookEndpoints",
 		"idempotente": false,
 		"reintento": "solo_429",
-		"binario": null
+		"binario": null,
+		"llave": "api_o_administracion"
 	},
 	{
 		"operationId": "updateCustomer",
@@ -1349,7 +1596,8 @@ export const OPERACIONES: readonly InfoOperacion[] = [
 		"recurso": "Customers",
 		"idempotente": false,
 		"reintento": "seguro",
-		"binario": null
+		"binario": null,
+		"llave": "api_o_administracion"
 	},
 	{
 		"operationId": "updatePaperNumberingRange",
@@ -1358,7 +1606,8 @@ export const OPERACIONES: readonly InfoOperacion[] = [
 		"recurso": "PaperNumberingRanges",
 		"idempotente": false,
 		"reintento": "seguro",
-		"binario": null
+		"binario": null,
+		"llave": "api_o_administracion"
 	},
 	{
 		"operationId": "updateProduct",
@@ -1367,7 +1616,8 @@ export const OPERACIONES: readonly InfoOperacion[] = [
 		"recurso": "Products",
 		"idempotente": false,
 		"reintento": "seguro",
-		"binario": null
+		"binario": null,
+		"llave": "api_o_administracion"
 	},
 	{
 		"operationId": "updateWebhookEndpoint",
@@ -1376,12 +1626,14 @@ export const OPERACIONES: readonly InfoOperacion[] = [
 		"recurso": "WebhookEndpoints",
 		"idempotente": false,
 		"reintento": "seguro",
-		"binario": null
+		"binario": null,
+		"llave": "api_o_administracion"
 	}
 ];
 
 /** El nombre de cada etiqueta del SDK (una propiedad del cliente por etiqueta). */
 export const ETIQUETAS: readonly string[] = [
+	"Account",
 	"Balance",
 	"CreditNotes",
 	"Customers",
@@ -1438,6 +1690,8 @@ export const CLASE_POR_CODE: Readonly<Record<string, string>> = {
 	"numbering_request_in_progress": "ConflictError",
 	"range_protected": "ConflictError",
 	"paper_numbering_limit_reached": "ConflictError",
+	"company_exists": "ConflictError",
+	"key_limit_reached": "ConflictError",
 	"company_not_enabled": "PreconditionError",
 	"numbering_unavailable": "PreconditionError",
 	"certificate_problem": "PreconditionError",
@@ -1451,6 +1705,7 @@ export const CLASE_POR_CODE: Readonly<Record<string, string>> = {
 	"top_up_above_maximum": "BalanceError",
 	"top_ups_unavailable": "BalanceError",
 	"rate_limited": "RateLimitError",
+	"company_limit_reached": "RateLimitError",
 	"dian_unavailable": "DianUnavailableError",
 	"internal_error": "InternalServerError"
 };

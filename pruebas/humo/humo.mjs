@@ -4,9 +4,13 @@
 //   TREVOL_API_KEY=tvl_test_… TREVOL_HUMO_EMITIR=1 npm run humo   # además EMITE una factura en habilitación (la repite con la misma clave,
 //                                                                 # espera la entrega y descarga el PDF y el XML)
 //
-// Se NIEGA a correr si la llave no es tvl_test_. `TREVOL_BASE_URL` (opcional) apunta a otro servidor, p. ej. un Prism local.
+//   … TREVOL_HUMO_ADMIN_KEY=tva_test_… npm run humo           # además, SOLO LECTURAS con una llave de administración de pruebas
+//                                                                 # (la llave, sus empresas y la empresa de una de ellas)
+//
+// Se NIEGA a correr si la llave no es tvl_test_ (y si TREVOL_HUMO_ADMIN_KEY no es tva_test_). `TREVOL_BASE_URL` (opcional) apunta a otro
+// servidor, p. ej. un Prism local.
 import { createHmac } from 'node:crypto';
-import { NotFoundError, Trevol, ValidationError, Webhook } from '../../dist/index.js';
+import { ConfigurationError, NotFoundError, Trevol, ValidationError, Webhook } from '../../dist/index.js';
 
 const llave = process.env.TREVOL_API_KEY ?? '';
 if (!/^tvl_test_[0-9a-f]{64}$/.test(llave)) {
@@ -102,6 +106,47 @@ if (process.env.TREVOL_HUMO_EMITIR === '1') {
 	}
 } else {
 	console.log('(no se emite nada: define TREVOL_HUMO_EMITIR=1 para emitir una factura en habilitación)');
+}
+
+const llaveAdmin = process.env.TREVOL_HUMO_ADMIN_KEY;
+if (llaveAdmin !== undefined && llaveAdmin !== '') {
+	if (!/^tva_test_[0-9a-f]{64}$/.test(llaveAdmin)) {
+		console.error('humo: me niego a usar TREVOL_HUMO_ADMIN_KEY si no es una llave de administración de PRUEBAS (tva_test_…).');
+		process.exit(2);
+	}
+	const admin = new Trevol(llaveAdmin, { environment: 'test', baseUrl: process.env.TREVOL_BASE_URL ?? undefined });
+	await paso('account.retrieveAccount (llave de administración)', async () => {
+		const info = await admin.account.retrieveAccount();
+		if (info.key?.environment !== 'test') throw new Error(`la llave dice environment=${info.key?.environment}`);
+		return `${info.key?.prefix ?? ''} ${(info.key?.permissions ?? []).join(',')}`;
+	});
+	let habilitada;
+	await paso('account.listAccountCompanies + paginate (3)', async () => {
+		let n = 0;
+		for await (const c of admin.paginate((cursor) => admin.account.listAccountCompanies({ limit: 3, startingAfter: cursor }))) {
+			if (!habilitada && c.status === 'enabled') habilitada = c.id;
+			if (++n === 3) break;
+		}
+		return `${n} empresas`;
+	});
+	await paso('una operación de empresa sin company → ConfigurationError sin llamar', async () => {
+		try {
+			await admin.general.retrieveCompany();
+		} catch (e) {
+			if (e instanceof ConfigurationError) return 'ok';
+			throw e;
+		}
+		throw new Error('no lanzó ConfigurationError');
+	});
+	if (habilitada) {
+		await paso('withCompany(…).general.retrieveCompany (Trevol-Company y Trevol-Environment)', async () => {
+			const c = await admin.withCompany(habilitada).general.retrieveCompany();
+			if (c.id !== habilitada) throw new Error(`otra empresa: ${c.id}`);
+			return `${c.name ?? ''} (${c.nit ?? ''})`;
+		});
+	} else {
+		console.log('(la llave de administración no alcanza ninguna empresa habilitada: no se prueba withCompany)');
+	}
 }
 
 const fallas = pasos.filter(([, ok]) => !ok);

@@ -7,9 +7,10 @@ electrónica y eventos RADIAN ante la DIAN (Colombia). Documentación: <https://
 > (`standardwebhooks`). Fully typed models generated from the OpenAPI spec (OpenAPI Generator), plus a thin hand-written layer: automatic
 > `Idempotency-Key` (the same one on retries), retries with exponential backoff honouring `Retry-After`, typed errors by problem+json `code`,
 > environment inferred from the key prefix (`tvl_test_` = DIAN test environment, `tvl_live_` = production), pinned `Trevol-Version`,
-> Standard Webhooks signature verification, cursor pagination iterators and PDF/XML/ZIP downloads. Docs are in Spanish like the API.
+> Standard Webhooks signature verification, cursor pagination iterators and PDF/XML/ZIP downloads. Account keys (`tva_test_`/`tva_live_`)
+> manage several companies: `trevol.account.*`, and `company` / `withCompany()` for company operations. Docs are in Spanish like the API.
 
-**Versión 0.2.0** — API `2026-11-18`. Licencia MIT.
+**Versión 0.3.0** (sin publicar) — API `2026-11-18`. Licencia MIT.
 
 ## Instalación
 
@@ -66,6 +67,43 @@ Los nombres de los métodos y de los parámetros son los del `operationId` de la
 (`createInvoice`, `listInvoices`, `retrieveInvoice`, `correctInvoice`, `sendInvoice`, `downloadInvoicePdf`…). Los campos del cuerpo se
 escriben **igual que en la API** (`external_id`, no `externalId`), y los importes y las fechas viajan como texto (`'32000.50'`,
 `'2026-10-31'`).
+
+## Llave de administración
+
+Si llevas varias empresas en tu cuenta, una llave de administración (`tva_test_…` o `tva_live_…`, la crea el titular en la consola)
+sirve para todas: `trevol.account` ve tus empresas, reserva empresas nuevas, crea y revoca las llaves de cada una y lista lo emitido, lo
+recibido y los eventos RADIAN de todas. Con el permiso `documents:write` también emite en ellas: indica la empresa con `company` o, por
+llamada, con `withCompany`. El SDK manda `Trevol-Company` y `Trevol-Environment` (el del prefijo de la llave: `tva_test_` es habilitación,
+`tva_live_` producción) y, si falta la empresa, lanza `ConfigurationError` antes de llamar.
+
+```ts
+const admin = new Trevol(); // lee TREVOL_API_KEY: tva_live_… → admin.keyType === 'account'
+
+for await (const empresa of admin.paginate((cursor) => admin.account.listAccountCompanies({ status: 'enabled', startingAfter: cursor }))) {
+	console.log(empresa.id, empresa.name);
+}
+
+// Emitir en una empresa (el com_… sale de la lista de arriba; invoiceInput, como en el ejemplo de Uso)
+const factura = await admin.withCompany('com_3f0c9a1e5b2d4c7f8a6e1d2c3b4a5f60').invoices.createInvoice({ invoiceInput });
+
+// Una llave para el ERP de esa empresa: el token sale una sola vez
+const llave = await admin.account.createAccountCompanyApiKey({
+	id: 'com_3f0c9a1e5b2d4c7f8a6e1d2c3b4a5f60',
+	accountApiKeyInput: { name: 'ERP de la bodega', permissions: 'write' }
+});
+```
+
+- Las operaciones de `account` solo aceptan una llave de administración; con una `tvl_` el SDK lanza `ConfigurationError` sin llamar.
+  `company` y `withCompany` solo aplican a una `tva_` (una `tvl_` ya es de una empresa).
+- Reservar empresas (`createAccountCompany`) pide una llave `tva_live_` que alcance todas tus empresas. La consola no deja darle
+  `companies:write` a una `tva_test_` ni a una llave con lista de empresas, así que con esas la respuesta es `PermissionDeniedError`
+  con `problem.required_permission === 'companies:write'`. Los `problem.reason` `live_mode_required` y `scope_list` solo salen si una
+  llave así tuviera ese permiso.
+- Si `createAccountCompanyApiKey` se repite con la misma `Idempotency-Key`, la respuesta trae la misma llave con `token: null`: el token
+  solo sale la primera vez. Si lo perdiste, revoca esa llave (`revokeAccountCompanyApiKey`) y crea otra.
+- Errores propios: `ConflictError` con `code` `company_exists` (la empresa está en `error.problem.company`) o `key_limit_reached`;
+  `RateLimitError` con `company_limit_reached` (y `retryAfter`); `PermissionDeniedError` con `problem.reason` (`environment_mismatch`,
+  `live_mode_required`, `scope_list`) o `problem.required_permission`.
 
 ## Lo que conviene saber
 
@@ -156,6 +194,7 @@ new Trevol(llave, {
 	maxRetryAfter: 60, // segundos
 	baseUrl: 'https://api.trevol.si/v1',
 	environment: 'test', // si la llave no coincide: ConfigurationError antes de llamar
+	company: 'com_…', // solo con una llave de administración: la empresa de las operaciones de una empresa
 	fetch: miFetch, // proxies, pruebas
 	dangerouslyAllowBrowser: false // la llave nunca debe ir en un navegador
 });
@@ -173,7 +212,7 @@ new Trevol(llave, {
   (`npx @stoplight/prism-cli mock pruebas/datos/openapi.json -p 4010`) que valida cada petición contra la especificación, y que además
   corre como programa cada fragmento de código de la documentación.
 - `npm run humo` es la prueba de humo **real** (solo con una llave `tvl_test_`; con `TREVOL_HUMO_EMITIR=1` emite una factura en
-  habilitación).
+  habilitación; con `TREVOL_HUMO_ADMIN_KEY=tva_test_…` además hace lecturas con una llave de administración).
 
 ## Licencia
 

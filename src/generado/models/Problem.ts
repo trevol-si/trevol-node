@@ -27,6 +27,13 @@ import {
     ProblemErrorToJSON,
     ProblemErrorToJSONTyped,
 } from './ProblemError.js';
+import type { AccountCompany } from './AccountCompany.js';
+import {
+    AccountCompanyFromJSON,
+    AccountCompanyFromJSONTyped,
+    AccountCompanyToJSON,
+    AccountCompanyToJSONTyped,
+} from './AccountCompany.js';
 import type { Document } from './Document.js';
 import {
     DocumentFromJSON,
@@ -86,7 +93,7 @@ export interface Problem {
      */
     existing_id?: string;
     /**
-     * En `company_not_enabled` (`missing_legal_representative`, `missing_pin`, `missing_software`, `payroll_not_enabled`) y en `numbering_unavailable` (`missing_technical_key`, `no_contingency_numbering`, `no_resolution`, `prefix_in_use`, `resolution_exhausted`, `resolution_expired`, `resolution_not_yet_valid`): por qué. En `automatic_mode_unavailable` (`credentials_missing`, `mandate_required`: falta el mandato para integraciones que se acepta en la app, `disabled`) y en `permission_denied` de una ruta que solo existe en producción (`live_mode_required`).
+     * En `company_not_enabled` (`missing_legal_representative`, `missing_pin`, `missing_software`, `payroll_not_enabled`) y en `numbering_unavailable` (`missing_technical_key`, `no_contingency_numbering`, `no_resolution`, `prefix_in_use`, `resolution_exhausted`, `resolution_expired`, `resolution_not_yet_valid`): por qué. En `automatic_mode_unavailable` (`credentials_missing`, `mandate_required`: falta el mandato para integraciones que se acepta en la app, `disabled`) y en `permission_denied` de una ruta que solo existe en producción (`live_mode_required`). En `permission_denied` de una llave de administración: `environment_mismatch` (`Trevol-Environment` no es el ambiente de la llave), `live_mode_required` (el alta de empresas pide una llave de producción) y `scope_list` (una llave con alcance de lista no da de alta empresas; como esa llave no puede tener `companies:write`, lo que llega en la práctica es el 403 con `required_permission: companies:write`).
      */
     reason?: ProblemReasonEnum;
     /**
@@ -102,7 +109,15 @@ export interface Problem {
      */
     maximum_cop?: number | null;
     /**
-     * En `rate_limited`: qué límite se pasó.
+     * En `insufficient_balance` de una operación cobrada: el saldo disponible de la cuenta, en pesos.
+     */
+    balance_cop?: number;
+    /**
+     * En `insufficient_balance` de una operación cobrada: lo que cuesta la operación, en pesos.
+     */
+    price_cop?: number;
+    /**
+     * En `rate_limited`: qué límite se pasó. Con una llave de administración: `lecturas` (600 peticiones por minuto de la llave en `/v1/account`), `account_key` (el mismo contador, visto desde una ruta de empresa), `api_keys` (60 llaves de empresa creadas o revocadas por hora) y `account_queries` (60 consultas de documentos o eventos por minuto, sumando las llaves de la cuenta). En `company_limit_reached`: `hour` (20 altas por hora) o `day` (100 por día).
      */
     limit?: string;
     /**
@@ -122,9 +137,13 @@ export interface Problem {
      */
     existing_active?: boolean;
     /**
-     * En `permission_denied`: el permiso de la llave que hace falta (buscar clientes por su documento necesita `customers:read`).
+     * En `permission_denied`: el permiso de la llave que hace falta (buscar clientes por su documento necesita `customers:read`). Con una llave de administración, el permiso que le falta a esa llave (`companies:read`, `companies:write`, `keys:write`, `documents:read`, `documents:write`, `customers:read`).
      */
     required_permission?: ProblemRequiredPermissionEnum;
+    /**
+     * En `company_exists`: la empresa que ya está en la cuenta con ese NIT.
+     */
+    company?: AccountCompany;
     /**
      * En `report_too_large`: cuántos documentos tiene lo pedido.
      */
@@ -144,6 +163,8 @@ export const ProblemCodeEnum = {
     AutomaticModeUnavailable: 'automatic_mode_unavailable',
     CertificateProblem: 'certificate_problem',
     CompanyBusy: 'company_busy',
+    CompanyExists: 'company_exists',
+    CompanyLimitReached: 'company_limit_reached',
     CompanyNotEnabled: 'company_not_enabled',
     ConfirmationRequired: 'confirmation_required',
     DianRejected: 'dian_rejected',
@@ -161,6 +182,7 @@ export const ProblemCodeEnum = {
     InvalidJson: 'invalid_json',
     InvalidRequest: 'invalid_request',
     InvalidState: 'invalid_state',
+    KeyLimitReached: 'key_limit_reached',
     MethodNotAllowed: 'method_not_allowed',
     NotFound: 'not_found',
     NumberingRequestInProgress: 'numbering_request_in_progress',
@@ -189,6 +211,7 @@ export type ProblemCodeEnum = typeof ProblemCodeEnum[keyof typeof ProblemCodeEnu
 export const ProblemReasonEnum = {
     CredentialsMissing: 'credentials_missing',
     Disabled: 'disabled',
+    EnvironmentMismatch: 'environment_mismatch',
     LiveModeRequired: 'live_mode_required',
     MandateRequired: 'mandate_required',
     MissingLegalRepresentative: 'missing_legal_representative',
@@ -202,6 +225,7 @@ export const ProblemReasonEnum = {
     ResolutionExhausted: 'resolution_exhausted',
     ResolutionExpired: 'resolution_expired',
     ResolutionNotYetValid: 'resolution_not_yet_valid',
+    ScopeList: 'scope_list',
 } as const;
 export type ProblemReasonEnum = typeof ProblemReasonEnum[keyof typeof ProblemReasonEnum];
 
@@ -209,6 +233,11 @@ export type ProblemReasonEnum = typeof ProblemReasonEnum[keyof typeof ProblemRea
  * @export
  */
 export const ProblemRequiredPermissionEnum = {
+    CompaniesRead: 'companies:read',
+    CompaniesWrite: 'companies:write',
+    KeysWrite: 'keys:write',
+    DocumentsRead: 'documents:read',
+    DocumentsWrite: 'documents:write',
     CustomersRead: 'customers:read',
 } as const;
 export type ProblemRequiredPermissionEnum = typeof ProblemRequiredPermissionEnum[keyof typeof ProblemRequiredPermissionEnum];
@@ -246,12 +275,15 @@ export function ProblemFromJSONTyped(json: any, ignoreDiscriminator: boolean): P
         'previous': json['previous'] == null ? undefined : json['previous'],
         'minimum_cop': json['minimum_cop'] === undefined ? undefined : json['minimum_cop'] === null ? null : json['minimum_cop'],
         'maximum_cop': json['maximum_cop'] === undefined ? undefined : json['maximum_cop'] === null ? null : json['maximum_cop'],
+        'balance_cop': json['balance_cop'] == null ? undefined : json['balance_cop'],
+        'price_cop': json['price_cop'] == null ? undefined : json['price_cop'],
         'limit': json['limit'] == null ? undefined : json['limit'],
         'available_from': json['available_from'] === undefined ? undefined : json['available_from'] === null ? null : json['available_from'],
         'rules': json['rules'] == null ? undefined : json['rules'],
         'current_software': json['current_software'] == null ? undefined : ProblemCurrentSoftwareFromJSON(json['current_software']),
         'existing_active': json['existing_active'] == null ? undefined : json['existing_active'],
         'required_permission': json['required_permission'] == null ? undefined : json['required_permission'],
+        'company': json['company'] == null ? undefined : AccountCompanyFromJSON(json['company']),
         'rows': json['rows'] == null ? undefined : json['rows'],
         'max_rows': json['max_rows'] == null ? undefined : json['max_rows'],
     };
@@ -283,12 +315,15 @@ export function ProblemToJSONTyped(value?: Problem | null, ignoreDiscriminator: 
         'previous': value['previous'],
         'minimum_cop': value['minimum_cop'],
         'maximum_cop': value['maximum_cop'],
+        'balance_cop': value['balance_cop'],
+        'price_cop': value['price_cop'],
         'limit': value['limit'],
         'available_from': value['available_from'],
         'rules': value['rules'],
         'current_software': ProblemCurrentSoftwareToJSON(value['current_software']),
         'existing_active': value['existing_active'],
         'required_permission': value['required_permission'],
+        'company': AccountCompanyToJSON(value['company']),
         'rows': value['rows'],
         'max_rows': value['max_rows'],
     };

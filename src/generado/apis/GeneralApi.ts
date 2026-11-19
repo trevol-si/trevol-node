@@ -109,7 +109,7 @@ export class GeneralApi extends runtime.BaseAPI {
     }
 
     /**
-     * La empresa de la llave: NIT, razón social, ambiente y numeraciones activas. Desde la fase 3 trae `capabilities`, un resumen de lo que ESTA llave puede emitir ahora: documento soporte (con su numeración), documento equivalente (con los prefijos POS), nómina (`status`: `enabled`, `testing`, `not_registered` o `not_enabled`, según el ambiente de la llave) y eventos RADIAN (representante legal). Es informativo: si una lectura falla, esa clave no aparece.
+     * La empresa de la llave: NIT, razón social, ambiente y numeraciones activas. Desde la fase 3 trae `capabilities`, un resumen de lo que ESTA llave puede emitir ahora: documento soporte (con su numeración), documento equivalente (con los prefijos POS), nómina (`status`: `enabled`, `testing`, `not_registered` o `not_enabled`, según el ambiente de la llave) y eventos RADIAN (representante legal). Es informativo: si una lectura falla, esa clave no aparece. Con una llave de administración, la empresa es la de `Trevol-Company` y `key` es la identidad con que esa llave trabaja en la empresa (un `key_…` que no sale en `GET /v1/account/companies/{id}/api_keys`).
      * La empresa de la llave
      */
     async retrieveCompanyRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Company>> {
@@ -120,7 +120,7 @@ export class GeneralApi extends runtime.BaseAPI {
     }
 
     /**
-     * La empresa de la llave: NIT, razón social, ambiente y numeraciones activas. Desde la fase 3 trae `capabilities`, un resumen de lo que ESTA llave puede emitir ahora: documento soporte (con su numeración), documento equivalente (con los prefijos POS), nómina (`status`: `enabled`, `testing`, `not_registered` o `not_enabled`, según el ambiente de la llave) y eventos RADIAN (representante legal). Es informativo: si una lectura falla, esa clave no aparece.
+     * La empresa de la llave: NIT, razón social, ambiente y numeraciones activas. Desde la fase 3 trae `capabilities`, un resumen de lo que ESTA llave puede emitir ahora: documento soporte (con su numeración), documento equivalente (con los prefijos POS), nómina (`status`: `enabled`, `testing`, `not_registered` o `not_enabled`, según el ambiente de la llave) y eventos RADIAN (representante legal). Es informativo: si una lectura falla, esa clave no aparece. Con una llave de administración, la empresa es la de `Trevol-Company` y `key` es la identidad con que esa llave trabaja en la empresa (un `key_…` que no sale en `GET /v1/account/companies/{id}/api_keys`).
      * La empresa de la llave
      */
     async retrieveCompany(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Company> {
