@@ -24,7 +24,7 @@ export interface AccountApiKeyInput {
      */
     name: string;
     /**
-     * `read`: solo lee; `write`: emite y lee. Una de escritura de producción, por ahora, se crea en la app.
+     * `read`: solo lee; `write`: emite y lee.
      */
     permissions: AccountApiKeyInputPermissionsEnum;
     /**

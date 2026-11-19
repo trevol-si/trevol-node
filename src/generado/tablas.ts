@@ -22,7 +22,7 @@ import {
 	TestEventDataFromJSON,
 } from './models/index.js';
 
-export const VERSION = "0.3.0";
+export const VERSION = "0.3.1";
 export const API_VERSION = "2026-11-18";
 
 export interface InfoOperacion {

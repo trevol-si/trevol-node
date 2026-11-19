@@ -40,7 +40,7 @@ export interface Event {
      */
     environment?: EventEnvironmentEnum;
     /**
-     * La versión vigente más nueva de la API; el resumen del documento no cambia con la versión de la llave.
+     * La versión del formato de los eventos (hoy `2026-10-22`), la misma para todas las llaves: el resumen del documento no cambia con la versión de la llave.
      */
     api_version?: string;
     /**

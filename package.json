@@ -1,6 +1,6 @@
 {
 	"name": "@trevol/sdk",
-	"version": "0.3.0",
+	"version": "0.3.1",
 	"description": "SDK de Node.js/TypeScript para la API de Trevol: facturación electrónica ante la DIAN (Colombia).",
 	"keywords": ["trevol", "dian", "factura electrónica", "colombia", "nómina electrónica", "sdk"],
 	"homepage": "https://platform.trevol.si/docs",
