@@ -20,7 +20,7 @@ import { mapValues } from '../runtime.js';
  */
 export interface DocumentTotalsItem {
     /**
-     * 
+     * Cantidad × precio SIN impuestos.
      */
     gross?: string;
     /**
@@ -39,6 +39,14 @@ export interface DocumentTotalsItem {
      * 
      */
     commercial_value?: string;
+    /**
+     * Solo en las líneas con unit_price_includes_tax: el precio unitario sin impuestos que Trevol derivó (hasta 6 decimales), en la moneda de totals.
+     */
+    net_unit_price?: string;
+    /**
+     * Solo en las líneas con unit_price_includes_tax: line_extension más los impuestos de la línea, en la moneda de totals.
+     */
+    total?: string;
 }
 
 /**
@@ -63,6 +71,8 @@ export function DocumentTotalsItemFromJSONTyped(json: any, ignoreDiscriminator: 
         'line_extension': json['line_extension'] == null ? undefined : json['line_extension'],
         'charge': json['charge'] == null ? undefined : json['charge'],
         'commercial_value': json['commercial_value'] == null ? undefined : json['commercial_value'],
+        'net_unit_price': json['net_unit_price'] == null ? undefined : json['net_unit_price'],
+        'total': json['total'] == null ? undefined : json['total'],
     };
 }
 
@@ -82,6 +92,8 @@ export function DocumentTotalsItemToJSONTyped(value?: DocumentTotalsItem | null,
         'line_extension': value['line_extension'],
         'charge': value['charge'],
         'commercial_value': value['commercial_value'],
+        'net_unit_price': value['net_unit_price'],
+        'total': value['total'],
     };
 }
 

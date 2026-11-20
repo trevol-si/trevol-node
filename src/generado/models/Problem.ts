@@ -41,6 +41,13 @@ import {
     DocumentToJSON,
     DocumentToJSONTyped,
 } from './Document.js';
+import type { ProblemFinding } from './ProblemFinding.js';
+import {
+    ProblemFindingFromJSON,
+    ProblemFindingFromJSONTyped,
+    ProblemFindingToJSON,
+    ProblemFindingToJSONTyped,
+} from './ProblemFinding.js';
 
 /**
  * 
@@ -93,7 +100,7 @@ export interface Problem {
      */
     existing_id?: string;
     /**
-     * En `company_not_enabled` (`missing_legal_representative`, `missing_pin`, `missing_software`, `payroll_not_enabled`) y en `numbering_unavailable` (`missing_technical_key`, `no_contingency_numbering`, `no_resolution`, `prefix_in_use`, `resolution_exhausted`, `resolution_expired`, `resolution_not_yet_valid`): por qué. En `automatic_mode_unavailable` (`credentials_missing`, `mandate_required`: falta el mandato para integraciones que se acepta en la app, `disabled`) y en `permission_denied` de una ruta que solo existe en producción (`live_mode_required`). En `permission_denied` de una llave de administración: `environment_mismatch` (`Trevol-Environment` no es el ambiente de la llave), `live_mode_required` (el alta de empresas pide una llave de producción) y `scope_list` (una llave con alcance de lista no da de alta empresas; como esa llave no puede tener `companies:write`, lo que llega en la práctica es el 403 con `required_permission: companies:write`).
+     * En `company_not_enabled` (`missing_legal_representative`, `missing_pin`, `missing_software`, `payroll_not_enabled`), en `numbering_unavailable` (`missing_technical_key`, `no_contingency_numbering`, `no_resolution`, `prefix_in_use`, `resolution_exhausted`, `resolution_expired`, `resolution_not_yet_valid`) y en `invalid_state` al reenviar el correo (`delivery_incomplete`, `delivery_pending`, `email_suppressed`, `no_recipient`, `not_accepted`): por qué. En `automatic_mode_unavailable` (`credentials_missing`, `mandate_required`: falta el mandato para integraciones que se acepta en la app, `disabled`) y en `permission_denied` de una ruta que solo existe en producción (`live_mode_required`). En `permission_denied` de una llave de administración: `environment_mismatch` (`Trevol-Environment` no es el ambiente de la llave), `live_mode_required` (el alta de empresas pide una llave de producción) y `scope_list` (una llave con alcance de lista no da de alta empresas; como esa llave no puede tener `companies:write`, lo que llega en la práctica es el 403 con `required_permission: companies:write`). En `logo_invalid` (`animated`, `empty`, `svg_not_supported`, `too_large`, `too_many_pixels`, `too_small`, `unreadable`, `unsupported_format`) y en `permission_denied` del diseño del PDF (`pdf_design_writes_disabled`: el titular no permitió en la app que la API lo cambie). En `permission_denied` de una llave de la empresa simulada: `simulated_not_supported` (eso no existe en el entorno simulado: el adquiriente en la DIAN, RADIAN, el saldo y las recargas, el XML de un documento de la DIAN, el documento equivalente y la nómina; o el entorno simulado está apagado).
      */
     reason?: ProblemReasonEnum;
     /**
@@ -117,7 +124,7 @@ export interface Problem {
      */
     price_cop?: number;
     /**
-     * En `rate_limited`: qué límite se pasó. Con una llave de administración: `lecturas` (600 peticiones por minuto de la llave en `/v1/account`), `account_key` (el mismo contador, visto desde una ruta de empresa), `api_keys` (60 llaves de empresa creadas o revocadas por hora) y `account_queries` (60 consultas de documentos o eventos por minuto, sumando las llaves de la cuenta). En `company_limit_reached`: `hour` (20 altas por hora) o `day` (100 por día).
+     * En `rate_limited`: qué límite se pasó (`email_resend`: los reenvíos del correo de un documento o de la empresa en el día). Con una llave de administración: `lecturas` (600 peticiones por minuto de la llave en `/v1/account`), `account_key` (el mismo contador, visto desde una ruta de empresa), `api_keys` (60 llaves de empresa creadas o revocadas por hora) y `account_queries` (60 consultas de documentos o eventos por minuto, sumando las llaves de la cuenta). En `company_limit_reached`: `hour` (20 altas por hora) o `day` (100 por día). `simulated`: un tope del entorno simulado (los envíos por hora de todas las cuentas, o demasiados documentos o webhooks por procesar en tu empresa simulada o en todo el entorno).
      */
     limit?: string;
     /**
@@ -144,6 +151,14 @@ export interface Problem {
      * En `company_exists`: la empresa que ya está en la cuenta con ese NIT.
      */
     company?: AccountCompany;
+    /**
+     * En `pdf_design_invalid`: qué no cabe y en qué tipos de documento.
+     */
+    findings?: Array<ProblemFinding>;
+    /**
+     * En `pdf_design_outdated`: la versión actual del diseño.
+     */
+    current_version?: number;
     /**
      * En `report_too_large`: cuántos documentos tiene lo pedido.
      */
@@ -183,11 +198,17 @@ export const ProblemCodeEnum = {
     InvalidRequest: 'invalid_request',
     InvalidState: 'invalid_state',
     KeyLimitReached: 'key_limit_reached',
+    LogoInvalid: 'logo_invalid',
     MethodNotAllowed: 'method_not_allowed',
     NotFound: 'not_found',
     NumberingRequestInProgress: 'numbering_request_in_progress',
     NumberingUnavailable: 'numbering_unavailable',
     PaperNumberingLimitReached: 'paper_numbering_limit_reached',
+    PdfDesignArchived: 'pdf_design_archived',
+    PdfDesignInUse: 'pdf_design_in_use',
+    PdfDesignInvalid: 'pdf_design_invalid',
+    PdfDesignLimitReached: 'pdf_design_limit_reached',
+    PdfDesignOutdated: 'pdf_design_outdated',
     PermissionDenied: 'permission_denied',
     PortalReadRequired: 'portal_read_required',
     PreviousEventPending: 'previous_event_pending',
@@ -209,8 +230,13 @@ export type ProblemCodeEnum = typeof ProblemCodeEnum[keyof typeof ProblemCodeEnu
  * @export
  */
 export const ProblemReasonEnum = {
+    Animated: 'animated',
     CredentialsMissing: 'credentials_missing',
+    DeliveryIncomplete: 'delivery_incomplete',
+    DeliveryPending: 'delivery_pending',
     Disabled: 'disabled',
+    EmailSuppressed: 'email_suppressed',
+    Empty: 'empty',
     EnvironmentMismatch: 'environment_mismatch',
     LiveModeRequired: 'live_mode_required',
     MandateRequired: 'mandate_required',
@@ -219,13 +245,23 @@ export const ProblemReasonEnum = {
     MissingSoftware: 'missing_software',
     MissingTechnicalKey: 'missing_technical_key',
     NoContingencyNumbering: 'no_contingency_numbering',
+    NoRecipient: 'no_recipient',
     NoResolution: 'no_resolution',
+    NotAccepted: 'not_accepted',
     PayrollNotEnabled: 'payroll_not_enabled',
+    PdfDesignWritesDisabled: 'pdf_design_writes_disabled',
     PrefixInUse: 'prefix_in_use',
     ResolutionExhausted: 'resolution_exhausted',
     ResolutionExpired: 'resolution_expired',
     ResolutionNotYetValid: 'resolution_not_yet_valid',
     ScopeList: 'scope_list',
+    SimulatedNotSupported: 'simulated_not_supported',
+    SvgNotSupported: 'svg_not_supported',
+    TooLarge: 'too_large',
+    TooManyPixels: 'too_many_pixels',
+    TooSmall: 'too_small',
+    Unreadable: 'unreadable',
+    UnsupportedFormat: 'unsupported_format',
 } as const;
 export type ProblemReasonEnum = typeof ProblemReasonEnum[keyof typeof ProblemReasonEnum];
 
@@ -284,6 +320,8 @@ export function ProblemFromJSONTyped(json: any, ignoreDiscriminator: boolean): P
         'existing_active': json['existing_active'] == null ? undefined : json['existing_active'],
         'required_permission': json['required_permission'] == null ? undefined : json['required_permission'],
         'company': json['company'] == null ? undefined : AccountCompanyFromJSON(json['company']),
+        'findings': json['findings'] == null ? undefined : ((json['findings'] as Array<any>).map(ProblemFindingFromJSON)),
+        'current_version': json['current_version'] == null ? undefined : json['current_version'],
         'rows': json['rows'] == null ? undefined : json['rows'],
         'max_rows': json['max_rows'] == null ? undefined : json['max_rows'],
     };
@@ -324,6 +362,8 @@ export function ProblemToJSONTyped(value?: Problem | null, ignoreDiscriminator: 
         'existing_active': value['existing_active'],
         'required_permission': value['required_permission'],
         'company': AccountCompanyToJSON(value['company']),
+        'findings': value['findings'] == null ? undefined : ((value['findings'] as Array<any>).map(ProblemFindingToJSON)),
+        'current_version': value['current_version'],
         'rows': value['rows'],
         'max_rows': value['max_rows'],
     };

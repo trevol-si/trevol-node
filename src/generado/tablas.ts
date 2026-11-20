@@ -22,7 +22,7 @@ import {
 	TestEventDataFromJSON,
 } from './models/index.js';
 
-export const VERSION = "0.3.1";
+export const VERSION = "0.4.0";
 export const API_VERSION = "2026-11-18";
 
 export interface InfoOperacion {
@@ -33,12 +33,22 @@ export interface InfoOperacion {
 	readonly idempotente: boolean;
 	/** seguro: GET, preview, PATCH y todo POST/PUT con Idempotency-Key que no devuelva un secreto una sola vez. solo_429: el resto. */
 	readonly reintento: 'seguro' | 'solo_429';
-	readonly binario: 'pdf' | 'xml' | 'zip' | 'csv' | null;
+	readonly binario: 'pdf' | 'xml' | 'zip' | 'csv' | 'png' | null;
 	/** Qué llave admite: la de una empresa (tvl_) o la de administración (tva_, con Trevol-Company y Trevol-Environment); solo la de administración; ninguna. */
 	readonly llave: 'api_o_administracion' | 'administracion' | 'ninguna';
 }
 
 export const OPERACIONES: readonly InfoOperacion[] = [
+	{
+		"operationId": "archivePdfDesign",
+		"metodo": "POST",
+		"ruta": "/pdf_designs/{id}/archive",
+		"recurso": "PdfDesigns",
+		"idempotente": false,
+		"reintento": "solo_429",
+		"binario": null,
+		"llave": "api_o_administracion"
+	},
 	{
 		"operationId": "associateNumberingRange",
 		"metodo": "POST",
@@ -300,6 +310,16 @@ export const OPERACIONES: readonly InfoOperacion[] = [
 		"llave": "api_o_administracion"
 	},
 	{
+		"operationId": "createPdfDesign",
+		"metodo": "POST",
+		"ruta": "/pdf_designs",
+		"recurso": "PdfDesigns",
+		"idempotente": true,
+		"reintento": "seguro",
+		"binario": null,
+		"llave": "api_o_administracion"
+	},
+	{
 		"operationId": "createProduct",
 		"metodo": "POST",
 		"ruta": "/products",
@@ -364,6 +384,16 @@ export const OPERACIONES: readonly InfoOperacion[] = [
 		"metodo": "POST",
 		"ruta": "/paper_numbering_ranges/{id}/deactivate",
 		"recurso": "PaperNumberingRanges",
+		"idempotente": false,
+		"reintento": "solo_429",
+		"binario": null,
+		"llave": "api_o_administracion"
+	},
+	{
+		"operationId": "deleteCompanyLogo",
+		"metodo": "DELETE",
+		"ruta": "/company/logo",
+		"recurso": "CompanySettings",
 		"idempotente": false,
 		"reintento": "solo_429",
 		"binario": null,
@@ -810,6 +840,26 @@ export const OPERACIONES: readonly InfoOperacion[] = [
 		"llave": "api_o_administracion"
 	},
 	{
+		"operationId": "listCatalogEntries",
+		"metodo": "GET",
+		"ruta": "/catalogs/{name}",
+		"recurso": "Catalogs",
+		"idempotente": false,
+		"reintento": "seguro",
+		"binario": null,
+		"llave": "api_o_administracion"
+	},
+	{
+		"operationId": "listCatalogs",
+		"metodo": "GET",
+		"ruta": "/catalogs",
+		"recurso": "Catalogs",
+		"idempotente": false,
+		"reintento": "seguro",
+		"binario": null,
+		"llave": "api_o_administracion"
+	},
+	{
 		"operationId": "listCreditNotes",
 		"metodo": "GET",
 		"ruta": "/credit_notes",
@@ -954,6 +1004,26 @@ export const OPERACIONES: readonly InfoOperacion[] = [
 		"metodo": "GET",
 		"ruta": "/payrolls",
 		"recurso": "Payrolls",
+		"idempotente": false,
+		"reintento": "seguro",
+		"binario": null,
+		"llave": "api_o_administracion"
+	},
+	{
+		"operationId": "listPdfDesigns",
+		"metodo": "GET",
+		"ruta": "/pdf_designs",
+		"recurso": "PdfDesigns",
+		"idempotente": false,
+		"reintento": "seguro",
+		"binario": null,
+		"llave": "api_o_administracion"
+	},
+	{
+		"operationId": "listPdfTemplates",
+		"metodo": "GET",
+		"ruta": "/pdf_templates",
+		"recurso": "PdfTemplates",
 		"idempotente": false,
 		"reintento": "seguro",
 		"binario": null,
@@ -1200,6 +1270,26 @@ export const OPERACIONES: readonly InfoOperacion[] = [
 		"llave": "api_o_administracion"
 	},
 	{
+		"operationId": "retrieveCompanyLogo",
+		"metodo": "GET",
+		"ruta": "/company/logo",
+		"recurso": "CompanySettings",
+		"idempotente": false,
+		"reintento": "seguro",
+		"binario": null,
+		"llave": "api_o_administracion"
+	},
+	{
+		"operationId": "retrieveCompanyLogoFile",
+		"metodo": "GET",
+		"ruta": "/company/logo/file",
+		"recurso": "CompanySettings",
+		"idempotente": false,
+		"reintento": "seguro",
+		"binario": "png",
+		"llave": "api_o_administracion"
+	},
+	{
 		"operationId": "retrieveCreditNote",
 		"metodo": "GET",
 		"ruta": "/credit_notes/{id}",
@@ -1360,6 +1450,26 @@ export const OPERACIONES: readonly InfoOperacion[] = [
 		"llave": "api_o_administracion"
 	},
 	{
+		"operationId": "retrievePdfDesign",
+		"metodo": "GET",
+		"ruta": "/pdf_designs/{id}",
+		"recurso": "PdfDesigns",
+		"idempotente": false,
+		"reintento": "seguro",
+		"binario": null,
+		"llave": "api_o_administracion"
+	},
+	{
+		"operationId": "retrievePdfSettings",
+		"metodo": "GET",
+		"ruta": "/company/pdf_settings",
+		"recurso": "CompanySettings",
+		"idempotente": false,
+		"reintento": "seguro",
+		"binario": null,
+		"llave": "api_o_administracion"
+	},
+	{
 		"operationId": "retrieveProduct",
 		"metodo": "GET",
 		"ruta": "/products/{id}",
@@ -1490,12 +1600,32 @@ export const OPERACIONES: readonly InfoOperacion[] = [
 		"llave": "api_o_administracion"
 	},
 	{
+		"operationId": "sendCreditNoteEmail",
+		"metodo": "POST",
+		"ruta": "/credit_notes/{id}/email",
+		"recurso": "CreditNotes",
+		"idempotente": true,
+		"reintento": "seguro",
+		"binario": null,
+		"llave": "api_o_administracion"
+	},
+	{
 		"operationId": "sendDebitNote",
 		"metodo": "POST",
 		"ruta": "/debit_notes/{id}/send",
 		"recurso": "DebitNotes",
 		"idempotente": false,
 		"reintento": "solo_429",
+		"binario": null,
+		"llave": "api_o_administracion"
+	},
+	{
+		"operationId": "sendDebitNoteEmail",
+		"metodo": "POST",
+		"ruta": "/debit_notes/{id}/email",
+		"recurso": "DebitNotes",
+		"idempotente": true,
+		"reintento": "seguro",
 		"binario": null,
 		"llave": "api_o_administracion"
 	},
@@ -1520,12 +1650,42 @@ export const OPERACIONES: readonly InfoOperacion[] = [
 		"llave": "api_o_administracion"
 	},
 	{
+		"operationId": "sendEquivalentDocumentAdjustmentEmail",
+		"metodo": "POST",
+		"ruta": "/equivalent_document_adjustments/{id}/email",
+		"recurso": "EquivalentDocumentAdjustments",
+		"idempotente": true,
+		"reintento": "seguro",
+		"binario": null,
+		"llave": "api_o_administracion"
+	},
+	{
+		"operationId": "sendEquivalentDocumentEmail",
+		"metodo": "POST",
+		"ruta": "/equivalent_documents/{id}/email",
+		"recurso": "EquivalentDocuments",
+		"idempotente": true,
+		"reintento": "seguro",
+		"binario": null,
+		"llave": "api_o_administracion"
+	},
+	{
 		"operationId": "sendInvoice",
 		"metodo": "POST",
 		"ruta": "/invoices/{id}/send",
 		"recurso": "Invoices",
 		"idempotente": false,
 		"reintento": "solo_429",
+		"binario": null,
+		"llave": "api_o_administracion"
+	},
+	{
+		"operationId": "sendInvoiceEmail",
+		"metodo": "POST",
+		"ruta": "/invoices/{id}/email",
+		"recurso": "Invoices",
+		"idempotente": true,
+		"reintento": "seguro",
 		"binario": null,
 		"llave": "api_o_administracion"
 	},
@@ -1590,6 +1750,16 @@ export const OPERACIONES: readonly InfoOperacion[] = [
 		"llave": "api_o_administracion"
 	},
 	{
+		"operationId": "updateCompanyLogo",
+		"metodo": "PUT",
+		"ruta": "/company/logo",
+		"recurso": "CompanySettings",
+		"idempotente": false,
+		"reintento": "solo_429",
+		"binario": null,
+		"llave": "api_o_administracion"
+	},
+	{
 		"operationId": "updateCustomer",
 		"metodo": "PATCH",
 		"ruta": "/customers/{id}",
@@ -1604,6 +1774,26 @@ export const OPERACIONES: readonly InfoOperacion[] = [
 		"metodo": "PATCH",
 		"ruta": "/paper_numbering_ranges/{id}",
 		"recurso": "PaperNumberingRanges",
+		"idempotente": false,
+		"reintento": "seguro",
+		"binario": null,
+		"llave": "api_o_administracion"
+	},
+	{
+		"operationId": "updatePdfDesign",
+		"metodo": "PATCH",
+		"ruta": "/pdf_designs/{id}",
+		"recurso": "PdfDesigns",
+		"idempotente": false,
+		"reintento": "seguro",
+		"binario": null,
+		"llave": "api_o_administracion"
+	},
+	{
+		"operationId": "updatePdfSettings",
+		"metodo": "PATCH",
+		"ruta": "/company/pdf_settings",
+		"recurso": "CompanySettings",
 		"idempotente": false,
 		"reintento": "seguro",
 		"binario": null,
@@ -1635,6 +1825,8 @@ export const OPERACIONES: readonly InfoOperacion[] = [
 export const ETIQUETAS: readonly string[] = [
 	"Account",
 	"Balance",
+	"Catalogs",
+	"CompanySettings",
 	"CreditNotes",
 	"Customers",
 	"DebitNotes",
@@ -1652,6 +1844,8 @@ export const ETIQUETAS: readonly string[] = [
 	"PaperNumberingRanges",
 	"PayrollAdjustments",
 	"Payrolls",
+	"PdfDesigns",
+	"PdfTemplates",
 	"Products",
 	"RadianEvents",
 	"RadianStatus",
@@ -1676,6 +1870,8 @@ export const CLASE_POR_CODE: Readonly<Record<string, string>> = {
 	"idempotency_key_required": "InvalidRequestError",
 	"idempotency_key_reused": "IdempotencyError",
 	"validation_error": "ValidationError",
+	"logo_invalid": "ValidationError",
+	"pdf_design_invalid": "ValidationError",
 	"external_id_in_use": "ConflictError",
 	"invalid_state": "ConflictError",
 	"duplicate_document": "ConflictError",
@@ -1692,6 +1888,10 @@ export const CLASE_POR_CODE: Readonly<Record<string, string>> = {
 	"paper_numbering_limit_reached": "ConflictError",
 	"company_exists": "ConflictError",
 	"key_limit_reached": "ConflictError",
+	"pdf_design_limit_reached": "ConflictError",
+	"pdf_design_in_use": "ConflictError",
+	"pdf_design_outdated": "ConflictError",
+	"pdf_design_archived": "ConflictError",
 	"company_not_enabled": "PreconditionError",
 	"numbering_unavailable": "PreconditionError",
 	"certificate_problem": "PreconditionError",

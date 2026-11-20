@@ -90,6 +90,14 @@ export interface ListRadianEventsRequest {
      * 
      */
     invoiceCufe?: string;
+    /**
+     * El número completo exacto del EVENTO, como sale en `number` (p. ej. `AR994000123`), no el de la factura (esa va con `invoice_cufe`).
+     */
+    number?: string;
+    /**
+     * El prefijo exacto del evento, como sale en `prefix` (`AR`, `RC`, `RB`, `AE` o `E0xx`). Para filtrar por tipo es mejor `event_code`.
+     */
+    prefix?: string;
 }
 
 export interface RetrieveRadianEventRequest {
@@ -270,6 +278,14 @@ export class RadianEventsApi extends runtime.BaseAPI {
 
         if (requestParameters['invoiceCufe'] != null) {
             queryParameters['invoice_cufe'] = requestParameters['invoiceCufe'];
+        }
+
+        if (requestParameters['number'] != null) {
+            queryParameters['number'] = requestParameters['number'];
+        }
+
+        if (requestParameters['prefix'] != null) {
+            queryParameters['prefix'] = requestParameters['prefix'];
         }
 
         const headerParameters: runtime.HTTPHeaders = {};

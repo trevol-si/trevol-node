@@ -132,6 +132,10 @@ export interface EquivalentDocumentAdjustmentInput {
      * El documento que ajusta: {"id": "pos_…"} (de Trevol: validado, de la empresa y el ambiente de la llave) o {number, cude, issue_date, document_type, total?} si es de otra plataforma (`total` hace falta para anularlo).
      */
     equivalent_document: EquivalentDocumentReference;
+    /**
+     * El diseño del PDF de este documento (`pdd_…` o `classic`); gana al de la numeración y al predeterminado. `null` es lo mismo que no mandarlo. Guía: Diseño del PDF.
+     */
+    pdf_design_id?: string | null;
 }
 
 
@@ -180,6 +184,7 @@ export function EquivalentDocumentAdjustmentInputFromJSONTyped(json: any, ignore
         'concept': json['concept'],
         'description': json['description'] == null ? undefined : json['description'],
         'equivalent_document': EquivalentDocumentReferenceFromJSON(json['equivalent_document']),
+        'pdf_design_id': json['pdf_design_id'] === undefined ? undefined : json['pdf_design_id'] === null ? null : json['pdf_design_id'],
     };
 }
 
@@ -208,6 +213,7 @@ export function EquivalentDocumentAdjustmentInputToJSONTyped(value?: EquivalentD
         'concept': value['concept'],
         'description': value['description'],
         'equivalent_document': EquivalentDocumentReferenceToJSON(value['equivalent_document']),
+        'pdf_design_id': value['pdf_design_id'],
     };
 }
 

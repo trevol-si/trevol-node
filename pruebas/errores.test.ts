@@ -12,7 +12,7 @@ const ESTADO: Record<string, number> = {
 };
 
 describe('errores tipados a través de un método generado', () => {
-  it('cubre los 43 code', () => expect(todos).toHaveLength(43));
+  it('cubre los 49 code', () => expect(todos).toHaveLength(49)); // 43 + los 6 del diseño del PDF (0.4.0)
   for (const [clase, code] of todos) {
     it(`${code} → ${clase}`, async () => {
       // retryable false y sin reintentos: el error sale de la primera respuesta

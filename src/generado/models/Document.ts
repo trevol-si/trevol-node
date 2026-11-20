@@ -20,6 +20,48 @@ import {
     InvoiceReferenceToJSON,
     InvoiceReferenceToJSONTyped,
 } from './InvoiceReference.js';
+import type { DeliveryTerms } from './DeliveryTerms.js';
+import {
+    DeliveryTermsFromJSON,
+    DeliveryTermsFromJSONTyped,
+    DeliveryTermsToJSON,
+    DeliveryTermsToJSONTyped,
+} from './DeliveryTerms.js';
+import type { Customer } from './Customer.js';
+import {
+    CustomerFromJSON,
+    CustomerFromJSONTyped,
+    CustomerToJSON,
+    CustomerToJSONTyped,
+} from './Customer.js';
+import type { Shipment } from './Shipment.js';
+import {
+    ShipmentFromJSON,
+    ShipmentFromJSONTyped,
+    ShipmentToJSON,
+    ShipmentToJSONTyped,
+} from './Shipment.js';
+import type { DianResult } from './DianResult.js';
+import {
+    DianResultFromJSON,
+    DianResultFromJSONTyped,
+    DianResultToJSON,
+    DianResultToJSONTyped,
+} from './DianResult.js';
+import type { Interoperability } from './Interoperability.js';
+import {
+    InteroperabilityFromJSON,
+    InteroperabilityFromJSONTyped,
+    InteroperabilityToJSON,
+    InteroperabilityToJSONTyped,
+} from './Interoperability.js';
+import type { PdfDesignApplied } from './PdfDesignApplied.js';
+import {
+    PdfDesignAppliedFromJSON,
+    PdfDesignAppliedFromJSONTyped,
+    PdfDesignAppliedToJSON,
+    PdfDesignAppliedToJSONTyped,
+} from './PdfDesignApplied.js';
 import type { Item } from './Item.js';
 import {
     ItemFromJSON,
@@ -41,20 +83,6 @@ import {
     PaymentToJSON,
     PaymentToJSONTyped,
 } from './Payment.js';
-import type { DeliveryTerms } from './DeliveryTerms.js';
-import {
-    DeliveryTermsFromJSON,
-    DeliveryTermsFromJSONTyped,
-    DeliveryTermsToJSON,
-    DeliveryTermsToJSONTyped,
-} from './DeliveryTerms.js';
-import type { Customer } from './Customer.js';
-import {
-    CustomerFromJSON,
-    CustomerFromJSONTyped,
-    CustomerToJSON,
-    CustomerToJSONTyped,
-} from './Customer.js';
 import type { Currency } from './Currency.js';
 import {
     CurrencyFromJSON,
@@ -62,20 +90,6 @@ import {
     CurrencyToJSON,
     CurrencyToJSONTyped,
 } from './Currency.js';
-import type { Shipment } from './Shipment.js';
-import {
-    ShipmentFromJSON,
-    ShipmentFromJSONTyped,
-    ShipmentToJSON,
-    ShipmentToJSONTyped,
-} from './Shipment.js';
-import type { DianResult } from './DianResult.js';
-import {
-    DianResultFromJSON,
-    DianResultFromJSONTyped,
-    DianResultToJSON,
-    DianResultToJSONTyped,
-} from './DianResult.js';
 import type { Delivery } from './Delivery.js';
 import {
     DeliveryFromJSON,
@@ -90,13 +104,6 @@ import {
     DocumentTotalsToJSON,
     DocumentTotalsToJSONTyped,
 } from './DocumentTotals.js';
-import type { Interoperability } from './Interoperability.js';
-import {
-    InteroperabilityFromJSON,
-    InteroperabilityFromJSONTyped,
-    InteroperabilityToJSON,
-    InteroperabilityToJSONTyped,
-} from './Interoperability.js';
 
 /**
  * 
@@ -116,6 +123,10 @@ export interface Document {
      * 
      */
     environment?: DocumentEnvironmentEnum;
+    /**
+     * Solo en el entorno SIMULADO (la empresa simulada de la cuenta): el objeto se validó, se calculó y se firmó como siempre, pero nunca llegó a la DIAN ni tiene validez. Un objeto real no lleva esta propiedad.
+     */
+    simulated?: boolean;
     /**
      * `processing` solo en la versión 2026-10-22: la DIAN no confirmó y Trevol sigue resolviendo el documento (el resultado llega por GET y por webhook; no crees otro documento para la misma venta). En 2026-10-21 ese documento se ve como `error`.
      */
@@ -224,6 +235,14 @@ export interface Document {
      * 
      */
     updated_at?: string | null;
+    /**
+     * El que pidió el documento, o null.
+     */
+    pdf_design_id?: string | null;
+    /**
+     * El diseño fijado al emitir; null mientras está pendiente.
+     */
+    pdf_design?: PdfDesignApplied | null;
 }
 
 
@@ -291,6 +310,7 @@ export function DocumentFromJSONTyped(json: any, ignoreDiscriminator: boolean): 
         'id': json['id'] == null ? undefined : json['id'],
         'object': json['object'] == null ? undefined : json['object'],
         'environment': json['environment'] == null ? undefined : json['environment'],
+        'simulated': json['simulated'] == null ? undefined : json['simulated'],
         'status': json['status'] == null ? undefined : json['status'],
         'number': json['number'] === undefined ? undefined : json['number'] === null ? null : json['number'],
         'prefix': json['prefix'] === undefined ? undefined : json['prefix'] === null ? null : json['prefix'],
@@ -318,6 +338,8 @@ export function DocumentFromJSONTyped(json: any, ignoreDiscriminator: boolean): 
         'delivery': json['delivery'] == null ? undefined : DeliveryFromJSON(json['delivery']),
         'created_at': json['created_at'] == null ? undefined : json['created_at'],
         'updated_at': json['updated_at'] === undefined ? undefined : json['updated_at'] === null ? null : json['updated_at'],
+        'pdf_design_id': json['pdf_design_id'] === undefined ? undefined : json['pdf_design_id'] === null ? null : json['pdf_design_id'],
+        'pdf_design': json['pdf_design'] === undefined ? undefined : json['pdf_design'] === null ? null : PdfDesignAppliedFromJSON(json['pdf_design']),
     };
 }
 
@@ -335,6 +357,7 @@ export function DocumentToJSONTyped(value?: Document | null, ignoreDiscriminator
         'id': value['id'],
         'object': value['object'],
         'environment': value['environment'],
+        'simulated': value['simulated'],
         'status': value['status'],
         'number': value['number'],
         'prefix': value['prefix'],
@@ -362,6 +385,8 @@ export function DocumentToJSONTyped(value?: Document | null, ignoreDiscriminator
         'delivery': DeliveryToJSON(value['delivery']),
         'created_at': value['created_at'],
         'updated_at': value['updated_at'],
+        'pdf_design_id': value['pdf_design_id'],
+        'pdf_design': PdfDesignAppliedToJSON(value['pdf_design']),
     };
 }
 

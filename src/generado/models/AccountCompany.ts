@@ -43,6 +43,10 @@ export interface AccountCompany {
      */
     object?: AccountCompanyObjectEnum;
     /**
+     * Solo en el entorno SIMULADO (la empresa simulada de la cuenta): el objeto se validó, se calculó y se firmó como siempre, pero nunca llegó a la DIAN ni tiene validez. Un objeto real no lleva esta propiedad. En la empresa de `/v1/account/companies`: solo la ve una llave de administración de pruebas (`tva_test_…`); para una de producción no existe.
+     */
+    simulated?: boolean;
+    /**
      * El NIT, sin DV.
      */
     nit?: string;
@@ -137,6 +141,7 @@ export function AccountCompanyFromJSONTyped(json: any, ignoreDiscriminator: bool
         
         'id': json['id'] == null ? undefined : json['id'],
         'object': json['object'] == null ? undefined : json['object'],
+        'simulated': json['simulated'] == null ? undefined : json['simulated'],
         'nit': json['nit'] == null ? undefined : json['nit'],
         'check_digit': json['check_digit'] === undefined ? undefined : json['check_digit'] === null ? null : json['check_digit'],
         'name': json['name'] === undefined ? undefined : json['name'] === null ? null : json['name'],
@@ -164,6 +169,7 @@ export function AccountCompanyToJSONTyped(value?: AccountCompany | null, ignoreD
         
         'id': value['id'],
         'object': value['object'],
+        'simulated': value['simulated'],
         'nit': value['nit'],
         'check_digit': value['check_digit'],
         'name': value['name'],

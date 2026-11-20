@@ -20,6 +20,13 @@ import {
     DeliveryEmailToJSON,
     DeliveryEmailToJSONTyped,
 } from './DeliveryEmail.js';
+import type { DeliveryEmailResends } from './DeliveryEmailResends.js';
+import {
+    DeliveryEmailResendsFromJSON,
+    DeliveryEmailResendsFromJSONTyped,
+    DeliveryEmailResendsToJSON,
+    DeliveryEmailResendsToJSONTyped,
+} from './DeliveryEmailResends.js';
 
 /**
  * Con la versión 2026-10-22, el PDF, el ZIP y el correo se hacen en segundo plano después del 201: casi siempre llegan `pending` y se completan en segundos (GET o el evento `….delivered`). Si pides …/pdf o …/zip antes, se generan al momento. Con la 2026-10-21 se hacen antes del 201, como en la fase 1.
@@ -47,6 +54,10 @@ export interface Delivery {
      * 
      */
     email?: DeliveryEmail | null;
+    /**
+     * Los reenvíos del correo con `POST …/{id}/email`; null si nunca se reenvió. `status` y `email` siguen hablando del correo original. `last.deliveries` dice cómo le fue a cada destinatario del último reenvío, también si rebotó o se quejó después. Sin `customers:read`, `last.to` y `last.deliveries[].to` salen en null.
+     */
+    email_resends?: DeliveryEmailResends | null;
 }
 
 
@@ -82,6 +93,7 @@ export function DeliveryFromJSONTyped(json: any, ignoreDiscriminator: boolean): 
         'zip': json['zip'] == null ? undefined : json['zip'],
         'xml': json['xml'] == null ? undefined : json['xml'],
         'email': json['email'] === undefined ? undefined : json['email'] === null ? null : DeliveryEmailFromJSON(json['email']),
+        'email_resends': json['email_resends'] === undefined ? undefined : json['email_resends'] === null ? null : DeliveryEmailResendsFromJSON(json['email_resends']),
     };
 }
 
@@ -101,6 +113,7 @@ export function DeliveryToJSONTyped(value?: Delivery | null, ignoreDiscriminator
         'zip': value['zip'],
         'xml': value['xml'],
         'email': DeliveryEmailToJSON(value['email']),
+        'email_resends': DeliveryEmailResendsToJSON(value['email_resends']),
     };
 }
 

@@ -31,6 +31,10 @@ export interface WebhookEndpointInput {
      * Eventos del catálogo (69 tipos, hasta 100 en la lista), o ["*"] para todos (no se mezcla). Solo existen en producción (llaves live): `balance.low`, `numbering.low`, `numbering.expiring`, `dian_sync.completed`, `dian_sync.failed`, `numbering_range.exhausted`. `webhook.test` no se suscribe.
      */
     events: Array<WebhookEndpointInputEventsEnum>;
+    /**
+     * Solo con `events: ["*"]` (si no, 422 en `/follow_latest_catalog`): el endpoint sigue el catálogo más nuevo. Cambiar a una lista explícita lo apaga.
+     */
+    follow_latest_catalog?: boolean;
 }
 
 
@@ -134,6 +138,7 @@ export function WebhookEndpointInputFromJSONTyped(json: any, ignoreDiscriminator
         'url': json['url'],
         'description': json['description'] === undefined ? undefined : json['description'] === null ? null : json['description'],
         'events': json['events'],
+        'follow_latest_catalog': json['follow_latest_catalog'] == null ? undefined : json['follow_latest_catalog'],
     };
 }
 
@@ -151,6 +156,7 @@ export function WebhookEndpointInputToJSONTyped(value?: WebhookEndpointInput | n
         'url': value['url'],
         'description': value['description'],
         'events': value['events'],
+        'follow_latest_catalog': value['follow_latest_catalog'],
     };
 }
 

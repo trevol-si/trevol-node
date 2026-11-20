@@ -47,6 +47,10 @@ export interface InvoiceBatch {
      */
     environment?: InvoiceBatchEnvironmentEnum;
     /**
+     * Solo en el entorno SIMULADO (la empresa simulada de la cuenta): el objeto se validó, se calculó y se firmó como siempre, pero nunca llegó a la DIAN ni tiene validez. Un objeto real no lleva esta propiedad.
+     */
+    simulated?: boolean;
+    /**
      * completed cuando todas sus facturas reservadas llegaron a un estado final.
      */
     status?: InvoiceBatchStatusEnum;
@@ -116,6 +120,7 @@ export function InvoiceBatchFromJSONTyped(json: any, ignoreDiscriminator: boolea
         'id': json['id'] == null ? undefined : json['id'],
         'object': json['object'] == null ? undefined : json['object'],
         'environment': json['environment'] == null ? undefined : json['environment'],
+        'simulated': json['simulated'] == null ? undefined : json['simulated'],
         'status': json['status'] == null ? undefined : json['status'],
         'created_at': json['created_at'] == null ? undefined : json['created_at'],
         'completed_at': json['completed_at'] === undefined ? undefined : json['completed_at'] === null ? null : json['completed_at'],
@@ -138,6 +143,7 @@ export function InvoiceBatchToJSONTyped(value?: InvoiceBatch | null, ignoreDiscr
         'id': value['id'],
         'object': value['object'],
         'environment': value['environment'],
+        'simulated': value['simulated'],
         'status': value['status'],
         'created_at': value['created_at'],
         'completed_at': value['completed_at'],

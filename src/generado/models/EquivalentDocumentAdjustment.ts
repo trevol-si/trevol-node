@@ -90,6 +90,13 @@ import {
     DocumentTotalsToJSON,
     DocumentTotalsToJSONTyped,
 } from './DocumentTotals.js';
+import type { PdfDesignApplied } from './PdfDesignApplied.js';
+import {
+    PdfDesignAppliedFromJSON,
+    PdfDesignAppliedFromJSONTyped,
+    PdfDesignAppliedToJSON,
+    PdfDesignAppliedToJSONTyped,
+} from './PdfDesignApplied.js';
 
 /**
  * Una nota de ajuste de un documento equivalente (crédito 94 o débito 93). Se expide como la factura: archivos `pdf`, `xml`, `zip` y `dian_response`.
@@ -213,6 +220,14 @@ export interface EquivalentDocumentAdjustment {
      * 
      */
     equivalent_document?: EquivalentDocumentReference;
+    /**
+     * El que pidió el documento, o null.
+     */
+    pdf_design_id?: string | null;
+    /**
+     * El diseño fijado al emitir; null mientras está pendiente.
+     */
+    pdf_design?: PdfDesignApplied | null;
 }
 
 
@@ -314,6 +329,8 @@ export function EquivalentDocumentAdjustmentFromJSONTyped(json: any, ignoreDiscr
         'concept': json['concept'] == null ? undefined : json['concept'],
         'description': json['description'] == null ? undefined : json['description'],
         'equivalent_document': json['equivalent_document'] == null ? undefined : EquivalentDocumentReferenceFromJSON(json['equivalent_document']),
+        'pdf_design_id': json['pdf_design_id'] === undefined ? undefined : json['pdf_design_id'] === null ? null : json['pdf_design_id'],
+        'pdf_design': json['pdf_design'] === undefined ? undefined : json['pdf_design'] === null ? null : PdfDesignAppliedFromJSON(json['pdf_design']),
     };
 }
 
@@ -357,6 +374,8 @@ export function EquivalentDocumentAdjustmentToJSONTyped(value?: EquivalentDocume
         'concept': value['concept'],
         'description': value['description'],
         'equivalent_document': EquivalentDocumentReferenceToJSON(value['equivalent_document']),
+        'pdf_design_id': value['pdf_design_id'],
+        'pdf_design': PdfDesignAppliedToJSON(value['pdf_design']),
     };
 }
 

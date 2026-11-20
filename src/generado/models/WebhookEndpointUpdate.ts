@@ -32,6 +32,10 @@ export interface WebhookEndpointUpdate {
      */
     events?: Array<WebhookEndpointUpdateEventsEnum>;
     /**
+     * Solo con `events: ["*"]` (si no, 422 en `/follow_latest_catalog`): el endpoint sigue el catálogo más nuevo. Cambiar a una lista explícita lo apaga.
+     */
+    follow_latest_catalog?: boolean;
+    /**
      * enabled reactiva (también uno desactivado por Trevol) y pone en cero el contador de fallos.
      */
     status?: WebhookEndpointUpdateStatusEnum;
@@ -145,6 +149,7 @@ export function WebhookEndpointUpdateFromJSONTyped(json: any, ignoreDiscriminato
         'url': json['url'] == null ? undefined : json['url'],
         'description': json['description'] === undefined ? undefined : json['description'] === null ? null : json['description'],
         'events': json['events'] == null ? undefined : json['events'],
+        'follow_latest_catalog': json['follow_latest_catalog'] == null ? undefined : json['follow_latest_catalog'],
         'status': json['status'] == null ? undefined : json['status'],
     };
 }
@@ -163,6 +168,7 @@ export function WebhookEndpointUpdateToJSONTyped(value?: WebhookEndpointUpdate |
         'url': value['url'],
         'description': value['description'],
         'events': value['events'],
+        'follow_latest_catalog': value['follow_latest_catalog'],
         'status': value['status'],
     };
 }

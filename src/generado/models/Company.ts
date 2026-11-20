@@ -67,6 +67,10 @@ export interface Company {
      */
     environment?: CompanyEnvironmentEnum | null;
     /**
+     * Solo en el entorno SIMULADO (la empresa simulada de la cuenta): el objeto se validó, se calculó y se firmó como siempre, pero nunca llegó a la DIAN ni tiene validez. Un objeto real no lleva esta propiedad.
+     */
+    simulated?: boolean;
+    /**
      * Las numeraciones (resoluciones) activas del ambiente de la llave.
      */
     numbering?: Array<CompanyNumbering>;
@@ -133,6 +137,7 @@ export function CompanyFromJSONTyped(json: any, ignoreDiscriminator: boolean): C
         'trade_name': json['trade_name'] === undefined ? undefined : json['trade_name'] === null ? null : json['trade_name'],
         'status': json['status'] == null ? undefined : json['status'],
         'environment': json['environment'] === undefined ? undefined : json['environment'] === null ? null : json['environment'],
+        'simulated': json['simulated'] == null ? undefined : json['simulated'],
         'numbering': json['numbering'] == null ? undefined : ((json['numbering'] as Array<any>).map(CompanyNumberingFromJSON)),
         'key': json['key'] == null ? undefined : CompanyKeyFromJSON(json['key']),
         'capabilities': json['capabilities'] == null ? undefined : json['capabilities'],
@@ -158,6 +163,7 @@ export function CompanyToJSONTyped(value?: Company | null, ignoreDiscriminator: 
         'trade_name': value['trade_name'],
         'status': value['status'],
         'environment': value['environment'],
+        'simulated': value['simulated'],
         'numbering': value['numbering'] == null ? undefined : ((value['numbering'] as Array<any>).map(CompanyNumberingToJSON)),
         'key': CompanyKeyToJSON(value['key']),
         'capabilities': value['capabilities'],

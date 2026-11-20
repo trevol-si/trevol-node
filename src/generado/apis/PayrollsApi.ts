@@ -123,6 +123,14 @@ export interface ListPayrollsRequest {
      * 
      */
     periodEndTo?: string;
+    /**
+     * El número completo exacto, como sale en `number` (p. ej. `SETP990000123`; sin prefijo, solo el consecutivo), sin ceros a la izquierda, espacios ni guiones. Puede traer más de un documento.
+     */
+    number?: string;
+    /**
+     * El prefijo exacto, como sale en `prefix`. Solo, lista una numeración; con `number`, quita la ambigüedad.
+     */
+    prefix?: string;
 }
 
 export interface PreviewPayrollRequest {
@@ -486,6 +494,14 @@ export class PayrollsApi extends runtime.BaseAPI {
 
         if (requestParameters['periodEndTo'] != null) {
             queryParameters['period_end_to'] = requestParameters['periodEndTo'];
+        }
+
+        if (requestParameters['number'] != null) {
+            queryParameters['number'] = requestParameters['number'];
+        }
+
+        if (requestParameters['prefix'] != null) {
+            queryParameters['prefix'] = requestParameters['prefix'];
         }
 
         const headerParameters: runtime.HTTPHeaders = {};

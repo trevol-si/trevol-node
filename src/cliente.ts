@@ -28,7 +28,11 @@ import {
 	ProductsApi,
 	RadianStatusApi,
 	ReportRunsApi,
-	ReportsApi
+	ReportsApi,
+	CatalogsApi,
+	CompanySettingsApi,
+	PdfDesignsApi,
+	PdfTemplatesApi
 } from './generado/index.js';
 import { API_VERSION, VERSION } from './generado/tablas.js';
 import { ConfigurationError } from './errores.js';
@@ -105,6 +109,11 @@ export class Trevol {
 	readonly radianStatus: RadianStatusApi;
 	readonly reportRuns: ReportRunsApi;
 	readonly reports: ReportsApi;
+	// 0.4.0: las listas de valores, el diseño del PDF (plantillas, diseños, ajustes y logo de la empresa).
+	readonly catalogs: CatalogsApi;
+	readonly companySettings: CompanySettingsApi;
+	readonly pdfDesigns: PdfDesignsApi;
+	readonly pdfTemplates: PdfTemplatesApi;
 
 	// Arma el cliente de otra empresa con la misma llave y las mismas opciones. Es un cierre (no un campo) para que la llave no quede en
 	// el objeto: ni console.log, ni JSON.stringify, ni util.inspect la pueden mostrar.
@@ -189,6 +198,10 @@ export class Trevol {
 		this.radianStatus = new RadianStatusApi(config);
 		this.reportRuns = new ReportRunsApi(config);
 		this.reports = new ReportsApi(config);
+		this.catalogs = new CatalogsApi(config);
+		this.companySettings = new CompanySettingsApi(config);
+		this.pdfDesigns = new PdfDesignsApi(config);
+		this.pdfTemplates = new PdfTemplatesApi(config);
 	}
 
 	/**
@@ -203,7 +216,7 @@ export class Trevol {
 	/**
 	 * Recorre todas las páginas de un listado: `for await (const f of trevol.paginate((cursor) => trevol.invoices.listInvoices({ limit: 100, startingAfter: cursor }))) { … }`.
 	 */
-	paginate<T extends { id?: string }>(pagina: (cursor: string | undefined) => Promise<Pagina<T>>): AsyncGenerator<T, void, undefined> {
+	paginate<T>(pagina: (cursor: string | undefined) => Promise<Pagina<T>>): AsyncGenerator<T, void, undefined> {
 		return paginar(pagina);
 	}
 

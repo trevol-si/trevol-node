@@ -162,6 +162,8 @@ const ACCEPT: Record<string, string> = {
 	pdf: `application/pdf, ${PROBLEMA}`,
 	xml: `application/xml, ${PROBLEMA}`,
 	zip: `application/zip, ${PROBLEMA}`,
+	// El logo de la empresa (0.4.0).
+	png: `image/png, ${PROBLEMA}`,
 	// Los reportes: CSV o Excel según `format`.
 	csv: `text/csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, ${PROBLEMA}`,
 	json: `application/json, ${PROBLEMA}`
