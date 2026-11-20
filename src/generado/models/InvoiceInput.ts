@@ -69,6 +69,13 @@ import {
     PaymentToJSON,
     PaymentToJSONTyped,
 } from './Payment.js';
+import type { Numbering } from './Numbering.js';
+import {
+    NumberingFromJSON,
+    NumberingFromJSONTyped,
+    NumberingToJSON,
+    NumberingToJSONTyped,
+} from './Numbering.js';
 import type { References } from './References.js';
 import {
     ReferencesFromJSON,
@@ -191,6 +198,14 @@ export interface InvoiceInput {
      * La transcripción (03) de una factura de papel: su número y fecha. La numeración sale del prefijo del papel.
      */
     contingency?: InvoiceContingencyInput;
+    /**
+     * 
+     */
+    numbering?: Numbering;
+    /**
+     * El diseño del PDF de este documento (`pdd_…` o `classic`); gana al de la numeración y al predeterminado. `null` es lo mismo que no mandarlo. Guía: Diseño del PDF.
+     */
+    pdf_design_id?: string | null;
 }
 
 /**
@@ -231,6 +246,8 @@ export function InvoiceInputFromJSONTyped(json: any, ignoreDiscriminator: boolea
         'due_diligence': json['due_diligence'] == null ? undefined : json['due_diligence'],
         'interoperability': json['interoperability'] == null ? undefined : InteroperabilityFromJSON(json['interoperability']),
         'contingency': json['contingency'] == null ? undefined : InvoiceContingencyInputFromJSON(json['contingency']),
+        'numbering': json['numbering'] == null ? undefined : NumberingFromJSON(json['numbering']),
+        'pdf_design_id': json['pdf_design_id'] === undefined ? undefined : json['pdf_design_id'] === null ? null : json['pdf_design_id'],
     };
 }
 
@@ -265,6 +282,8 @@ export function InvoiceInputToJSONTyped(value?: InvoiceInput | null, ignoreDiscr
         'due_diligence': value['due_diligence'],
         'interoperability': InteroperabilityToJSON(value['interoperability']),
         'contingency': InvoiceContingencyInputToJSON(value['contingency']),
+        'numbering': NumberingToJSON(value['numbering']),
+        'pdf_design_id': value['pdf_design_id'],
     };
 }
 

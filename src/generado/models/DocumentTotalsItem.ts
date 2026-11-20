@@ -20,7 +20,7 @@ import { mapValues } from '../runtime.js';
  */
 export interface DocumentTotalsItem {
     /**
-     * 
+     * Cantidad × precio SIN impuestos.
      */
     gross?: string;
     /**

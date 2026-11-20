@@ -139,6 +139,10 @@ export interface NoteInput {
      * 
      */
     invoice?: InvoiceReference;
+    /**
+     * El diseño del PDF de este documento (`pdd_…` o `classic`); gana al de la numeración y al predeterminado. `null` es lo mismo que no mandarlo. Guía: Diseño del PDF.
+     */
+    pdf_design_id?: string | null;
 }
 
 /**
@@ -174,6 +178,7 @@ export function NoteInputFromJSONTyped(json: any, ignoreDiscriminator: boolean):
         'concept': json['concept'],
         'description': json['description'] == null ? undefined : json['description'],
         'invoice': json['invoice'] == null ? undefined : InvoiceReferenceFromJSON(json['invoice']),
+        'pdf_design_id': json['pdf_design_id'] === undefined ? undefined : json['pdf_design_id'] === null ? null : json['pdf_design_id'],
     };
 }
 
@@ -202,6 +207,7 @@ export function NoteInputToJSONTyped(value?: NoteInput | null, ignoreDiscriminat
         'concept': value['concept'],
         'description': value['description'],
         'invoice': InvoiceReferenceToJSON(value['invoice']),
+        'pdf_design_id': value['pdf_design_id'],
     };
 }
 

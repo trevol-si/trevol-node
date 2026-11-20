@@ -2,6 +2,8 @@
 /* eslint-disable */
 export * from './AccountApi.js';
 export * from './BalanceApi.js';
+export * from './CatalogsApi.js';
+export * from './CompanySettingsApi.js';
 export * from './CreditNotesApi.js';
 export * from './CustomersApi.js';
 export * from './DebitNotesApi.js';
@@ -19,6 +21,8 @@ export * from './NumberingRequestsApi.js';
 export * from './PaperNumberingRangesApi.js';
 export * from './PayrollAdjustmentsApi.js';
 export * from './PayrollsApi.js';
+export * from './PdfDesignsApi.js';
+export * from './PdfTemplatesApi.js';
 export * from './ProductsApi.js';
 export * from './RadianEventsApi.js';
 export * from './RadianStatusApi.js';

@@ -14,6 +14,16 @@
 
 import * as runtime from '../runtime.js';
 import {
+    type EmailResend,
+    EmailResendFromJSON,
+    EmailResendToJSON,
+} from '../models/EmailResend.js';
+import {
+    type EmailResendRequest,
+    EmailResendRequestFromJSON,
+    EmailResendRequestToJSON,
+} from '../models/EmailResendRequest.js';
+import {
     type EquivalentDocument,
     EquivalentDocumentFromJSON,
     EquivalentDocumentToJSON,
@@ -122,6 +132,14 @@ export interface ListEquivalentDocumentsRequest {
      * 
      */
     documentType?: ListEquivalentDocumentsDocumentTypeEnum;
+    /**
+     * El número completo exacto, como sale en `number` (p. ej. `SETP990000123`; sin prefijo, solo el consecutivo), sin ceros a la izquierda, espacios ni guiones. Puede traer más de un documento.
+     */
+    number?: string;
+    /**
+     * El prefijo exacto, como sale en `prefix`. Solo, lista una numeración; con `number`, quita la ambigüedad.
+     */
+    prefix?: string;
 }
 
 export interface PreviewEquivalentDocumentRequest {
@@ -143,6 +161,21 @@ export interface SendEquivalentDocumentRequest {
      * 
      */
     id: string;
+}
+
+export interface SendEquivalentDocumentEmailRequest {
+    /**
+     * 
+     */
+    id: string;
+    /**
+     * Obligatoria: 1 a 255 caracteres ASCII visibles, única por pedido (7 días).
+     */
+    idempotencyKey?: string;
+    /**
+     * 
+     */
+    emailResendRequest?: EmailResendRequest;
 }
 
 /**
@@ -534,6 +567,14 @@ export class EquivalentDocumentsApi extends runtime.BaseAPI {
             queryParameters['document_type'] = requestParameters['documentType'];
         }
 
+        if (requestParameters['number'] != null) {
+            queryParameters['number'] = requestParameters['number'];
+        }
+
+        if (requestParameters['prefix'] != null) {
+            queryParameters['prefix'] = requestParameters['prefix'];
+        }
+
         const headerParameters: runtime.HTTPHeaders = {};
 
         if (this.configuration && this.configuration.accessToken) {
@@ -739,6 +780,68 @@ export class EquivalentDocumentsApi extends runtime.BaseAPI {
      */
     async sendEquivalentDocument(requestParameters: SendEquivalentDocumentRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<EquivalentDocument> {
         const response = await this.sendEquivalentDocumentRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * Creates request options for sendEquivalentDocumentEmail without sending the request
+     */
+    async sendEquivalentDocumentEmailRequestOpts(requestParameters: SendEquivalentDocumentEmailRequest): Promise<runtime.RequestOpts> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling sendEquivalentDocumentEmail().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (requestParameters['idempotencyKey'] != null) {
+            headerParameters['Idempotency-Key'] = String(requestParameters['idempotencyKey']);
+        }
+
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = await token("llave", []);
+
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
+
+        let urlPath = `/equivalent_documents/{id}/email`;
+        urlPath = urlPath.replace('{id}', encodeURIComponent(String(requestParameters['id'])));
+
+        return {
+            path: urlPath,
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+            body: EmailResendRequestToJSON(requestParameters['emailResendRequest']),
+        };
+    }
+
+    /**
+     * Reenvía el correo del documento validado: el mismo ZIP (el AttachedDocument y el PDF), la misma plantilla y el mismo asunto. Sin cuerpo, va al destinatario de siempre: en producción, el correo del comprador (`customer.email`); en habilitación, solo a quien emitió el documento (con «[PRUEBA – sin validez legal]» en el asunto). Con `to` (de 1 a 3 direcciones; solo producción y solo con el permiso `customers:read`, porque el ZIP trae los datos del comprador) va a esas direcciones, un correo por destinatario: nadie ve a los demás.  Solo sirve cuando el documento está validado y su correo original ya terminó (si todavía se está enviando o se va a reintentar, 409 `invalid_state` con `reason: delivery_pending` y `Retry-After`; si ya no está programada, `delivery_incomplete`, sin reintento). Si el correo original falló y ya no se va a reintentar, sí se puede reenviar. A una dirección que rebotó o se quejó no le volvemos a escribir (409 `email_suppressed`). Topes: 5 reenvíos por documento al día y 200 por empresa al día en producción (20 en habilitación; cuentan reenvíos, no destinatarios: con 3 direcciones, hasta 600 correos); al pasarse, 429 con `limit: \"email_resend\"` y `Retry-After` hasta la medianoche (hora de Colombia).  `Idempotency-Key` obligatoria: repetirla devuelve el mismo resultado sin volver a enviar. El reenvío queda en `delivery.email_resends` del documento (`last.deliveries` dice cómo le fue a cada destinatario del último reenvío, también si rebotó o se quejó después); `delivery.status` y `delivery.email` siguen hablando del correo original. Sin `customers:read`, las direcciones salen en `null`.
+     * Reenviar el correo de un documento equivalente
+     */
+    async sendEquivalentDocumentEmailRaw(requestParameters: SendEquivalentDocumentEmailRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<EmailResend>> {
+        const requestOptions = await this.sendEquivalentDocumentEmailRequestOpts(requestParameters);
+        const response = await this.request(requestOptions, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => EmailResendFromJSON(jsonValue));
+    }
+
+    /**
+     * Reenvía el correo del documento validado: el mismo ZIP (el AttachedDocument y el PDF), la misma plantilla y el mismo asunto. Sin cuerpo, va al destinatario de siempre: en producción, el correo del comprador (`customer.email`); en habilitación, solo a quien emitió el documento (con «[PRUEBA – sin validez legal]» en el asunto). Con `to` (de 1 a 3 direcciones; solo producción y solo con el permiso `customers:read`, porque el ZIP trae los datos del comprador) va a esas direcciones, un correo por destinatario: nadie ve a los demás.  Solo sirve cuando el documento está validado y su correo original ya terminó (si todavía se está enviando o se va a reintentar, 409 `invalid_state` con `reason: delivery_pending` y `Retry-After`; si ya no está programada, `delivery_incomplete`, sin reintento). Si el correo original falló y ya no se va a reintentar, sí se puede reenviar. A una dirección que rebotó o se quejó no le volvemos a escribir (409 `email_suppressed`). Topes: 5 reenvíos por documento al día y 200 por empresa al día en producción (20 en habilitación; cuentan reenvíos, no destinatarios: con 3 direcciones, hasta 600 correos); al pasarse, 429 con `limit: \"email_resend\"` y `Retry-After` hasta la medianoche (hora de Colombia).  `Idempotency-Key` obligatoria: repetirla devuelve el mismo resultado sin volver a enviar. El reenvío queda en `delivery.email_resends` del documento (`last.deliveries` dice cómo le fue a cada destinatario del último reenvío, también si rebotó o se quejó después); `delivery.status` y `delivery.email` siguen hablando del correo original. Sin `customers:read`, las direcciones salen en `null`.
+     * Reenviar el correo de un documento equivalente
+     */
+    async sendEquivalentDocumentEmail(requestParameters: SendEquivalentDocumentEmailRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<EmailResend> {
+        const response = await this.sendEquivalentDocumentEmailRaw(requestParameters, initOverrides);
         return await response.value();
     }
 

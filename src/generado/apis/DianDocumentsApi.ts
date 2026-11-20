@@ -68,6 +68,14 @@ export interface ListDianDocumentsRequest {
      * `issued` (lo emitido, por defecto), `received` (lo recibido) o `all`. El cursor se pide con la misma.
      */
     direction?: ListDianDocumentsDirectionEnum;
+    /**
+     * El número completo exacto, como sale en `number` (sin prefijo, solo el consecutivo). En lo recibido es el del proveedor y puede repetirse entre proveedores.
+     */
+    number?: string;
+    /**
+     * El prefijo exacto, como sale en `prefix`. Solo, lista una numeración; con `number`, quita la ambigüedad.
+     */
+    prefix?: string;
 }
 
 /**
@@ -215,6 +223,14 @@ export class DianDocumentsApi extends runtime.BaseAPI {
             queryParameters['direction'] = requestParameters['direction'];
         }
 
+        if (requestParameters['number'] != null) {
+            queryParameters['number'] = requestParameters['number'];
+        }
+
+        if (requestParameters['prefix'] != null) {
+            queryParameters['prefix'] = requestParameters['prefix'];
+        }
+
         const headerParameters: runtime.HTTPHeaders = {};
 
         if (this.configuration && this.configuration.accessToken) {
@@ -237,7 +253,7 @@ export class DianDocumentsApi extends runtime.BaseAPI {
     }
 
     /**
-     * Lo que la DIAN tiene de la empresa de la llave, emitido con Trevol o con cualquier otro sistema, tal como lo trajo la sincronización de Trevol («Sincronizar con la DIAN» en la app, o `POST /v1/dian_syncs`). `direction`: `issued` (por defecto: lo EMITIDO), `received` (lo RECIBIDO de los proveedores, por la sincronización o por el buzón de recepción; lo del buzón aparece cuando una sincronización con lo recibido ya lo trajo de la DIAN) o `all`. Del más nuevo al más viejo por fecha de expedición. Es de solo lectura y no se cobra; no tiene PDF ni acciones aquí (`cufe` lo identifica ante la DIAN). El XML de cualquiera se pide a la DIAN en el momento (`xml_available` y `GET /v1/dian_documents/{id}/xml`; el de lo emitido trae los datos personales del cliente y exige el permiso `customers:read` de la llave). Lo que se emitió con Trevol aparece también en su recurso (`/invoices`…) con el mismo `cufe`. Filtros: `type` y `issued_from` / `issued_to` (AAAA-MM-DD, incluidos). Paginación por cursor: `limit` (1 a 100, 20 por defecto) y `starting_after` (el `id` de la última fila que tienes, pedida con la misma `direction`).
+     * Lo que la DIAN tiene de la empresa de la llave, emitido con Trevol o con cualquier otro sistema, tal como lo trajo la sincronización de Trevol («Sincronizar con la DIAN» en la app, o `POST /v1/dian_syncs`). `direction`: `issued` (por defecto: lo EMITIDO), `received` (lo RECIBIDO de los proveedores, por la sincronización o por el buzón de recepción; lo del buzón aparece cuando una sincronización con lo recibido ya lo trajo de la DIAN) o `all`. Del más nuevo al más viejo por fecha de expedición. Es de solo lectura y no se cobra; no tiene PDF ni acciones aquí (`cufe` lo identifica ante la DIAN). El XML de cualquiera se pide a la DIAN en el momento (`xml_available` y `GET /v1/dian_documents/{id}/xml`; el de lo emitido trae los datos personales del cliente y exige el permiso `customers:read` de la llave). Lo que se emitió con Trevol aparece también en su recurso (`/invoices`…) con el mismo `cufe`. Filtros: `type`, `issued_from` / `issued_to` (AAAA-MM-DD, incluidos) y, para buscar un documento por su número, `number` (el número completo exacto, como sale en `number`: `?number=FE7595`) y `prefix` (el prefijo exacto). En lo recibido el número es el del proveedor y puede repetirse entre proveedores: por eso es una lista. Paginación por cursor: `limit` (1 a 100, 20 por defecto) y `starting_after` (el `id` de la última fila que tienes, pedida con la misma `direction`).
      * Lo que la empresa emitió y recibió según la DIAN (con Trevol o con otro sistema)
      */
     async listDianDocumentsRaw(requestParameters: ListDianDocumentsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<DianDocumentList>> {
@@ -248,7 +264,7 @@ export class DianDocumentsApi extends runtime.BaseAPI {
     }
 
     /**
-     * Lo que la DIAN tiene de la empresa de la llave, emitido con Trevol o con cualquier otro sistema, tal como lo trajo la sincronización de Trevol («Sincronizar con la DIAN» en la app, o `POST /v1/dian_syncs`). `direction`: `issued` (por defecto: lo EMITIDO), `received` (lo RECIBIDO de los proveedores, por la sincronización o por el buzón de recepción; lo del buzón aparece cuando una sincronización con lo recibido ya lo trajo de la DIAN) o `all`. Del más nuevo al más viejo por fecha de expedición. Es de solo lectura y no se cobra; no tiene PDF ni acciones aquí (`cufe` lo identifica ante la DIAN). El XML de cualquiera se pide a la DIAN en el momento (`xml_available` y `GET /v1/dian_documents/{id}/xml`; el de lo emitido trae los datos personales del cliente y exige el permiso `customers:read` de la llave). Lo que se emitió con Trevol aparece también en su recurso (`/invoices`…) con el mismo `cufe`. Filtros: `type` y `issued_from` / `issued_to` (AAAA-MM-DD, incluidos). Paginación por cursor: `limit` (1 a 100, 20 por defecto) y `starting_after` (el `id` de la última fila que tienes, pedida con la misma `direction`).
+     * Lo que la DIAN tiene de la empresa de la llave, emitido con Trevol o con cualquier otro sistema, tal como lo trajo la sincronización de Trevol («Sincronizar con la DIAN» en la app, o `POST /v1/dian_syncs`). `direction`: `issued` (por defecto: lo EMITIDO), `received` (lo RECIBIDO de los proveedores, por la sincronización o por el buzón de recepción; lo del buzón aparece cuando una sincronización con lo recibido ya lo trajo de la DIAN) o `all`. Del más nuevo al más viejo por fecha de expedición. Es de solo lectura y no se cobra; no tiene PDF ni acciones aquí (`cufe` lo identifica ante la DIAN). El XML de cualquiera se pide a la DIAN en el momento (`xml_available` y `GET /v1/dian_documents/{id}/xml`; el de lo emitido trae los datos personales del cliente y exige el permiso `customers:read` de la llave). Lo que se emitió con Trevol aparece también en su recurso (`/invoices`…) con el mismo `cufe`. Filtros: `type`, `issued_from` / `issued_to` (AAAA-MM-DD, incluidos) y, para buscar un documento por su número, `number` (el número completo exacto, como sale en `number`: `?number=FE7595`) y `prefix` (el prefijo exacto). En lo recibido el número es el del proveedor y puede repetirse entre proveedores: por eso es una lista. Paginación por cursor: `limit` (1 a 100, 20 por defecto) y `starting_after` (el `id` de la última fila que tienes, pedida con la misma `direction`).
      * Lo que la empresa emitió y recibió según la DIAN (con Trevol o con otro sistema)
      */
     async listDianDocuments(requestParameters: ListDianDocumentsRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<DianDocumentList> {

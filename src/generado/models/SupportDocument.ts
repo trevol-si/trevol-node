@@ -103,6 +103,10 @@ export interface SupportDocument {
      */
     environment?: SupportDocumentEnvironmentEnum;
     /**
+     * Solo en el entorno SIMULADO (la empresa simulada de la cuenta): el objeto se validó, se calculó y se firmó como siempre, pero nunca llegó a la DIAN ni tiene validez. Un objeto real no lleva esta propiedad.
+     */
+    simulated?: boolean;
+    /**
      * `processing` solo en la versión 2026-10-22: la DIAN no confirmó y Trevol sigue resolviendo el documento (el resultado llega por GET y por webhook; no crees otro documento para la misma venta). En 2026-10-21 ese documento se ve como `error`.
      */
     status?: SupportDocumentStatusEnum;
@@ -263,6 +267,7 @@ export function SupportDocumentFromJSONTyped(json: any, ignoreDiscriminator: boo
         'id': json['id'] == null ? undefined : json['id'],
         'object': json['object'] == null ? undefined : json['object'],
         'environment': json['environment'] == null ? undefined : json['environment'],
+        'simulated': json['simulated'] == null ? undefined : json['simulated'],
         'status': json['status'] == null ? undefined : json['status'],
         'number': json['number'] === undefined ? undefined : json['number'] === null ? null : json['number'],
         'prefix': json['prefix'] === undefined ? undefined : json['prefix'] === null ? null : json['prefix'],
@@ -302,6 +307,7 @@ export function SupportDocumentToJSONTyped(value?: SupportDocument | null, ignor
         'id': value['id'],
         'object': value['object'],
         'environment': value['environment'],
+        'simulated': value['simulated'],
         'status': value['status'],
         'number': value['number'],
         'prefix': value['prefix'],

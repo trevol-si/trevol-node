@@ -40,6 +40,10 @@ export interface Event {
      */
     environment?: EventEnvironmentEnum;
     /**
+     * Solo en el entorno SIMULADO (la empresa simulada de la cuenta): el objeto se validó, se calculó y se firmó como siempre, pero nunca llegó a la DIAN ni tiene validez. Un objeto real no lleva esta propiedad.
+     */
+    simulated?: boolean;
+    /**
      * La versión del formato de los eventos (hoy `2026-10-22`), la misma para todas las llaves: el resumen del documento no cambia con la versión de la llave.
      */
     api_version?: string;
@@ -167,6 +171,7 @@ export function EventFromJSONTyped(json: any, ignoreDiscriminator: boolean): Eve
         'type': json['type'] == null ? undefined : json['type'],
         'timestamp': json['timestamp'] == null ? undefined : json['timestamp'],
         'environment': json['environment'] == null ? undefined : json['environment'],
+        'simulated': json['simulated'] == null ? undefined : json['simulated'],
         'api_version': json['api_version'] == null ? undefined : json['api_version'],
         'data': json['data'] == null ? undefined : json['data'],
     };
@@ -188,6 +193,7 @@ export function EventToJSONTyped(value?: Event | null, ignoreDiscriminator: bool
         'type': value['type'],
         'timestamp': value['timestamp'],
         'environment': value['environment'],
+        'simulated': value['simulated'],
         'api_version': value['api_version'],
         'data': value['data'],
     };

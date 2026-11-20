@@ -44,7 +44,7 @@ export interface WebhookEndpoint {
      */
     events?: Array<WebhookEndpointEventsEnum>;
     /**
-     * Qué catálogo recibe con `["*"]`: `1` = el de la fase 2 (facturas, notas, saldo, numeración y certificado); `2` = también documento soporte, documento equivalente, nómina y eventos RADIAN; `3` = también lo recibido, la sincronización con la DIAN, la numeración automática, los lotes y la contingencia; `4` = también los clientes y productos del catálogo, el rango de numeración agotado y los reportes asíncronos. Un endpoint queda en el catálogo con que se guardó hasta que guardes de nuevo su lista de eventos (PATCH `events`); los nuevos nacen en 4. Una lista explícita siempre recibe lo que pide.
+     * Qué catálogo recibe con `["*"]`: `1` = el de la fase 2 (facturas, notas, saldo, numeración y certificado); `2` = también documento soporte, documento equivalente, nómina y eventos RADIAN; `3` = también lo recibido, la sincronización con la DIAN, la numeración automática, los lotes y la contingencia; `4` = también los clientes y productos del catálogo, el rango de numeración agotado y los reportes asíncronos. Un endpoint queda en el catálogo con que se guardó hasta que guardes de nuevo su lista de eventos (PATCH `events`) o actives `follow_latest_catalog`; los nuevos nacen en 4. Una lista explícita siempre recibe lo que pide.
      */
     catalog_version?: WebhookEndpointCatalogVersionEnum;
     /**
@@ -55,6 +55,10 @@ export interface WebhookEndpoint {
      * `sustained_failures`: fallos sostenidos. `api_key_revoked`: se revocó la llave que lo creó o le cambió la URL, los eventos o el secreto; revísalo antes de reactivarlo.
      */
     disabled_reason?: WebhookEndpointDisabledReasonEnum | null;
+    /**
+     * Con `events: ["*"]`, recibe el catálogo más nuevo sin volver a guardar la lista (y `catalog_version` dice ese catálogo). Por defecto false: un `["*"]` se queda en el catálogo con que se guardó. Tu receptor tiene que ignorar los tipos que no conoce.
+     */
+    follow_latest_catalog?: boolean;
     /**
      * 
      */
@@ -225,6 +229,7 @@ export function WebhookEndpointFromJSONTyped(json: any, ignoreDiscriminator: boo
         'catalog_version': json['catalog_version'] == null ? undefined : json['catalog_version'],
         'status': json['status'] == null ? undefined : json['status'],
         'disabled_reason': json['disabled_reason'] === undefined ? undefined : json['disabled_reason'] === null ? null : json['disabled_reason'],
+        'follow_latest_catalog': json['follow_latest_catalog'] == null ? undefined : json['follow_latest_catalog'],
         'secret_rotated_at': json['secret_rotated_at'] === undefined ? undefined : json['secret_rotated_at'] === null ? null : json['secret_rotated_at'],
         'created_at': json['created_at'] === undefined ? undefined : json['created_at'] === null ? null : json['created_at'],
         'updated_at': json['updated_at'] === undefined ? undefined : json['updated_at'] === null ? null : json['updated_at'],
@@ -252,6 +257,7 @@ export function WebhookEndpointToJSONTyped(value?: WebhookEndpoint | null, ignor
         'catalog_version': value['catalog_version'],
         'status': value['status'],
         'disabled_reason': value['disabled_reason'],
+        'follow_latest_catalog': value['follow_latest_catalog'],
         'secret_rotated_at': value['secret_rotated_at'],
         'created_at': value['created_at'],
         'updated_at': value['updated_at'],

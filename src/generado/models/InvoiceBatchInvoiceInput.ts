@@ -13,13 +13,6 @@
  */
 
 import { mapValues } from '../runtime.js';
-import type { Payment } from './Payment.js';
-import {
-    PaymentFromJSON,
-    PaymentFromJSONTyped,
-    PaymentToJSON,
-    PaymentToJSONTyped,
-} from './Payment.js';
 import type { DeliveryTerms } from './DeliveryTerms.js';
 import {
     DeliveryTermsFromJSON,
@@ -34,20 +27,6 @@ import {
     CustomerToJSON,
     CustomerToJSONTyped,
 } from './Customer.js';
-import type { References } from './References.js';
-import {
-    ReferencesFromJSON,
-    ReferencesFromJSONTyped,
-    ReferencesToJSON,
-    ReferencesToJSONTyped,
-} from './References.js';
-import type { Currency } from './Currency.js';
-import {
-    CurrencyFromJSON,
-    CurrencyFromJSONTyped,
-    CurrencyToJSON,
-    CurrencyToJSONTyped,
-} from './Currency.js';
 import type { AllowanceCharge } from './AllowanceCharge.js';
 import {
     AllowanceChargeFromJSON,
@@ -69,20 +48,6 @@ import {
     ShipmentToJSON,
     ShipmentToJSONTyped,
 } from './Shipment.js';
-import type { Withholding } from './Withholding.js';
-import {
-    WithholdingFromJSON,
-    WithholdingFromJSONTyped,
-    WithholdingToJSON,
-    WithholdingToJSONTyped,
-} from './Withholding.js';
-import type { Prepayment } from './Prepayment.js';
-import {
-    PrepaymentFromJSON,
-    PrepaymentFromJSONTyped,
-    PrepaymentToJSON,
-    PrepaymentToJSONTyped,
-} from './Prepayment.js';
 import type { ItemInput } from './ItemInput.js';
 import {
     ItemInputFromJSON,
@@ -97,9 +62,51 @@ import {
     InteroperabilityToJSON,
     InteroperabilityToJSONTyped,
 } from './Interoperability.js';
+import type { Payment } from './Payment.js';
+import {
+    PaymentFromJSON,
+    PaymentFromJSONTyped,
+    PaymentToJSON,
+    PaymentToJSONTyped,
+} from './Payment.js';
+import type { Numbering } from './Numbering.js';
+import {
+    NumberingFromJSON,
+    NumberingFromJSONTyped,
+    NumberingToJSON,
+    NumberingToJSONTyped,
+} from './Numbering.js';
+import type { References } from './References.js';
+import {
+    ReferencesFromJSON,
+    ReferencesFromJSONTyped,
+    ReferencesToJSON,
+    ReferencesToJSONTyped,
+} from './References.js';
+import type { Currency } from './Currency.js';
+import {
+    CurrencyFromJSON,
+    CurrencyFromJSONTyped,
+    CurrencyToJSON,
+    CurrencyToJSONTyped,
+} from './Currency.js';
+import type { Withholding } from './Withholding.js';
+import {
+    WithholdingFromJSON,
+    WithholdingFromJSONTyped,
+    WithholdingToJSON,
+    WithholdingToJSONTyped,
+} from './Withholding.js';
+import type { Prepayment } from './Prepayment.js';
+import {
+    PrepaymentFromJSON,
+    PrepaymentFromJSONTyped,
+    PrepaymentToJSON,
+    PrepaymentToJSONTyped,
+} from './Prepayment.js';
 
 /**
- * El cuerpo de `POST /v1/invoices` (los campos y las reglas de InvoiceInput) más su `idempotency_key`. Sin `contingency` (la 03 va sola).
+ * El cuerpo de `POST /v1/invoices` (los campos y las reglas de InvoiceInput) más su `idempotency_key`. Sin `contingency` (la 03 va sola). Cada factura puede elegir su numeración con `numbering`; si no sirve, esa factura queda `failed` sin numerarse.
  * @export
  * @interface InvoiceBatchInvoiceInput
  */
@@ -184,6 +191,14 @@ export interface InvoiceBatchInvoiceInput {
      * 
      */
     interoperability?: Interoperability;
+    /**
+     * 
+     */
+    numbering?: Numbering;
+    /**
+     * 
+     */
+    pdf_design_id?: string | null;
 }
 
 /**
@@ -225,6 +240,8 @@ export function InvoiceBatchInvoiceInputFromJSONTyped(json: any, ignoreDiscrimin
         'shipment': json['shipment'] == null ? undefined : ShipmentFromJSON(json['shipment']),
         'due_diligence': json['due_diligence'] == null ? undefined : json['due_diligence'],
         'interoperability': json['interoperability'] == null ? undefined : InteroperabilityFromJSON(json['interoperability']),
+        'numbering': json['numbering'] == null ? undefined : NumberingFromJSON(json['numbering']),
+        'pdf_design_id': json['pdf_design_id'] === undefined ? undefined : json['pdf_design_id'] === null ? null : json['pdf_design_id'],
     };
 }
 
@@ -259,6 +276,8 @@ export function InvoiceBatchInvoiceInputToJSONTyped(value?: InvoiceBatchInvoiceI
         'shipment': ShipmentToJSON(value['shipment']),
         'due_diligence': value['due_diligence'],
         'interoperability': InteroperabilityToJSON(value['interoperability']),
+        'numbering': NumberingToJSON(value['numbering']),
+        'pdf_design_id': value['pdf_design_id'],
     };
 }
 

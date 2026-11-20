@@ -187,6 +187,10 @@ export interface EquivalentDocumentInput {
      * Solo en el POS: el prefijo de la resolución POS que numera (una empresa con varias cajas o establecimientos tiene varias). Sin él, la más nueva vigente. Si no existe, `numbering_unavailable` (`no_resolution`).
      */
     numbering?: Numbering;
+    /**
+     * El diseño del PDF de este documento (`pdd_…` o `classic`); gana al de la numeración y al predeterminado. `null` es lo mismo que no mandarlo. Guía: Diseño del PDF.
+     */
+    pdf_design_id?: string | null;
 }
 
 /**
@@ -226,6 +230,7 @@ export function EquivalentDocumentInputFromJSONTyped(json: any, ignoreDiscrimina
         'origin_note': json['origin_note'] == null ? undefined : OriginNoteFromJSON(json['origin_note']),
         'contingency': json['contingency'] == null ? undefined : ContingencyFromJSON(json['contingency']),
         'numbering': json['numbering'] == null ? undefined : NumberingFromJSON(json['numbering']),
+        'pdf_design_id': json['pdf_design_id'] === undefined ? undefined : json['pdf_design_id'] === null ? null : json['pdf_design_id'],
     };
 }
 
@@ -259,6 +264,7 @@ export function EquivalentDocumentInputToJSONTyped(value?: EquivalentDocumentInp
         'origin_note': OriginNoteToJSON(value['origin_note']),
         'contingency': ContingencyToJSON(value['contingency']),
         'numbering': NumberingToJSON(value['numbering']),
+        'pdf_design_id': value['pdf_design_id'],
     };
 }
 

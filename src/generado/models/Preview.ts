@@ -13,6 +13,14 @@
  */
 
 import { mapValues } from '../runtime.js';
+import type { PreviewNumbering } from './PreviewNumbering.js';
+import {
+    PreviewNumberingFromJSON,
+    PreviewNumberingFromJSONTyped,
+    PreviewNumberingToJSON,
+    PreviewNumberingToJSONTyped,
+} from './PreviewNumbering.js';
+
 /**
  * El resultado de calcular sin emitir: el documento que se emitiría, con sus totales. No gasta numeración, saldo ni le manda nada a la DIAN. Lleva además los campos del pedido normalizados (cambian de un tipo de documento a otro).
  * @export
@@ -32,6 +40,10 @@ export interface Preview {
      * 
      */
     environment?: PreviewEnvironmentEnum | null;
+    /**
+     * Solo en la factura que pide `numbering`: la numeración que la numeraría (el prefijo normalizado), ya comprobada. No reserva número.
+     */
+    numbering?: PreviewNumbering;
     /**
      * Los totales calculados: la misma forma que `totals` del documento (en nómina, devengados, deducciones y total del comprobante).
      */
@@ -78,6 +90,7 @@ export function PreviewFromJSONTyped(json: any, ignoreDiscriminator: boolean): P
         'object': json['object'] == null ? undefined : json['object'],
         'document': json['document'] == null ? undefined : json['document'],
         'environment': json['environment'] === undefined ? undefined : json['environment'] === null ? null : json['environment'],
+        'numbering': json['numbering'] == null ? undefined : PreviewNumberingFromJSON(json['numbering']),
         'totals': json['totals'] == null ? undefined : json['totals'],
     };
 }
@@ -97,6 +110,7 @@ export function PreviewToJSONTyped(value?: Preview | null, ignoreDiscriminator: 
         'object': value['object'],
         'document': value['document'],
         'environment': value['environment'],
+        'numbering': PreviewNumberingToJSON(value['numbering']),
         'totals': value['totals'],
     };
 }

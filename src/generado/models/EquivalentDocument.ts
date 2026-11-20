@@ -48,6 +48,13 @@ import {
     DianResultToJSON,
     DianResultToJSONTyped,
 } from './DianResult.js';
+import type { PdfDesignApplied } from './PdfDesignApplied.js';
+import {
+    PdfDesignAppliedFromJSON,
+    PdfDesignAppliedFromJSONTyped,
+    PdfDesignAppliedToJSON,
+    PdfDesignAppliedToJSONTyped,
+} from './PdfDesignApplied.js';
 import type { EquivalentItem } from './EquivalentItem.js';
 import {
     EquivalentItemFromJSON,
@@ -253,6 +260,14 @@ export interface EquivalentDocument {
      * 
      */
     contingency?: EquivalentDocumentContingency | null;
+    /**
+     * El que pidió el documento, o null.
+     */
+    pdf_design_id?: string | null;
+    /**
+     * El diseño fijado al emitir; null mientras está pendiente.
+     */
+    pdf_design?: PdfDesignApplied | null;
 }
 
 
@@ -365,6 +380,8 @@ export function EquivalentDocumentFromJSONTyped(json: any, ignoreDiscriminator: 
         'extension': json['extension'] == null ? undefined : ExtensionFromJSON(json['extension']),
         'origin_note': json['origin_note'] == null ? undefined : OriginNoteFromJSON(json['origin_note']),
         'contingency': json['contingency'] === undefined ? undefined : json['contingency'] === null ? null : EquivalentDocumentContingencyFromJSON(json['contingency']),
+        'pdf_design_id': json['pdf_design_id'] === undefined ? undefined : json['pdf_design_id'] === null ? null : json['pdf_design_id'],
+        'pdf_design': json['pdf_design'] === undefined ? undefined : json['pdf_design'] === null ? null : PdfDesignAppliedFromJSON(json['pdf_design']),
     };
 }
 
@@ -411,6 +428,8 @@ export function EquivalentDocumentToJSONTyped(value?: EquivalentDocument | null,
         'extension': ExtensionToJSON(value['extension']),
         'origin_note': OriginNoteToJSON(value['origin_note']),
         'contingency': EquivalentDocumentContingencyToJSON(value['contingency']),
+        'pdf_design_id': value['pdf_design_id'],
+        'pdf_design': PdfDesignAppliedToJSON(value['pdf_design']),
     };
 }
 
