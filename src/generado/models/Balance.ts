@@ -13,6 +13,13 @@
  */
 
 import { mapValues } from '../runtime.js';
+import type { BalanceKeyOwner } from './BalanceKeyOwner.js';
+import {
+    BalanceKeyOwnerFromJSON,
+    BalanceKeyOwnerFromJSONTyped,
+    BalanceKeyOwnerToJSON,
+    BalanceKeyOwnerToJSONTyped,
+} from './BalanceKeyOwner.js';
 import type { BalanceOperationPrices } from './BalanceOperationPrices.js';
 import {
     BalanceOperationPricesFromJSON,
@@ -22,7 +29,7 @@ import {
 } from './BalanceOperationPrices.js';
 
 /**
- * El saldo prepago de Trevol. Es de la **cuenta**, no de la empresa: todas las empresas de la cuenta lo comparten (`shared: true`) y cualquier llave de cualquiera de ellas, de lectura o de escritura, `test` o `live`, ve el mismo. Solo lo que se emite en producción (llaves `live`) lo consume; la habilitación (`test`) no cobra. `available` es lo que se puede gastar (en pesos); `held`, lo apartado por documentos que la DIAN todavía valida y por operaciones de la API en curso; `overdraft`, cuánto puede bajar `available` de cero al apartar un documento; `low_threshold`, el umbral del aviso de saldo bajo (el 20 % de la última recarga; `null` sin recargas). `level`: `empty` con `available` ≤ 0, `low` por debajo de `low_threshold`, si no `ok`. Con `available` por debajo del precio de un documento, emitir en producción responde 402 `insufficient_balance`. El evento `balance.low` avisa por webhook. `operation_prices`: el precio en pesos de cada operación que Trevol hace por la empresa en el portal de la DIAN y que se cobra del saldo (`dian_sync`: `POST /v1/dian_syncs`; `numbering_refresh`: `POST /v1/numbering_ranges/refresh`; `numbering_association`: `POST /v1/numbering_ranges/{id}/associate`; `numbering_request`: `POST /v1/numbering_requests`, una vez por solicitud). 0 es gratis. Solo en producción: se aparta al crearla, se cobra si termina bien y se devuelve si falla; sin saldo, 402 `insufficient_balance` y no se crea nada.
+ * El saldo prepago de Trevol. Es de la **cuenta**, no de la empresa: todas las empresas de la cuenta lo comparten (`shared: true`) y cualquier llave de cualquiera de ellas, de lectura o de escritura, `test` o `live`, ve el mismo. Solo lo que se emite en producción (llaves `live`) lo consume; la habilitación (`test`) no cobra. `available` es lo que se puede gastar (en pesos); `held`, lo apartado por documentos que la DIAN todavía valida y por operaciones de la API en curso; `overdraft`, cuánto puede bajar `available` de cero al apartar un documento; `low_threshold`, el umbral del aviso de saldo bajo (el 20 % de la última recarga; `null` sin recargas). `level`: `empty` con `available` ≤ 0, `low` por debajo de `low_threshold`, si no `ok`. Con `available` por debajo del precio de un documento, emitir en producción responde 402 `insufficient_balance`. El evento `balance.low` avisa por webhook. `operation_prices`: el precio en pesos de cada operación que Trevol hace por la empresa en el portal de la DIAN y que se cobra del saldo (`dian_sync`: `POST /v1/dian_syncs`; `numbering_refresh`: `POST /v1/numbering_ranges/refresh`; `numbering_association`: `POST /v1/numbering_ranges/{id}/associate`; `numbering_request`: `POST /v1/numbering_requests`, una vez por solicitud). 0 es gratis. Solo en producción: se aparta al crearla, se cobra si termina bien y se devuelve si falla; sin saldo, 402 `insufficient_balance` y no se crea nada. Si la persona responsable de la llave no puede ver el saldo de la cuenta (en una cuenta compartida, un Facturador: en la app solo ve si alcanza), 403 `permission_denied` con `reason: key_owner_without_access`, y el 402 llega sin `balance_cop`.
  * @export
  * @interface Balance
  */
@@ -63,6 +70,10 @@ export interface Balance {
      * Siempre true: el saldo es de la cuenta y lo comparten todas sus empresas.
      */
     shared?: boolean;
+    /**
+     * Cuando la llave paga primero con el saldo propio de su persona responsable (lo activa esa persona en la app): el nivel de ese saldo propio, sin montos (quien tiene la llave no ve cuánto tiene esa persona). null si la llave paga con el saldo de la cuenta. Los demás campos siguen siendo los de la cuenta.
+     */
+    key_owner?: BalanceKeyOwner | null;
     /**
      * El precio en pesos de cada operación que Trevol hace por la empresa en el portal de la DIAN y que se cobra del saldo (0 es gratis). Solo en producción.
      */
@@ -123,6 +134,7 @@ export function BalanceFromJSONTyped(json: any, ignoreDiscriminator: boolean): B
         'level': json['level'] == null ? undefined : json['level'],
         'updated_at': json['updated_at'] === undefined ? undefined : json['updated_at'] === null ? null : json['updated_at'],
         'shared': json['shared'] == null ? undefined : json['shared'],
+        'key_owner': json['key_owner'] === undefined ? undefined : json['key_owner'] === null ? null : BalanceKeyOwnerFromJSON(json['key_owner']),
         'operation_prices': json['operation_prices'] == null ? undefined : BalanceOperationPricesFromJSON(json['operation_prices']),
     };
 }
@@ -147,6 +159,7 @@ export function BalanceToJSONTyped(value?: Balance | null, ignoreDiscriminator: 
         'level': value['level'],
         'updated_at': value['updated_at'],
         'shared': value['shared'],
+        'key_owner': BalanceKeyOwnerToJSON(value['key_owner']),
         'operation_prices': BalanceOperationPricesToJSON(value['operation_prices']),
     };
 }

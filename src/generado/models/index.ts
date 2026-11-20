@@ -28,6 +28,7 @@ export * from './AllowanceCharge.js';
 export * from './AlternativeCurrency.js';
 export * from './Balance.js';
 export * from './BalanceEventData.js';
+export * from './BalanceKeyOwner.js';
 export * from './BalanceOperationPrices.js';
 export * from './BalanceTransaction.js';
 export * from './BalanceTransactionCompany.js';

@@ -93,7 +93,7 @@ export interface Problem {
      */
     existing_id?: string;
     /**
-     * En `company_not_enabled` (`missing_legal_representative`, `missing_pin`, `missing_software`, `payroll_not_enabled`) y en `numbering_unavailable` (`missing_technical_key`, `no_contingency_numbering`, `no_resolution`, `prefix_in_use`, `resolution_exhausted`, `resolution_expired`, `resolution_not_yet_valid`): por qué. En `automatic_mode_unavailable` (`credentials_missing`, `mandate_required`: falta el mandato para integraciones que se acepta en la app, `disabled`) y en `permission_denied` de una ruta que solo existe en producción (`live_mode_required`). En `permission_denied` de una llave de administración: `environment_mismatch` (`Trevol-Environment` no es el ambiente de la llave), `live_mode_required` (el alta de empresas pide una llave de producción) y `scope_list` (una llave con alcance de lista no da de alta empresas; como esa llave no puede tener `companies:write`, lo que llega en la práctica es el 403 con `required_permission: companies:write`).
+     * En `company_not_enabled` (`missing_legal_representative`, `missing_pin`, `missing_software`, `payroll_not_enabled`) y en `numbering_unavailable` (`missing_technical_key`, `no_contingency_numbering`, `no_resolution`, `prefix_in_use`, `resolution_exhausted`, `resolution_expired`, `resolution_not_yet_valid`): por qué. En `permission_denied`: `key_owner_without_access` (la persona responsable de la llave ya no tiene acceso a la empresa, no puede gestionar lo que pide la ruta: webhooks, numeración, talonarios o sincronización con la DIAN, o no puede ver el saldo de la cuenta) y `number_paused` (el número de WhatsApp está en pausa hasta que la empresa le asigne una persona responsable). En `automatic_mode_unavailable` (`credentials_missing`, `mandate_required`: falta el mandato para integraciones que se acepta en la app, `disabled`) y en `permission_denied` de una ruta que solo existe en producción (`live_mode_required`). En `permission_denied` de una llave de administración: `environment_mismatch` (`Trevol-Environment` no es el ambiente de la llave), `live_mode_required` (el alta de empresas pide una llave de producción) y `scope_list` (una llave con alcance de lista no da de alta empresas; como esa llave no puede tener `companies:write`, lo que llega en la práctica es el 403 con `required_permission: companies:write`).
      */
     reason?: ProblemReasonEnum;
     /**
@@ -109,7 +109,7 @@ export interface Problem {
      */
     maximum_cop?: number | null;
     /**
-     * En `insufficient_balance` de una operación cobrada: el saldo disponible de la cuenta, en pesos.
+     * En `insufficient_balance` de una operación cobrada: el saldo disponible de la cuenta, en pesos (el mismo `available` de `GET /v1/balance`). No viene si la persona responsable de la llave no puede ver el saldo de la cuenta.
      */
     balance_cop?: number;
     /**
@@ -212,6 +212,7 @@ export const ProblemReasonEnum = {
     CredentialsMissing: 'credentials_missing',
     Disabled: 'disabled',
     EnvironmentMismatch: 'environment_mismatch',
+    KeyOwnerWithoutAccess: 'key_owner_without_access',
     LiveModeRequired: 'live_mode_required',
     MandateRequired: 'mandate_required',
     MissingLegalRepresentative: 'missing_legal_representative',
@@ -220,6 +221,7 @@ export const ProblemReasonEnum = {
     MissingTechnicalKey: 'missing_technical_key',
     NoContingencyNumbering: 'no_contingency_numbering',
     NoResolution: 'no_resolution',
+    NumberPaused: 'number_paused',
     PayrollNotEnabled: 'payroll_not_enabled',
     PrefixInUse: 'prefix_in_use',
     ResolutionExhausted: 'resolution_exhausted',
