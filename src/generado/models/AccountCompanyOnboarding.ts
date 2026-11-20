@@ -60,7 +60,6 @@ export const AccountCompanyOnboardingStopReasonEnum = {
     NotRegisteredForTesting: 'not_registered_for_testing',
     TestSetRejected: 'test_set_rejected',
     DianPortalUnavailable: 'dian_portal_unavailable',
-    Captcha: 'captcha',
     InternalError: 'internal_error',
 } as const;
 export type AccountCompanyOnboardingStopReasonEnum = typeof AccountCompanyOnboardingStopReasonEnum[keyof typeof AccountCompanyOnboardingStopReasonEnum];
