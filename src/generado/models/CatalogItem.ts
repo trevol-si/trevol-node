@@ -104,13 +104,9 @@ export interface CatalogItem {
      */
     quantity?: string;
     /**
-     * Precio unitario SIN impuestos (con unit_price_includes_tax, con ellos).
+     * Precio unitario SIN impuestos.
      */
     unit_price?: string;
-    /**
-     * true: unit_price trae los impuestos de la línea; Trevol calcula el precio sin ellos.
-     */
-    unit_price_includes_tax?: boolean;
     /**
      * Impuestos de la línea: {code, rate} porcentual, {code: "01", excluded: true} o nominal {code, unit_amount, unit?, quantity?}.
      */
@@ -207,7 +203,6 @@ export function CatalogItemFromJSONTyped(json: any, ignoreDiscriminator: boolean
         'unit': json['unit'] == null ? undefined : json['unit'],
         'quantity': json['quantity'] == null ? undefined : json['quantity'],
         'unit_price': json['unit_price'] == null ? undefined : json['unit_price'],
-        'unit_price_includes_tax': json['unit_price_includes_tax'] == null ? undefined : json['unit_price_includes_tax'],
         'taxes': json['taxes'] == null ? undefined : ((json['taxes'] as Array<any>).map(ItemTaxFromJSON)),
         'discounts': json['discounts'] == null ? undefined : ((json['discounts'] as Array<any>).map(ItemAllowanceFromJSON)),
         'charges': json['charges'] == null ? undefined : ((json['charges'] as Array<any>).map(ItemAllowanceFromJSON)),
@@ -243,7 +238,6 @@ export function CatalogItemToJSONTyped(value?: CatalogItem | null, ignoreDiscrim
         'unit': value['unit'],
         'quantity': value['quantity'],
         'unit_price': value['unit_price'],
-        'unit_price_includes_tax': value['unit_price_includes_tax'],
         'taxes': value['taxes'] == null ? undefined : ((value['taxes'] as Array<any>).map(ItemTaxToJSON)),
         'discounts': value['discounts'] == null ? undefined : ((value['discounts'] as Array<any>).map(ItemAllowanceToJSON)),
         'charges': value['charges'] == null ? undefined : ((value['charges'] as Array<any>).map(ItemAllowanceToJSON)),
