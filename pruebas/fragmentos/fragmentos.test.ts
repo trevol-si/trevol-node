@@ -22,7 +22,7 @@ const carpeta = new URL('./programas/', import.meta.url);
 
 describe('la estructura', () => {
 	it('hay un fragmento por operación y por lenguaje, y un programa de arnés por cada uno de node', () => {
-		expect(operaciones).toHaveLength(178); // 0.4.0: + 19 (listas de valores, diseño del PDF y reenvío del correo)
+		expect(operaciones).toHaveLength(180); // 0.4.0: + 19 (listas de valores, diseño del PDF y reenvío del correo); 0.6.0: + 2 (el PDF de la DIAN)
 		expect(OPERACIONES_DE_CUENTA.size).toBe(10);
 		expect(datos.lenguajes.slice(0, 3)).toEqual(['curl', 'node', 'python']); // los demás SDK suman los suyos después
 		for (const op of operaciones) for (const l of datos.lenguajes) expect(datos.fragmentos[op][l], `${op}/${l}`).toBeTruthy();

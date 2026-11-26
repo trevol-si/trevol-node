@@ -24,10 +24,22 @@ import {
     DianDocumentListToJSON,
 } from '../models/DianDocumentList.js';
 import {
+    type DianDocumentPdf,
+    DianDocumentPdfFromJSON,
+    DianDocumentPdfToJSON,
+} from '../models/DianDocumentPdf.js';
+import {
     type Problem,
     ProblemFromJSON,
     ProblemToJSON,
 } from '../models/Problem.js';
+
+export interface DownloadDianDocumentPdfRequest {
+    /**
+     * 
+     */
+    id: string;
+}
 
 export interface DownloadDianDocumentXmlRequest {
     /**
@@ -78,10 +90,72 @@ export interface ListDianDocumentsRequest {
     prefix?: string;
 }
 
+export interface RequestDianDocumentPdfRequest {
+    /**
+     * 
+     */
+    id: string;
+}
+
 /**
  * 
  */
 export class DianDocumentsApi extends runtime.BaseAPI {
+
+    /**
+     * Creates request options for downloadDianDocumentPdf without sending the request
+     */
+    async downloadDianDocumentPdfRequestOpts(requestParameters: DownloadDianDocumentPdfRequest): Promise<runtime.RequestOpts> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling downloadDianDocumentPdf().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = await token("llave", []);
+
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
+
+        let urlPath = `/dian_documents/{id}/pdf`;
+        urlPath = urlPath.replace('{id}', encodeURIComponent(String(requestParameters['id'])));
+
+        return {
+            path: urlPath,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        };
+    }
+
+    /**
+     * El PDF oficial de la DIAN de un documento, cuando está listo (200 `application/pdf`). Bajarlo no se cobra. Si todavía viene en camino: 409 `file_unavailable` reintentable con `reason: pending` y `Retry-After` (o mira `pdf_status`). Si no se ha pedido (o venció a los 90 días): 409 `file_unavailable` con `reason: not_requested`; pídelo con POST /v1/dian_documents/{id}/pdf. Si la DIAN no lo entregó: 503 `dian_unavailable` (pídelo otra vez) o 409 `file_unavailable` con `reason: dian_failed` (la DIAN no tiene el PDF de ese documento); en los dos casos no se cobró. Solo producción; lo emitido exige `customers:read`.
+     * Bajar el PDF de la DIAN de un documento
+     */
+    async downloadDianDocumentPdfRaw(requestParameters: DownloadDianDocumentPdfRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<runtime.HttpFile>> {
+        const requestOptions = await this.downloadDianDocumentPdfRequestOpts(requestParameters);
+        const response = await this.request(requestOptions, initOverrides);
+
+        return new runtime.BlobApiResponse(response);
+    }
+
+    /**
+     * El PDF oficial de la DIAN de un documento, cuando está listo (200 `application/pdf`). Bajarlo no se cobra. Si todavía viene en camino: 409 `file_unavailable` reintentable con `reason: pending` y `Retry-After` (o mira `pdf_status`). Si no se ha pedido (o venció a los 90 días): 409 `file_unavailable` con `reason: not_requested`; pídelo con POST /v1/dian_documents/{id}/pdf. Si la DIAN no lo entregó: 503 `dian_unavailable` (pídelo otra vez) o 409 `file_unavailable` con `reason: dian_failed` (la DIAN no tiene el PDF de ese documento); en los dos casos no se cobró. Solo producción; lo emitido exige `customers:read`.
+     * Bajar el PDF de la DIAN de un documento
+     */
+    async downloadDianDocumentPdf(requestParameters: DownloadDianDocumentPdfRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.HttpFile> {
+        const response = await this.downloadDianDocumentPdfRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
 
     /**
      * Creates request options for downloadDianDocumentXml without sending the request
@@ -269,6 +343,61 @@ export class DianDocumentsApi extends runtime.BaseAPI {
      */
     async listDianDocuments(requestParameters: ListDianDocumentsRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<DianDocumentList> {
         const response = await this.listDianDocumentsRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * Creates request options for requestDianDocumentPdf without sending the request
+     */
+    async requestDianDocumentPdfRequestOpts(requestParameters: RequestDianDocumentPdfRequest): Promise<runtime.RequestOpts> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling requestDianDocumentPdf().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = await token("llave", []);
+
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
+
+        let urlPath = `/dian_documents/{id}/pdf`;
+        urlPath = urlPath.replace('{id}', encodeURIComponent(String(requestParameters['id'])));
+
+        return {
+            path: urlPath,
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+        };
+    }
+
+    /**
+     * Pide el PDF oficial que genera la DIAN de un documento de la empresa de la llave (emitido o recibido): la representación gráfica de la DIAN, la misma que ofrece su portal. Trevol lo pide a la DIAN y puede tardar unos segundos o minutos: responde 202 con el objeto `dian_document_pdf` (`status: pending`), `Location` y `Retry-After`; cuando está listo, bájalo con GET /v1/dian_documents/{id}/pdf (o mira `pdf_status` en el documento). Si ya hay uno en camino o listo, lo devuelve sin pedir otro ni cobrar (200 si ya está listo): repetir la petición es seguro y no necesita `Idempotency-Key`. Se cobra del saldo cuando llega (`dian_document_pdf` en `operation_prices` de GET /v1/balance); si la DIAN no lo entrega, no se cobra. Se guarda 90 días: bajarlo otra vez no se cobra; después vence y pedirlo es un pedido nuevo. Solo producción (con una llave de prueba, 403 `live_mode_required`) y con una llave de escritura. Lo emitido trae los datos personales del cliente: exige el permiso `customers:read` de la llave. Errores: 404 (otra empresa u otro ambiente), 409 `file_unavailable` (sin CUFE: mira `pdf_available`), 402 `insufficient_balance` (no se pidió nada) y 429 con `limit: dian_document_pdf`.
+     * Pedir el PDF de la DIAN de un documento
+     */
+    async requestDianDocumentPdfRaw(requestParameters: RequestDianDocumentPdfRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<DianDocumentPdf>> {
+        const requestOptions = await this.requestDianDocumentPdfRequestOpts(requestParameters);
+        const response = await this.request(requestOptions, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => DianDocumentPdfFromJSON(jsonValue));
+    }
+
+    /**
+     * Pide el PDF oficial que genera la DIAN de un documento de la empresa de la llave (emitido o recibido): la representación gráfica de la DIAN, la misma que ofrece su portal. Trevol lo pide a la DIAN y puede tardar unos segundos o minutos: responde 202 con el objeto `dian_document_pdf` (`status: pending`), `Location` y `Retry-After`; cuando está listo, bájalo con GET /v1/dian_documents/{id}/pdf (o mira `pdf_status` en el documento). Si ya hay uno en camino o listo, lo devuelve sin pedir otro ni cobrar (200 si ya está listo): repetir la petición es seguro y no necesita `Idempotency-Key`. Se cobra del saldo cuando llega (`dian_document_pdf` en `operation_prices` de GET /v1/balance); si la DIAN no lo entrega, no se cobra. Se guarda 90 días: bajarlo otra vez no se cobra; después vence y pedirlo es un pedido nuevo. Solo producción (con una llave de prueba, 403 `live_mode_required`) y con una llave de escritura. Lo emitido trae los datos personales del cliente: exige el permiso `customers:read` de la llave. Errores: 404 (otra empresa u otro ambiente), 409 `file_unavailable` (sin CUFE: mira `pdf_available`), 402 `insufficient_balance` (no se pidió nada) y 429 con `limit: dian_document_pdf`.
+     * Pedir el PDF de la DIAN de un documento
+     */
+    async requestDianDocumentPdf(requestParameters: RequestDianDocumentPdfRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<DianDocumentPdf> {
+        const response = await this.requestDianDocumentPdfRaw(requestParameters, initOverrides);
         return await response.value();
     }
 

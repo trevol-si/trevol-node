@@ -20,9 +20,16 @@ import {
     DianCounterpartToJSON,
     DianCounterpartToJSONTyped,
 } from './DianCounterpart.js';
+import type { DianDocumentPdfState } from './DianDocumentPdfState.js';
+import {
+    DianDocumentPdfStateFromJSON,
+    DianDocumentPdfStateFromJSONTyped,
+    DianDocumentPdfStateToJSON,
+    DianDocumentPdfStateToJSONTyped,
+} from './DianDocumentPdfState.js';
 
 /**
- * Un documento de la empresa ante la DIAN (emitido con Trevol o con otro sistema, o recibido de un proveedor), tal como lo trajo la sincronización o el buzón. Es de solo lectura: no tiene PDF ni acciones aquí; su XML se le pide a la DIAN (`xml_available`).
+ * Un documento de la empresa ante la DIAN (emitido con Trevol o con otro sistema, o recibido de un proveedor), tal como lo trajo la sincronización o el buzón. Es de solo lectura: su XML se le pide a la DIAN (`xml_available`) y también el PDF oficial que genera la DIAN (`pdf_available`, `pdf_status`).
  * @export
  * @interface DianDocument
  */
@@ -99,6 +106,14 @@ export interface DianDocument {
      * Si se le puede pedir el XML a la DIAN con GET /v1/dian_documents/{id}/xml (tiene CUFE y la DIAN lo verificó; Trevol no lo guarda). En lo emitido, además, si la llave tiene el permiso customers:read (su XML trae los datos personales del cliente).
      */
     xml_available?: boolean;
+    /**
+     * Si se le puede pedir a la DIAN el PDF oficial del documento con POST /v1/dian_documents/{id}/pdf: solo en producción, con CUFE y verificado por la DIAN. En lo emitido, además, si la llave tiene el permiso customers:read.
+     */
+    pdf_available?: boolean;
+    /**
+     * Cómo va el PDF de la DIAN: `not_requested` (nunca se pidió, o el que se pidió venció a los 90 días), `pending` (Trevol lo está pidiendo a la DIAN), `ready` (se baja con GET /v1/dian_documents/{id}/pdf) o `failed` (la DIAN no lo entregó; no se cobró: se puede pedir otra vez).
+     */
+    pdf_status?: DianDocumentPdfState;
 }
 
 
@@ -186,6 +201,8 @@ export function DianDocumentFromJSONTyped(json: any, ignoreDiscriminator: boolea
         'received_on': json['received_on'] === undefined ? undefined : json['received_on'] === null ? null : json['received_on'],
         'source': json['source'] == null ? undefined : json['source'],
         'xml_available': json['xml_available'] == null ? undefined : json['xml_available'],
+        'pdf_available': json['pdf_available'] == null ? undefined : json['pdf_available'],
+        'pdf_status': json['pdf_status'] == null ? undefined : DianDocumentPdfStateFromJSON(json['pdf_status']),
     };
 }
 
@@ -218,6 +235,8 @@ export function DianDocumentToJSONTyped(value?: DianDocument | null, ignoreDiscr
         'received_on': value['received_on'],
         'source': value['source'],
         'xml_available': value['xml_available'],
+        'pdf_available': value['pdf_available'],
+        'pdf_status': DianDocumentPdfStateToJSON(value['pdf_status']),
     };
 }
 

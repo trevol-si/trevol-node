@@ -10,7 +10,7 @@ electrónica y eventos RADIAN ante la DIAN (Colombia). Documentación: <https://
 > Standard Webhooks signature verification, cursor pagination iterators and PDF/XML/ZIP downloads. Account keys (`tva_test_`/`tva_live_`)
 > manage several companies: `trevol.account.*`, and `company` / `withCompany()` for company operations. Docs are in Spanish like the API.
 
-**Versión 0.5.0** — API `2026-11-18`. Licencia MIT.
+**Versión 0.6.0** — API `2026-11-18`. Licencia MIT.
 
 ## Instalación
 

@@ -22,7 +22,7 @@ import {
 	TestEventDataFromJSON,
 } from './models/index.js';
 
-export const VERSION = "0.5.0";
+export const VERSION = "0.6.0";
 export const API_VERSION = "2026-11-18";
 
 export interface InfoOperacion {
@@ -487,6 +487,16 @@ export const OPERACIONES: readonly InfoOperacion[] = [
 		"idempotente": false,
 		"reintento": "seguro",
 		"binario": "zip",
+		"llave": "api_o_administracion"
+	},
+	{
+		"operationId": "downloadDianDocumentPdf",
+		"metodo": "GET",
+		"ruta": "/dian_documents/{id}/pdf",
+		"recurso": "DianDocuments",
+		"idempotente": false,
+		"reintento": "seguro",
+		"binario": "pdf",
 		"llave": "api_o_administracion"
 	},
 	{
@@ -1214,6 +1224,16 @@ export const OPERACIONES: readonly InfoOperacion[] = [
 		"metodo": "POST",
 		"ruta": "/numbering_ranges/refresh",
 		"recurso": "NumberingRanges",
+		"idempotente": false,
+		"reintento": "solo_429",
+		"binario": null,
+		"llave": "api_o_administracion"
+	},
+	{
+		"operationId": "requestDianDocumentPdf",
+		"metodo": "POST",
+		"ruta": "/dian_documents/{id}/pdf",
+		"recurso": "DianDocuments",
 		"idempotente": false,
 		"reintento": "solo_429",
 		"binario": null,

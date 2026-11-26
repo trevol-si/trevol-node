@@ -24,7 +24,7 @@ export interface BalanceTransactionOperation {
      */
     type?: BalanceTransactionOperationTypeEnum;
     /**
-     * dsync_… (sincronización), nas_… (asociación) o nreq_… (solicitud); null en una lectura de numeraciones.
+     * dsync_… (sincronización), nas_… (asociación), nreq_… (solicitud) o ddoc_… (el documento del PDF de la DIAN); null en una lectura de numeraciones.
      */
     id?: string | null;
 }
@@ -38,6 +38,7 @@ export const BalanceTransactionOperationTypeEnum = {
     NumberingRefresh: 'numbering_refresh',
     NumberingAssociation: 'numbering_association',
     NumberingRequest: 'numbering_request',
+    DianDocumentPdf: 'dian_document_pdf',
 } as const;
 export type BalanceTransactionOperationTypeEnum = typeof BalanceTransactionOperationTypeEnum[keyof typeof BalanceTransactionOperationTypeEnum];
 

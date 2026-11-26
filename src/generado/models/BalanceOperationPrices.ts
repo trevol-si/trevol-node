@@ -14,7 +14,7 @@
 
 import { mapValues } from '../runtime.js';
 /**
- * El precio en pesos de cada operación que Trevol hace por la empresa en el portal de la DIAN y que se cobra del saldo (0 es gratis). Solo en producción.
+ * El precio en pesos de cada operación de la API que Trevol hace por la empresa ante la DIAN y que se cobra del saldo (0 es gratis). Solo en producción.
  * @export
  * @interface BalanceOperationPrices
  */
@@ -35,6 +35,10 @@ export interface BalanceOperationPrices {
      * 
      */
     numbering_request?: number;
+    /**
+     * 
+     */
+    dian_document_pdf?: number;
 }
 
 /**
@@ -58,6 +62,7 @@ export function BalanceOperationPricesFromJSONTyped(json: any, ignoreDiscriminat
         'numbering_refresh': json['numbering_refresh'] == null ? undefined : json['numbering_refresh'],
         'numbering_association': json['numbering_association'] == null ? undefined : json['numbering_association'],
         'numbering_request': json['numbering_request'] == null ? undefined : json['numbering_request'],
+        'dian_document_pdf': json['dian_document_pdf'] == null ? undefined : json['dian_document_pdf'],
     };
 }
 
@@ -76,6 +81,7 @@ export function BalanceOperationPricesToJSONTyped(value?: BalanceOperationPrices
         'numbering_refresh': value['numbering_refresh'],
         'numbering_association': value['numbering_association'],
         'numbering_request': value['numbering_request'],
+        'dian_document_pdf': value['dian_document_pdf'],
     };
 }
 

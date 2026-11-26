@@ -95,6 +95,10 @@ export interface DianDocumentEventData {
      * Si se le puede pedir el XML a la DIAN con GET /v1/dian_documents/{id}/xml (tiene CUFE y la DIAN lo verificó).
      */
     xml_available?: boolean;
+    /**
+     * Si se le puede pedir el PDF oficial de la DIAN con POST /v1/dian_documents/{id}/pdf (además, solo en producción).
+     */
+    pdf_available?: boolean;
 }
 
 
@@ -180,6 +184,7 @@ export function DianDocumentEventDataFromJSONTyped(json: any, ignoreDiscriminato
         'counterpart': json['counterpart'] == null ? undefined : EventDianCounterpartFromJSON(json['counterpart']),
         'source': json['source'] == null ? undefined : json['source'],
         'xml_available': json['xml_available'] == null ? undefined : json['xml_available'],
+        'pdf_available': json['pdf_available'] == null ? undefined : json['pdf_available'],
     };
 }
 
@@ -211,6 +216,7 @@ export function DianDocumentEventDataToJSONTyped(value?: DianDocumentEventData |
         'counterpart': EventDianCounterpartToJSON(value['counterpart']),
         'source': value['source'],
         'xml_available': value['xml_available'],
+        'pdf_available': value['pdf_available'],
     };
 }
 
